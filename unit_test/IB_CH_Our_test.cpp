@@ -100,7 +100,7 @@ void IB_CH_Our_test() {
 void IB_CH_KEF_test() {
     Our_IB_CH_KEF *test = new Our_IB_CH_KEF(&G1, &G2, &Zp, &GT, rev_G1G2);
 
-    if(out_file) fprintf(out, "public_key: %d B, secret_key: %d B, hash_value: %d B, random_value: %d B\n", test->public_key_size(), CountSize(td_1) + CountSize(td_2), CountSize(h), CountSize(r_1) + CountSize(r_2));
+    if(out_file) fprintf(out, "public_key: %d B, secret_key: %d B, hash_value: %d B, random_value: %d B\n", test->public_key_size(), CountSize(td_1) + CountSize(td_2), CountSize(h), CountSize(r_1) + CountSize(r_2) + CountSize(r_3));
     if(out_file) fprintf(out, "turns_setup: %d, turns_extract: %d, turns_hash: %d, turns_forge: %d\n", turns_setup, turns_keygen, turns_hash, turns_collision);
 
     for(int _ = 0;_ < turns_setup;_++) {
