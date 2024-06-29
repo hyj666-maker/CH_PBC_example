@@ -1,22 +1,65 @@
 ## IB-CH-KEF Schemes Implementation（on PBC Library）
 
-### Develop environment：Ubuntu 20.04 and above
+This is the implementation of our Identity-based Chameleon Hash schemes in the standard model. Besides, there is implementation of former schemes for speed tests.
 
-### Introduce to folder
+### Code structure
 
-We save all header file in folder `include`, and their cpp file in folder `src`. We implement unit test and save the cpp file in folder `unit_test`.
+The `include` directory houses all header files, mirrored by the `src` directory which contains their respective source (cpp) implementations.
 
-For folder `include`, in folder `base` we write `ElementList.h` to define a curve element list class. In folder `curve` we write `params.h` to save initial parameter used in PBC Library. In folder `scheme` we implement six schemes in four papers. Then we save their implementation in the same relative path in folder `src`.
+Within `include/base`, the `ElementList.h` file defines a class for managing curve element lists. The `curve` subfolder contains `params.h`, where initial parameters vital to the PBC Library are defined. 
 
-### Introduce to paper
+In the `scheme` directory we implement 4 distinct schemes: `IB_CH_KEF`, `IB_CH_Our`, `IB_CH_Zhang`, and `IB_CH_nonRO`.
 
-`IB_CH_Zhang` reference to ID-based chameleon hashes from bilinear pairings, IACR Cryptol. ePrint Arch. 2003/208. In this file we make three class `IB_CH`, `IB_CH_S1` and `IB_CH_S2`. The `IB_CH` is just for easy to write code, and `IB_CH_S1` is used to implement scheme `Scheme 1` in the paper, and so on to `IB_CH_S2`.
+The `unit_test` folder contains standalone test cases, each named according to the scheme it validates, e.g., `IB_CH_KEF_test.cpp`.
 
-`IB_CH_KEF` reference to Identity-based chameleon hash scheme without key exposure, ACISP 2010
+```bash
+IB_CH/
+├── include/
+│   ├── base/
+│   │   └── ElementList.h
+│   ├── curve/
+│   │   └── params.h
+│   ├── scheme/
+│   │   ├── IB_CH_KEF.h
+│   │   ├── IB_CH_Our.h
+│   │   ├── IB_CH_Zhang.h
+│   │   └── IB_CH_nonRO.h
+│   └── utils/
+│       └── func.h
+├── src/
+│   ├── base/
+│   │   └── ElementList.cpp
+│   ├── curve/
+│   │   └── params.cpp
+│   ├── scheme/
+│   │   ├── IB_CH_KEF.cpp
+│   │   ├── IB_CH_Our.cpp
+│   │   ├── IB_CH_Zhang.cpp
+│   │   └── IB_CH_nonRO.cpp
+│   └── utils/
+│       └── func.cpp
+├── unit_test/
+│   ├── IB_CH_KEF_test.cpp
+│   ├── IB_CH_Our_test.cpp
+│   ├── IB_CH_Zhang_test.cpp
+│   └── IB_CH_nonRO_test.cpp
+├── CMakeLists.txt
+└── README.md
+```
 
-`IB_CH_nonRO` reference to Identity-based chameleon hash without random oracles and application in the mobile internet, ICC 2021
+### Introduction to IB-CH schemes
 
-`IB_CH_Our` reference to Identity-Based Chameleon Hashes in the Standard Model for Mobile Devices. In this file we make two class `Our_IB_CH` and `Our_IB_CH_KEF`. The `Our_IB_CH` is used to implement scheme `Our-1` in the paper, and the `Our_IB_CH` is used to implement scheme `Our-2`.
+- `IB_CH_Zhang` references to ID-based chameleon hashes from bilinear pairings, IACR Cryptol. ePrint Arch. 2003/208. In this file we make three class `IB_CH`, `IB_CH_S1` and `IB_CH_S2`. The `IB_CH` is just for easy to write code, and `IB_CH_S1` is used to implement scheme `Scheme 1` in the paper, and so on to `IB_CH_S2`.
+
+- `IB_CH_KEF` references to Identity-based chameleon hash scheme without key exposure, ACISP 2010
+
+- `IB_CH_nonRO` references to Identity-based chameleon hash without random oracles and application in the mobile internet, ICC 2021
+
+- `IB_CH_Our` references to Identity-Based Chameleon Hashes in the Standard Model for Mobile Devices. In this file we make two class `Our_IB_CH` and `Our_IB_CH_KEF`. The `Our_IB_CH` is used to implement scheme `Our-1` in the paper, and the `Our_IB_CH` is used to implement scheme `Our-2`.
+
+## Quick start
+
+- Develop environment：Ubuntu 20.04 and above
 
 ### Install PBC Library
 
@@ -44,21 +87,23 @@ make
 ./IB_CH_Our_test {type} {turns} {function} {swapG1G2} KEF
 ```
 
-explain the parameters:
+### Usage
 
-    type:
-        the curve type in PBC default;
-        choose from [a|e|i|f|d224];
+```
+type:
+    the curve type in PBC default;
+    choose from [a|e|i|f|d224];
 
-    turns:
-        controll running function how many times;
-        must be positive integer;
+turns:
+    controll running function how many times;
+    must be positive integer;
 
-    function:
-        choose which function to run {turns} times;
-        choose from [setup|hash|keygen|collision|all];
-        if choose all means run setup, hash, keygen, collision {turns} times;
-        
-    swapG1G2:
-        controll swap G1 and G2 group in nonsymmetric pairing groups;
-        choose from [0|1];
+function:
+    choose which function to run {turns} times;
+    choose from [setup|hash|keygen|collision|all];
+    if choose all means run setup, hash, keygen, collision {turns} times;
+    
+swapG1G2:
+    controll swap G1 and G2 group in nonsymmetric pairing groups;
+    choose from [0|1];
+```
