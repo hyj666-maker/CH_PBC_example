@@ -6,7 +6,7 @@ These are implementations of our proposed identity-based chameleon hash (IB-CH) 
 
 The `include` directory houses all header files, mirrored by the `src` directory which contains their respective source (cpp) implementations.
 
-Within `include/base`, the `ElementList.h` file defines a class for managing curve element lists. The `curve` subfolder contains `params.h`, where initial parameters vital to the PBC Library are defined. 
+Within `include/base`, the `ElementList.h` file defines a class for managing curve element lists. The `curve` subfolder contains `params.h`, where initial parameters vital to the PBC Library are defined.
 
 In the `scheme` directory, we implement 4 distinct schemes: `IB_CH_KEF`, `IB_CH_Our`, `IB_CH_Zhang`, and `IB_CH_nonRO`.
 
@@ -49,13 +49,13 @@ IB_CH/
 
 ### Introduction to IB-CH schemes
 
-- `IB_CH_Zhang` references to ID-based chameleon hashes from bilinear pairings, IACR Cryptol. ePrint Arch. 2003/208. In this file we make three class `IB_CH`, `IB_CH_S1` and `IB_CH_S2`. The `IB_CH` is just for easy to write code, and `IB_CH_S1` is used to implement scheme `Scheme 1` in the paper, and so on to `IB_CH_S2`.
+- `IB_CH_Zhang` references to ID-based chameleon hashes from bilinear pairings, IACR Cryptol. ePrint Arch. 2003/208. In this file we make three classes `IB_CH`, `IB_CH_S1` and `IB_CH_S2`. The `IB_CH` is just for easy to write code, and `IB_CH_S1` is used to implement scheme `Scheme 1` in the paper, and so on to `IB_CH_S2`.
 
 - `IB_CH_KEF` references to Identity-based chameleon hash scheme without key exposure, ACISP 2010
 
 - `IB_CH_nonRO` references to Identity-based chameleon hash without random oracles and application in the mobile internet, ICC 2021
 
-- `IB_CH_Our` references to Identity-Based Chameleon Hashes in the Standard Model for Mobile Devices. In this file we make two class `Our_IB_CH` and `Our_IB_CH_KEF`. The `Our_IB_CH` is used to implement the `Our-1` scgeme in our paper, and the `Our_IB_CH_KEF` is used to implement the `Our-2` scheme.
+- `IB_CH_Our` references to Identity-Based Chameleon Hashes in the Standard Model for Mobile Devices. In this file we make two classes `Our_IB_CH` and `Our_IB_CH_KEF`. The `Our_IB_CH` is used to implement the `Our-1` scheme in our paper, and the `Our_IB_CH_KEF` is used to implement the `Our-2` scheme.
 
 ## Quick start
 
