@@ -55,7 +55,7 @@ IB_CH/
 
 - `IB_CH_nonRO` references to Identity-based chameleon hash without random oracles and application in the mobile internet, ICC 2021
 
-- `IB_CH_Our` references to Identity-Based Chameleon Hashes in the Standard Model for Mobile Devices. In this file we make two class `Our_IB_CH` and `Our_IB_CH_KEF`. The `Our_IB_CH` is used to implement scheme `Our-1` in the paper, and the `Our_IB_CH_KEF` is used to implement scheme `Our-2`.
+- `IB_CH_Our` references to Identity-Based Chameleon Hashes in the Standard Model for Mobile Devices. In this file we make two class `Our_IB_CH` and `Our_IB_CH_KEF`. The `Our_IB_CH` is used to implement the `Our-1` scgeme in our paper, and the `Our_IB_CH_KEF` is used to implement the `Our-2` scheme.
 
 ## Quick start
 
