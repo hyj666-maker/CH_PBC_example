@@ -1,6 +1,6 @@
 ## IB-CH-KEF Schemes Implementation（on PBC Library）
 
-This is the implementation of our Identity-based Chameleon Hash schemes in the standard model. Besides, there is implementation of former schemes for speed tests.
+These are implementations of our proposed identity-based chameleon hash (IB-CH) schemes and previous IB-CH ones for comparison.
 
 ### Code structure
 
@@ -8,7 +8,7 @@ The `include` directory houses all header files, mirrored by the `src` directory
 
 Within `include/base`, the `ElementList.h` file defines a class for managing curve element lists. The `curve` subfolder contains `params.h`, where initial parameters vital to the PBC Library are defined. 
 
-In the `scheme` directory we implement 4 distinct schemes: `IB_CH_KEF`, `IB_CH_Our`, `IB_CH_Zhang`, and `IB_CH_nonRO`.
+In the `scheme` directory, we implement 4 distinct schemes: `IB_CH_KEF`, `IB_CH_Our`, `IB_CH_Zhang`, and `IB_CH_nonRO`.
 
 The `unit_test` folder contains standalone test cases, each named according to the scheme it validates, e.g., `IB_CH_KEF_test.cpp`.
 
@@ -55,7 +55,7 @@ IB_CH/
 
 - `IB_CH_nonRO` references to Identity-based chameleon hash without random oracles and application in the mobile internet, ICC 2021
 
-- `IB_CH_Our` references to Identity-Based Chameleon Hashes in the Standard Model for Mobile Devices. In this file we make two class `Our_IB_CH` and `Our_IB_CH_KEF`. The `Our_IB_CH` is used to implement scheme `Our-1` in the paper, and the `Our_IB_CH` is used to implement scheme `Our-2`.
+- `IB_CH_Our` references to Identity-Based Chameleon Hashes in the Standard Model for Mobile Devices. In this file we make two class `Our_IB_CH` and `Our_IB_CH_KEF`. The `Our_IB_CH` is used to implement scheme `Our-1` in the paper, and the `Our_IB_CH_KEF` is used to implement scheme `Our-2`.
 
 ## Quick start
 
