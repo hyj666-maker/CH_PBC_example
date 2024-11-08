@@ -31,14 +31,22 @@ endif (LOCAL_DEBUG)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -ggdb")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS}")
 
+link_libraries(gmp pbc OpenSSL::SSL)
+
+add_executable(EIB_CH_MD_test src/scheme/EIB_CH_MD.cpp
+        src/curve/params.cpp
+        src/base/ElementList.cpp
+        src/utils/func.cpp
+        unit_test/EIB_CH_MD_test.cpp)
+
 add_executable(IB_CH_Zhang_test src/scheme/IB_CH_Zhang.cpp
         src/curve/params.cpp
         src/utils/func.cpp
         unit_test/IB_CH_Zhang_test.cpp)
         
-target_link_libraries(IB_CH_Zhang_test pbc OpenSSL::SSL
-        "/lib/x86_64-linux-gnu/libgmpxx.a"
-        "/lib/x86_64-linux-gnu/libgmp.a")
+# target_link_libraries(IB_CH_Zhang_test pbc OpenSSL::SSL
+#         "/lib/x86_64-linux-gnu/libgmpxx.a"
+#         "/lib/x86_64-linux-gnu/libgmp.a")
 
 add_executable(IB_CH_nonRO_test src/scheme/IB_CH_nonRO.cpp
         src/curve/params.cpp
@@ -46,9 +54,9 @@ add_executable(IB_CH_nonRO_test src/scheme/IB_CH_nonRO.cpp
         src/utils/func.cpp
         unit_test/IB_CH_nonRO_test.cpp)
         
-target_link_libraries(IB_CH_nonRO_test pbc OpenSSL::SSL
-        "/lib/x86_64-linux-gnu/libgmpxx.a"
-        "/lib/x86_64-linux-gnu/libgmp.a")
+# target_link_libraries(IB_CH_nonRO_test pbc OpenSSL::SSL
+#         "/lib/x86_64-linux-gnu/libgmpxx.a"
+#         "/lib/x86_64-linux-gnu/libgmp.a")
 
 add_executable(IB_CH_KEF_test src/scheme/IB_CH_KEF.cpp
         src/curve/params.cpp
@@ -56,9 +64,9 @@ add_executable(IB_CH_KEF_test src/scheme/IB_CH_KEF.cpp
         src/utils/func.cpp
         unit_test/IB_CH_KEF_test.cpp)
         
-target_link_libraries(IB_CH_KEF_test pbc OpenSSL::SSL
-        "/lib/x86_64-linux-gnu/libgmpxx.a"
-        "/lib/x86_64-linux-gnu/libgmp.a")
+# target_link_libraries(IB_CH_KEF_test pbc OpenSSL::SSL
+#         "/lib/x86_64-linux-gnu/libgmpxx.a"
+#         "/lib/x86_64-linux-gnu/libgmp.a")
 
 add_executable(IB_CH_Our_test src/scheme/IB_CH_Our.cpp
         src/curve/params.cpp
@@ -66,6 +74,6 @@ add_executable(IB_CH_Our_test src/scheme/IB_CH_Our.cpp
         src/utils/func.cpp
         unit_test/IB_CH_Our_test.cpp)
         
-target_link_libraries(IB_CH_Our_test pbc OpenSSL::SSL
-        "/lib/x86_64-linux-gnu/libgmpxx.a"
-        "/lib/x86_64-linux-gnu/libgmp.a")
+# target_link_libraries(IB_CH_Our_test pbc OpenSSL::SSL
+#         "/lib/x86_64-linux-gnu/libgmpxx.a"
+#         "/lib/x86_64-linux-gnu/libgmp.a")
