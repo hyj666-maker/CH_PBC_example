@@ -39,6 +39,12 @@ add_executable(EIB_CH_MD_test src/scheme/EIB_CH_MD.cpp
         src/utils/func.cpp
         unit_test/EIB_CH_MD_test.cpp)
 
+add_executable(DLB_CH_KEF_test src/scheme/DLB_CH_KEF.cpp
+        src/curve/params.cpp
+        src/base/ElementList.cpp
+        src/utils/func.cpp
+        unit_test/DLB_CH_KEF_test.cpp)
+
 add_executable(IB_CH_Zhang_test src/scheme/IB_CH_Zhang.cpp
         src/curve/params.cpp
         src/utils/func.cpp

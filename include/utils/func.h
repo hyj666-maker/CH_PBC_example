@@ -14,5 +14,7 @@ void Hm(element_t &m, element_t &res, element_t &tmp_Zp, element_t &g);
 
 void Hgsm(element_t &gs, element_t &m, element_t &res, element_t &tmp_Zp, element_t &g);
 
+void Hgsm_1(element_t &gs, element_t &m, element_t &res);
+
 int CountSize(element_t &t);
 #endif //UTIL_FUNC_H
