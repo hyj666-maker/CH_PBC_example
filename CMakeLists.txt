@@ -39,6 +39,12 @@ add_executable(ID_B_CollRes_XSL_2021_test src/scheme/ID_B_CollRes_XSL_2021.cpp
         src/utils/func.cpp
         unit_test/ID_B_CollRes_XSL_2021_test.cpp)
 
+add_executable(CH_KEF_CZK_2004_test src/scheme/CH_KEF_CZK_2004.cpp
+        src/curve/params.cpp
+        src/base/ElementList.cpp
+        src/utils/func.cpp
+        unit_test/CH_KEF_CZK_2004_test.cpp)
+
 add_executable(CH_ET_test src/scheme/CH_ET.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
