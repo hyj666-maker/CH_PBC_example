@@ -1,4 +1,4 @@
-#include <scheme/IB_CH_Zhang.h>
+#include <scheme/IB_CH_ZSS_2003.h>
 #include "curve/params.h"
 #include <chrono>
 #include <iostream>
@@ -84,6 +84,7 @@ void IB_CH_S1_test() {
         ts = std::chrono::high_resolution_clock::now();
         test->Forge(&ID, &S_ID, &m, &m_p, &R, &R_p);
         te = std::chrono::high_resolution_clock::now();
+        printf("%d\n", test->Verify(&H, &R_p, &ID, &m_p));
         OutTime("collision", _, time_cast(te, ts));
     }
 
@@ -125,7 +126,7 @@ void IB_CH_S2_test() {
         ts = std::chrono::high_resolution_clock::now();
         test->Forge(&ID, &S_ID, &m, &m_p, &R, &R_p);
         te = std::chrono::high_resolution_clock::now();
-        // printf("%d\n", test->Verify(&H, &R_p, &ID, &m_p));
+        printf("%d\n", test->Verify(&H, &R_p, &ID, &m_p));
         OutTime("collision", _, time_cast(te, ts));
     }
 

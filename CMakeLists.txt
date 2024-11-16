@@ -69,10 +69,11 @@ add_executable(DLB_CH_KEF_test src/scheme/DLB_CH_KEF.cpp
         src/utils/func.cpp
         unit_test/DLB_CH_KEF_test.cpp)
 
-add_executable(IB_CH_Zhang_test src/scheme/IB_CH_Zhang.cpp
+add_executable(IB_CH_ZSS_2003_test 
+        src/scheme/IB_CH_ZSS_2003.cpp
         src/curve/params.cpp
         src/utils/func.cpp
-        unit_test/IB_CH_Zhang_test.cpp)
+        unit_test/IB_CH_ZSS_2003_test.cpp)
         
 # target_link_libraries(IB_CH_Zhang_test pbc OpenSSL::SSL
 #         "/lib/x86_64-linux-gnu/libgmpxx.a"

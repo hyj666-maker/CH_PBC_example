@@ -4,8 +4,8 @@
 #endif //IMPORT_UTIL_FUNC
 
 
-#ifndef IB_CH_Zhang_H
-#define IB_CH_Zhang_H
+#ifndef IB_CH_ZSS_2003_H
+#define IB_CH_ZSS_2003_H
 
 class IB_CH {
     protected:
@@ -75,4 +75,4 @@ class IB_CH_S2: public IB_CH {
     ~IB_CH_S2();
 };
 
-#endif //IB_CH_Zhang_H
+#endif //IB_CH_ZSS_2003_H

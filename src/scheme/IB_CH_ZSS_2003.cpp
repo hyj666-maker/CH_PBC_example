@@ -1,4 +1,4 @@
-#include <scheme/IB_CH_Zhang.h>
+#include <scheme/IB_CH_ZSS_2003.h>
 
 void IB_CH::H0(element_t &m, element_t &res) {
     Hm(m, res, this->tmp_Zn, *this->G1);
