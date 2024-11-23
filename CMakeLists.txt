@@ -33,6 +33,12 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS}")
 
 link_libraries(gmp pbc OpenSSL::SSL)
 
+add_executable(CR_CH_DSS_2020_test src/scheme/CR_CH_DSS_2020.cpp
+        src/curve/params.cpp
+        src/base/ElementList.cpp
+        src/utils/func.cpp
+        unit_test/CR_CH_DSS_2020_test.cpp)
+
 add_executable(FCR_CH_PreQA_DKS_2020_test src/scheme/FCR_CH_PreQA_DKS_2020.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp

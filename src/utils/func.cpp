@@ -73,6 +73,43 @@ void Hm_2(element_t &y, element_t &h, element_t &m,element_t &u1,element_t &u2, 
     element_from_hash(res, hash, SHA256_DIGEST_LENGTH);
 }
 
+/**
+ * CR_CH_DSS_2020
+ */
+void Hm_3(element_t &y, element_t &h1, element_t &h2, element_t &m,
+            element_t &u11,element_t &u12, element_t &u2, 
+            element_t &res) {
+    // 计算SHA-256哈希
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+
+    unsigned char bytes1[element_length_in_bytes(y)];
+    element_to_bytes(bytes1, y);
+    SHA256_Update(&sha256, bytes1, sizeof(bytes1));
+    unsigned char bytes2[element_length_in_bytes(h1)];
+    element_to_bytes(bytes2, h1);
+    SHA256_Update(&sha256, bytes2, sizeof(bytes2));
+    unsigned char bytes3[element_length_in_bytes(h2)];
+    element_to_bytes(bytes3, h2);
+    SHA256_Update(&sha256, bytes3, sizeof(bytes3));
+    unsigned char bytes4[element_length_in_bytes(m)];
+    element_to_bytes(bytes4, m);
+    SHA256_Update(&sha256, bytes4, sizeof(bytes4));
+    unsigned char bytes5[element_length_in_bytes(u11)];
+    element_to_bytes(bytes5, u11);
+    SHA256_Update(&sha256, bytes5, sizeof(bytes5));
+    unsigned char bytes6[element_length_in_bytes(u12)];
+    element_to_bytes(bytes6, u12);
+    SHA256_Update(&sha256, bytes6, sizeof(bytes6));
+    unsigned char bytes7[element_length_in_bytes(u2)];
+    element_to_bytes(bytes7, u2);
+    SHA256_Update(&sha256, bytes7, sizeof(bytes7));
+    
+    SHA256_Final(hash, &sha256);
+    element_from_hash(res, hash, SHA256_DIGEST_LENGTH);
+}
+
 int CountSize(element_t &t) {
     return element_length_in_bytes(t);
 }
