@@ -67,6 +67,8 @@ void FCR_CH_PreQA_DKS_2020::KG(element_t *y) {
     // secret key x ∈ Zp
     element_random(this->x);
     element_printf("x = %B\n", this->x);
+    // 输出x的大小
+    printf("sizeof(x): %d bystes\n",element_length_in_bytes(this->x));
     // public key y = g1^x
     element_pow_zn(*y, this->g1, this->x);
     element_printf("y = %B\n", *y);
@@ -99,6 +101,8 @@ void FCR_CH_PreQA_DKS_2020::Hash(element_t *m, element_t *y,
     element_pow_zn(this->tmp_G2, this->g2, this->xi);
     element_mul(*h, this->tmp_G1, this->tmp_G2);
     element_printf("h = %B\n", *h);
+    // 输出h的大小
+    printf("sizeof(h):  %d bytes\n",element_length_in_bytes(*h));
     // e = H((y,h,m),(u1,u2))
     // ? 将 m 哈希成群上的一个点
     element_from_hash(this->tmp_G1, (void *)m, element_length_in_bytes(*m));

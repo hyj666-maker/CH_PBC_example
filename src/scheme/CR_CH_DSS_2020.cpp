@@ -67,6 +67,8 @@ void CR_CH_DSS_2020::KG(element_t *_x, element_t *_y) {
     // secret key x ∈ Zp
     element_random(this->x);
     element_printf("x = %B\n", this->x);
+    // 输出x的大小
+    printf("sizeof(x):  %d bytes\n",element_length_in_bytes(this->x));
     // public key y = g^x
     element_pow_zn(this->y, this->g, this->x);
     element_printf("y = %B\n", this->y);
@@ -99,10 +101,14 @@ void CR_CH_DSS_2020::Hash(element_t *_y, element_t *m,
     // h1 = g^xi
     element_pow_zn(*h1, this->g, this->xi);
     element_printf("h1 = %B\n", *h1);
+    // 输出h1的大小
+    printf("sizeof(h1):  %d bytes\n",element_length_in_bytes(*h1));
     // h2 = m * pk^xi
     element_pow_zn(this->tmp_G1, *_y, this->xi);
     element_mul(*h2, *m, this->tmp_G1);
     element_printf("h2 = %B\n", *h2);
+    // 输出h2的大小
+    printf("sizeof(h2):  %d bytes\n",element_length_in_bytes(*h2));
     // e = H((y,h,m),(u11,u12,u2))
     this->H(_y, h1, h2, m, &this->u11, &this->u12, &this->u2, &this->e);
     // e1 = e - e2
