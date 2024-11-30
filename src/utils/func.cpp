@@ -28,6 +28,21 @@ void Hgsm(element_t &gs, element_t &m, element_t &res, element_t &tmp_Zp, elemen
     element_from_hash(res, hash, SHA256_DIGEST_LENGTH);
 }
 
+/**
+ * res = H(m)
+ */
+void Hm_1(element_t &m, element_t &res) {
+    // 计算SHA-256哈希
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+    unsigned char bytes1[element_length_in_bytes(m)];
+    element_to_bytes(bytes1, m);
+    SHA256_Update(&sha256, bytes1, sizeof(bytes1));
+    SHA256_Final(hash, &sha256);
+    element_from_hash(res, hash, SHA256_DIGEST_LENGTH);
+}
+
 void Hgsm_1(element_t &gs, element_t &m, element_t &res) {
     // 计算SHA-256哈希
     unsigned char hash[SHA256_DIGEST_LENGTH];

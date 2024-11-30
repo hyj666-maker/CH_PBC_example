@@ -14,6 +14,8 @@ void Hm(element_t &m, element_t &res, element_t &tmp_Zp, element_t &g);
 
 void Hgsm(element_t &gs, element_t &m, element_t &res, element_t &tmp_Zp, element_t &g);
 
+void Hm_1(element_t &m, element_t &res);
+
 void Hgsm_1(element_t &gs, element_t &m, element_t &res);
 
 void Hm_2(element_t &y, element_t &h, element_t &m,element_t &u1,element_t &u2, element_t &res);
