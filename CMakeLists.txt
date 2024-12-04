@@ -33,6 +33,11 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS}")
 
 link_libraries(gmp pbc OpenSSL::SSL)
 
+add_executable(RSA_test
+    src/RSA/RSA.cpp
+    unit_test/RSA_test/RSA_test.cpp    
+)
+
 add_executable(IB_CH_KEF_CZS_2014_test src/scheme/IB_CH_KEF_CZS_2014.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
