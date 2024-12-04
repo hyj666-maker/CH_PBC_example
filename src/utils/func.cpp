@@ -125,6 +125,43 @@ void Hm_3(element_t &y, element_t &h1, element_t &h2, element_t &m,
     element_from_hash(res, hash, SHA256_DIGEST_LENGTH);
 }
 
+/**
+ * input: m1,m2,m3
+ * output: res
+ */
+void Hm_4(element_t &m1, element_t &m2, element_t &m3, element_t &res) {
+    // 计算SHA-256哈希
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+
+    unsigned char bytes1[element_length_in_bytes(m1)];
+    element_to_bytes(bytes1, m1);
+    SHA256_Update(&sha256, bytes1, sizeof(bytes1));
+    unsigned char bytes2[element_length_in_bytes(m2)];
+    element_to_bytes(bytes2, m2);
+    SHA256_Update(&sha256, bytes2, sizeof(bytes2));
+    unsigned char bytes3[element_length_in_bytes(m3)];
+    element_to_bytes(bytes3, m3);
+    SHA256_Update(&sha256, bytes3, sizeof(bytes3));
+        
+    SHA256_Final(hash, &sha256);
+    element_from_hash(res, hash, SHA256_DIGEST_LENGTH);
+}
+
 int CountSize(element_t &t) {
     return element_length_in_bytes(t);
+}
+
+
+void PrintElement(std::string element_name, element_t &element){
+    printf("%s = ", element_name.c_str());
+    element_printf("%B\n", element);
+}
+void PrintElementsize(std::string element_name, element_t &element){
+    printf("size of %s = %d bytes\n", element_name.c_str(), CountSize(element));
+}
+void PrintElementAndSize(std::string element_name, element_t &element){
+    PrintElement(element_name, element);
+    PrintElementsize(element_name, element);
 }

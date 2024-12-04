@@ -24,5 +24,11 @@ void Hm_3(element_t &y, element_t &h1, element_t &h2, element_t &m,
             element_t &u11,element_t &u12, element_t &u2, 
             element_t &res);
 
+void Hm_4(element_t &m1, element_t &m2, element_t &m3, element_t &res);
+
+void PrintElement(std::string element_name, element_t &element);
+void PrintElementsize(std::string element_name, element_t &element);
+void PrintElementAndSize(std::string element_name, element_t &element);
+
 int CountSize(element_t &t);
 #endif //UTIL_FUNC_H
