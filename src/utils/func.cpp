@@ -165,3 +165,61 @@ void PrintElementAndSize(std::string element_name, element_t &element){
     PrintElement(element_name, element);
     PrintElementsize(element_name, element);
 }
+
+/**
+ * hash mod n
+ */
+void Hm_n(mpz_t &m, mpz_t &res,  mpz_t &n) {
+    // 计算SHA-256哈希
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+
+    size_t m_size = (mpz_sizeinbase(m, 2) + 7) / 8;   // 计算字节大小
+    unsigned char* bytes1 = new unsigned char[m_size];
+    mpz_export(bytes1, nullptr, 1, 1, 0, 0, m);       // 将 mpz_t 转换为字节数组
+    SHA256_Update(&sha256, bytes1, m_size);           // 更新哈希值
+    delete[] bytes1;  // 释放内存
+
+  
+    SHA256_Final(hash, &sha256);
+    
+    // 将哈希值转换为 mpz_t 并存储到 res 中
+    mpz_import(res, SHA256_DIGEST_LENGTH, 1, 1, 0, 0, hash);
+
+    // 将结果映射到 n 的范围内，计算 res = res mod n
+    mpz_mod(res, res, n);
+}
+
+/**
+ * hash mod n
+ */
+void Hgsm_n(mpz_t &gs, mpz_t &m, mpz_t &res,  mpz_t &n) {
+    // 计算SHA-256哈希
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+    
+    // 将第一个参数 gs 转换为字节数组
+    size_t gs_size = (mpz_sizeinbase(gs, 2) + 7) / 8;  // 计算字节大小
+    unsigned char* bytes1 = new unsigned char[gs_size];
+    mpz_export(bytes1, nullptr, 1, 1, 0, 0, gs);  // 将 mpz_t 转换为字节数组
+    SHA256_Update(&sha256, bytes1, gs_size);      // 更新哈希值
+    delete[] bytes1;  // 释放内存
+
+    // 将第二个参数 m 转换为字节数组
+    size_t m_size = (mpz_sizeinbase(m, 2) + 7) / 8;   // 计算字节大小
+    unsigned char* bytes2 = new unsigned char[m_size];
+    mpz_export(bytes2, nullptr, 1, 1, 0, 0, m);       // 将 mpz_t 转换为字节数组
+    SHA256_Update(&sha256, bytes2, m_size);           // 更新哈希值
+    delete[] bytes2;  // 释放内存
+
+    // 计算最终哈希值
+    SHA256_Final(hash, &sha256);
+
+    // 将哈希值转换为 mpz_t 并存储到 res 中
+    mpz_import(res, SHA256_DIGEST_LENGTH, 1, 1, 0, 0, hash);
+
+    // 将结果映射到 n 的范围内，计算 res = res mod n
+    mpz_mod(res, res, n);
+}

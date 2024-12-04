@@ -31,4 +31,8 @@ void PrintElementsize(std::string element_name, element_t &element);
 void PrintElementAndSize(std::string element_name, element_t &element);
 
 int CountSize(element_t &t);
+
+void Hm_n(mpz_t &m, mpz_t &res,  mpz_t &n);
+void Hgsm_n(mpz_t &gs, mpz_t &m, mpz_t &res,  mpz_t &n);
+
 #endif //UTIL_FUNC_H
