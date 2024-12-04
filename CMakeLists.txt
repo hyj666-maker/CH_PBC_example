@@ -50,6 +50,12 @@ add_executable(MCH_CDK_2017_test
         src/RSA/RSA.cpp
         unit_test/MCH_CDK_2017_test.cpp)
 
+add_executable(CHET_RSA_CDK_2017_test 
+        src/scheme/CHET_RSA_CDK_2017.cpp
+        src/utils/func.cpp
+        src/RSA/RSA.cpp
+        unit_test/CHET_RSA_CDK_2017_test.cpp)
+
 add_executable(IB_CH_KEF_CZS_2014_test src/scheme/IB_CH_KEF_CZS_2014.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
