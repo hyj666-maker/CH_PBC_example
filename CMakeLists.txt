@@ -122,36 +122,9 @@ add_executable(IB_CH_ZSS_2003_test
         src/utils/func.cpp
         unit_test/IB_CH_ZSS_2003_test.cpp)
         
-# target_link_libraries(IB_CH_Zhang_test pbc OpenSSL::SSL
-#         "/lib/x86_64-linux-gnu/libgmpxx.a"
-#         "/lib/x86_64-linux-gnu/libgmp.a")
 
-add_executable(IB_CH_nonRO_test src/scheme/IB_CH_nonRO.cpp
-        src/curve/params.cpp
-        src/base/ElementList.cpp
-        src/utils/func.cpp
-        unit_test/IB_CH_nonRO_test.cpp)
-        
-# target_link_libraries(IB_CH_nonRO_test pbc OpenSSL::SSL
-#         "/lib/x86_64-linux-gnu/libgmpxx.a"
-#         "/lib/x86_64-linux-gnu/libgmp.a")
-
-add_executable(IB_CH_KEF_test src/scheme/IB_CH_KEF.cpp
-        src/curve/params.cpp
-        src/base/ElementList.cpp
-        src/utils/func.cpp
-        unit_test/IB_CH_KEF_test.cpp)
-        
-# target_link_libraries(IB_CH_KEF_test pbc OpenSSL::SSL
-#         "/lib/x86_64-linux-gnu/libgmpxx.a"
-#         "/lib/x86_64-linux-gnu/libgmp.a")
-
-add_executable(IB_CH_Our_test src/scheme/IB_CH_Our.cpp
-        src/curve/params.cpp
-        src/base/ElementList.cpp
-        src/utils/func.cpp
-        unit_test/IB_CH_Our_test.cpp)
-        
-# target_link_libraries(IB_CH_Our_test pbc OpenSSL::SSL
-#         "/lib/x86_64-linux-gnu/libgmpxx.a"
-#         "/lib/x86_64-linux-gnu/libgmp.a")
+# google test
+enable_testing() 
+add_executable(TestAll unit_test/TestAll.cpp)
+target_link_libraries(TestAll PRIVATE gtest pthread)
+add_test(TestAll ${CMAKE_BINARY_DIR}/TestAll)
