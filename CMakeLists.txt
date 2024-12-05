@@ -38,6 +38,12 @@ add_executable(RSA_test
     unit_test/RSA_test/RSA_test.cpp    
 )
 
+add_executable(CH_KEF_F_CTZ_2010_test
+        src/scheme/CH_KEF_F_CTZ_2010.cpp
+        src/utils/func.cpp
+        unit_test/CH_KEF_F_CTZ_2010_test.cpp
+)
+
 add_executable(CH_CDK_2017_test 
         src/scheme/CH_CDK_2017.cpp
         src/utils/func.cpp

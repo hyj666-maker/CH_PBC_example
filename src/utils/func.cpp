@@ -1,5 +1,7 @@
 #include "utils/func.h"
 #include <openssl/sha.h>
+#include <sys/time.h>
+
 
 void Hm(element_t &m, element_t &res, element_t &tmp_Zp, element_t &g) {
     // 计算SHA-256哈希
@@ -222,4 +224,19 @@ void Hgsm_n(mpz_t &gs, mpz_t &m, mpz_t &res,  mpz_t &n) {
 
     // 将结果映射到 n 的范围内，计算 res = res mod n
     mpz_mod(res, res, n);
+}
+
+
+void GenerateRandomWithLength(mpz_t &res, int length){
+    // 生成随机数
+    gmp_randstate_t state;
+    gmp_randinit_default(state);          
+    
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    unsigned long long seed = tv.tv_sec * 1000000 + tv.tv_usec;
+
+    gmp_randseed_ui(state, seed);
+    mpz_urandomb(res, state, length); // 生成一个随机数，长度为 length 位
+    gmp_randclear(state);
 }

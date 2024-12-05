@@ -35,4 +35,6 @@ int CountSize(element_t &t);
 void Hm_n(mpz_t &m, mpz_t &res,  mpz_t &n);
 void Hgsm_n(mpz_t &gs, mpz_t &m, mpz_t &res,  mpz_t &n);
 
+void GenerateRandomWithLength(mpz_t &res, int length);
+
 #endif //UTIL_FUNC_H
