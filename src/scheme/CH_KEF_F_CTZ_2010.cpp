@@ -156,6 +156,8 @@ void CH_KEF_F_CTZ_2010::Uforge(pk *pk,sk *sk, mpz_t *L, mpz_t *m, mpz_t *r, mpz_
     mpz_set_ui(mpz_two, 2);
     mpz_powm(two_pow_fk, mpz_two, fk, pk->N);
     // 1/(2^fk)
+    // TODO
+    // !!! B = |H(L)|^(1/(2^f(k)))  , B^(2^(f(k))) != |H(L)|
     mpz_invert(tmp, two_pow_fk, pk->N);
     // B = |H(L)|^(1/(2^f(k)))
     mpz_powm(B, H_L, tmp, pk->N);
@@ -166,9 +168,6 @@ void CH_KEF_F_CTZ_2010::Uforge(pk *pk,sk *sk, mpz_t *L, mpz_t *m, mpz_t *r, mpz_
     // r_p = r * B^(m-m_p)  mod N
     mpz_mul(*r_p, *r, B_pow);
     mpz_mod(*r_p, *r_p, pk->N);
-
-    
-
 
     mpz_clears(B,H_L,fk,two_pow_fk,tmp,mpz_two,m_sub_m_p,B_pow,NULL);
 }

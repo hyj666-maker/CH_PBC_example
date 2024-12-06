@@ -240,3 +240,17 @@ void GenerateRandomWithLength(mpz_t &res, int length){
     mpz_urandomb(res, state, length); // 生成一个随机数，长度为 length 位
     gmp_randclear(state);
 }
+
+void GenerateRandomInN(mpz_t &res, mpz_t &max){
+    // 生成随机数
+    gmp_randstate_t state;
+    gmp_randinit_default(state);          
+    
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    unsigned long long seed = tv.tv_sec * 1000000 + tv.tv_usec;
+
+    gmp_randseed_ui(state, seed);
+    mpz_urandomm(res, state, max); // 生成一个随机数小于max
+    gmp_randclear(state);
+}

@@ -36,5 +36,6 @@ void Hm_n(mpz_t &m, mpz_t &res,  mpz_t &n);
 void Hgsm_n(mpz_t &gs, mpz_t &m, mpz_t &res,  mpz_t &n);
 
 void GenerateRandomWithLength(mpz_t &res, int length);
+void GenerateRandomInN(mpz_t &res, mpz_t &max);
 
 #endif //UTIL_FUNC_H
