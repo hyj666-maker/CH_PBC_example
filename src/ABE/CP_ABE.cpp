@@ -366,6 +366,145 @@ void CP_ABE::Encrypt(mpk *mpk, element_t *msg, std::string policy_str, ciphertex
 }
 
 /**
+ * Encrypt a message msg under a policy string.
+ * input: mpk, msg, policy_str, s1, s2
+ * output: ct
+ */
+void CP_ABE::Encrypt(mpk *mpk, element_t *msg, std::string policy_str, element_t *s1, element_t *s2, ciphertext *ciphertext){
+    policy_resolution pr;
+    policy_generation pg;
+    element_random(this->tmp_Zn);
+
+    vector<string>* postfix_expression = pr.infixToPostfix(policy_str);
+    // 打印
+    for(int i = 0;i < postfix_expression->size();i++){
+        printf("%s \n", postfix_expression->at(i).c_str());
+    }
+    binary_tree* binary_tree_expression = pr.postfixToBinaryTree(postfix_expression, this->tmp_Zn);
+    pg.generatePolicyInMatrixForm(binary_tree_expression);
+    element_t_matrix* M = pg.getPolicyInMatrixFormFromTree(binary_tree_expression);
+
+    unsigned long int rows = M->row();
+    unsigned long int cols = M->col();
+
+    printf("rows: %ld, cols: %ld\n", rows, cols);
+    for(int i = 0;i < rows;i++){
+        for(int j = 0;j < cols;j++){
+            element_printf("%B ", M->getElement(i, j));
+        }
+        printf("\n");
+    }
+
+    // s1,s2
+    element_set(this->s1, *s1);
+    element_set(this->s2, *s2);
+
+    // ct0
+    // ct0_1 = H1^s1
+    element_pow_zn(ciphertext->ct0.ct_1, mpk->H1, this->s1);
+    // ct0_2 = H2^s2
+    element_pow_zn(ciphertext->ct0.ct_2, mpk->H2, this->s2);
+    // ct0_3 = h^(s1+s2)
+    element_add(this->tmp_Zn_2, this->s1, this->s2);
+    element_pow_zn(ciphertext->ct0.ct_3, mpk->h, this->tmp_Zn_2);
+
+    // ct_prime = T1^s1 * T2^s2 * msg
+    element_pow_zn(this->tmp_GT, mpk->T1, this->s1);
+    element_pow_zn(this->tmp_GT_2, mpk->T2, this->s2);
+    element_mul(this->tmp_GT_3, this->tmp_GT, this->tmp_GT_2);
+    element_mul(ciphertext->ct_prime, this->tmp_GT_3, *msg);
+
+    // ct_y
+    // for i = 1,2,...,rows
+    for(unsigned long int i=0; i<rows;i++){
+        string attr = M->getName(i);
+        pai[i] = attr;
+        // printf("attr: %s\n", attr.c_str());
+
+        // l = 1
+        string attr_l_1 = attr + "1" + "1";
+        // H(attr_l_1)^s1
+        this->Hash(attr_l_1, &this->tmp_G);
+        element_pow_zn(this->tmp_G, this->tmp_G, this->s1);
+        string attr_l_2 = attr + "1" + "2";
+        // H(attr_l_2)^s2
+        this->Hash(attr_l_2, &this->tmp_G_2);
+        element_pow_zn(this->tmp_G_2, this->tmp_G_2, this->s2);
+        element_mul(ciphertext->ct_y[i]->ct_1, this->tmp_G, this->tmp_G_2);
+        // for j = 1,2,...,cols
+        string str_0jl1,str_0jl2;
+        for(unsigned long int j=0; j<cols;j++){
+            str_0jl1 = "0" + to_string(j+1) + "1" + "1";
+            str_0jl2 = "0" + to_string(j+1) + "1" + "2";
+            // H(0jl1)^s1
+            this->Hash(str_0jl1, &this->tmp_G);
+            element_pow_zn(this->tmp_G, this->tmp_G, this->s1);
+            // H(0jl2)^s2
+            this->Hash(str_0jl2, &this->tmp_G_2);
+            element_pow_zn(this->tmp_G_2, this->tmp_G_2, this->s2);
+            // H(0jl1)^s1 * H(0jl2)^s2
+            element_mul(this->tmp_G_3, this->tmp_G, this->tmp_G_2);
+            // (H(0jl1)^s1 * H(0jl2)^s2)^M[i][j]
+            element_pow_zn(this->tmp_G_4, this->tmp_G_3, M->getElement(i, j));
+            element_mul(ciphertext->ct_y[i]->ct_1, ciphertext->ct_y[i]->ct_1, this->tmp_G_4);
+        }
+    
+        // l = 2
+        attr_l_1 = attr + "2" + "1";
+        // H(attr_l_1)^s1
+        this->Hash(attr_l_1, &this->tmp_G);
+        element_pow_zn(this->tmp_G, this->tmp_G, this->s1);
+        attr_l_2 = attr + "2" + "2";
+        // H(attr_l_2)^s2
+        this->Hash(attr_l_2, &this->tmp_G_2);
+        element_pow_zn(this->tmp_G_2, this->tmp_G_2, this->s2);
+        element_mul(ciphertext->ct_y[i]->ct_2, this->tmp_G, this->tmp_G_2);
+        // for j = 1,2,...,cols
+        for(unsigned long int j=0; j<cols;j++){
+            str_0jl1 = "0" + to_string(j+1) + "2" + "1";
+            str_0jl2 = "0" + to_string(j+1) + "2" + "2";
+            // H(0jl1)^s1
+            this->Hash(str_0jl1, &this->tmp_G);
+            element_pow_zn(this->tmp_G, this->tmp_G, this->s1);
+            // H(0jl2)^s2
+            this->Hash(str_0jl2, &this->tmp_G_2);
+            element_pow_zn(this->tmp_G_2, this->tmp_G_2, this->s2);
+            // H(0jl1)^s1 * H(0jl2)^s2
+            element_mul(this->tmp_G_3, this->tmp_G, this->tmp_G_2);
+            // (H(0jl1)^s1 * H(0jl2)^s2)^M[i][j]
+            element_pow_zn(this->tmp_G_4, this->tmp_G_3, M->getElement(i, j));
+            element_mul(ciphertext->ct_y[i]->ct_2, ciphertext->ct_y[i]->ct_2, this->tmp_G_4);
+        }
+        // l = 3
+        attr_l_1 = attr + "3" + "1";
+        // H(attr_l_1)^s1
+        this->Hash(attr_l_1, &this->tmp_G);
+        element_pow_zn(this->tmp_G, this->tmp_G, this->s1);
+        attr_l_2 = attr + "3" + "2";
+        // H(attr_l_2)^s2
+        this->Hash(attr_l_2, &this->tmp_G_2);
+        element_pow_zn(this->tmp_G_2, this->tmp_G_2, this->s2);
+        element_mul(ciphertext->ct_y[i]->ct_3, this->tmp_G, this->tmp_G_2);
+        // for j = 1,2,...,cols
+        for(unsigned long int j=0; j<cols;j++){
+            str_0jl1 = "0" + to_string(j+1) + "3" + "1";
+            str_0jl2 = "0" + to_string(j+1) + "3" + "2";
+            // H(0jl1)^s1
+            this->Hash(str_0jl1, &this->tmp_G);
+            element_pow_zn(this->tmp_G, this->tmp_G, this->s1);
+            // H(0jl2)^s2
+            this->Hash(str_0jl2, &this->tmp_G_2);
+            element_pow_zn(this->tmp_G_2, this->tmp_G_2, this->s2);
+            // H(0jl1)^s1 * H(0jl2)^s2
+            element_mul(this->tmp_G_3, this->tmp_G, this->tmp_G_2);
+            // (H(0jl1)^s1 * H(0jl2)^s2)^M[i][j]
+            element_pow_zn(this->tmp_G_4, this->tmp_G_3, M->getElement(i, j));
+            element_mul(ciphertext->ct_y[i]->ct_3, ciphertext->ct_y[i]->ct_3, this->tmp_G_4);
+        }
+    }
+}
+
+/**
  * Decrypt a ciphertext.
  * input: mpk, ciphertext, sks
  * output: res
@@ -432,4 +571,38 @@ void CP_ABE::Decrypt(mpk *mpk, ciphertext *ciphertext, sks *sks, element_t *res)
 
     element_clear(num);
     element_clear(den);
+}
+
+
+CP_ABE::~CP_ABE(){
+    element_clear(this->tmp_G);
+    element_clear(this->tmp_G_2);
+    element_clear(this->tmp_G_3);
+    element_clear(this->tmp_G_4);
+    element_clear(this->tmp_H);
+    element_clear(this->tmp_H_2);
+    element_clear(this->tmp_H_3);
+    element_clear(this->tmp_GT);
+    element_clear(this->tmp_GT_2);
+    element_clear(this->tmp_GT_3);
+    element_clear(this->tmp_Zn);
+    element_clear(this->tmp_Zn_2);
+    element_clear(this->tmp_Zn_3);
+
+    element_clear(this->d1);
+    element_clear(this->d2);
+    element_clear(this->d3);
+
+    element_clear(this->r1);
+    element_clear(this->r2);
+
+    element_clear(this->b1r1a1);
+    element_clear(this->b1r1a2);
+    element_clear(this->b2r2a1);
+    element_clear(this->b2r2a2);
+    element_clear(this->r1r2a1);
+    element_clear(this->r1r2a2);
+
+    element_clear(this->s1);
+    element_clear(this->s2);
 }

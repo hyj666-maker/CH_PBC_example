@@ -1,33 +1,41 @@
-#ifndef RSA_H
-#define RSA_H
+#ifndef MYRSA_H
+#define MYRSA_H
 
 #include <stdio.h>
 #include <gmp.h>
 #include <stdlib.h>
 #include <time.h>
 
-class RSA{
+class MyRSA{
     private:
-    mpz_t *n; // 模数
-    mpz_t *e; // 公钥指数
-    mpz_t *d; // 私钥指数
+        mpz_t *n;
+        mpz_t *e;
+        mpz_t *d;
     
     public:
-    RSA(mpz_t *n, mpz_t *e, mpz_t *d);
+        MyRSA(mpz_t *n, mpz_t *e, mpz_t *d);
 
-    void rsa_clear();
+        void rsa_clear();
 
-    void rsa_generate_keys(unsigned long bit_size);
+        void rsa_generate_keys(unsigned long bit_size);
 
-    void rsa_generate_keys_2(unsigned long bit_size, unsigned long int k);
-    void rsa_generate_keys_2(unsigned long bit_size, unsigned long int k, mpz_t *phi);
+        void rsa_generate_keys_2(unsigned long bit_size, unsigned long int k);
+        void rsa_generate_keys_2(unsigned long bit_size, unsigned long int k, mpz_t *phi);
 
-    void rsa_generate_keys_pqn(unsigned long bit_size, mpz_t *p, mpz_t *q, mpz_t *n);
+        void rsa_generate_keys_pqn(unsigned long bit_size, mpz_t *p, mpz_t *q, mpz_t *n);
 
-    void rsa_encrypt(mpz_t *ciphertext, const mpz_t *plaintext);
+        void rsa_generate_keys_with_e(unsigned long bit_size, mpz_t *e);
 
-    void rsa_decrypt(mpz_t *plaintext, const mpz_t *ciphertext);
+        void rsa_encrypt(mpz_t *ciphertext, const mpz_t *plaintext);
+
+        void rsa_decrypt(mpz_t *plaintext, const mpz_t *ciphertext);
+
+        mpz_t *getN();
+        mpz_t *getE();
+        mpz_t *getD();
 
 };
 
-#endif  //RSA_H
+
+
+#endif  //MYRSA_H

@@ -8,7 +8,7 @@
 
 class MCH_CDK_2017{
     private:
-        RSA *rsa;
+        MyRSA *rsa;
 
     public:
         MCH_CDK_2017(mpz_t *n, mpz_t *e, mpz_t *d);

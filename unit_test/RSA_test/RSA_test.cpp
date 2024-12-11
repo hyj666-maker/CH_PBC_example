@@ -5,7 +5,7 @@ mpz_t e; // 公钥指数
 mpz_t d; // 私钥指数
 
 int main(int argc, char *argv[]){
-    RSA *test = new RSA(&n,&e,&d);
+    MyRSA *test = new MyRSA(&n,&e,&d);
 
     // 生成密钥对（位长度为 1024 位）
     test->rsa_generate_keys(1024);

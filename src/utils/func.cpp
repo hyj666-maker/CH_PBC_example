@@ -167,6 +167,16 @@ void PrintElementAndSize(std::string element_name, element_t &element){
     PrintElement(element_name, element);
     PrintElementsize(element_name, element);
 }
+void PrintMpz(std::string mpz_name, mpz_t &mpz){
+    gmp_printf("%s = %Zd\n", mpz_name.c_str(), mpz);
+}
+void PrintMpzsize(std::string mpz_name, mpz_t &mpz){
+    printf("size of %s = %ld bytes\n", mpz_name.c_str(), (mpz_sizeinbase(mpz, 2) + 7) / 8);
+}
+void PrintMpzAndSize(std::string mpz_name, mpz_t &mpz){
+    PrintMpz(mpz_name, mpz);
+    PrintMpzsize(mpz_name, mpz);
+}
 
 /**
  * hash mod n
@@ -226,7 +236,49 @@ void Hgsm_n(mpz_t &gs, mpz_t &m, mpz_t &res,  mpz_t &n) {
     mpz_mod(res, res, n);
 }
 
+/**
+ * hash mod n
+ * input: m1,m2,m3, n
+ * output: res
+ */
+void Hgsm_n_2(mpz_t &m1, mpz_t &m2, mpz_t &m3, mpz_t &n, mpz_t &res) {
+    // 计算SHA-256哈希
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+    
+    size_t m_size = (mpz_sizeinbase(m1, 2) + 7) / 8;  // 计算字节大小
+    unsigned char* bytes1 = new unsigned char[m_size];
+    mpz_export(bytes1, nullptr, 1, 1, 0, 0, m1);  // 将 mpz_t 转换为字节数组
+    SHA256_Update(&sha256, bytes1, m_size);      // 更新哈希值
+    delete[] bytes1;  // 释放内存
 
+    m_size = (mpz_sizeinbase(m2, 2) + 7) / 8;   // 计算字节大小
+    unsigned char* bytes2 = new unsigned char[m_size];
+    mpz_export(bytes2, nullptr, 1, 1, 0, 0, m2);       // 将 mpz_t 转换为字节数组
+    SHA256_Update(&sha256, bytes2, m_size);           // 更新哈希值
+    delete[] bytes2;  // 释放内存
+
+    m_size = (mpz_sizeinbase(m3, 2) + 7) / 8;   // 计算字节大小
+    unsigned char* bytes3 = new unsigned char[m_size];
+    mpz_export(bytes3, nullptr, 1, 1, 0, 0, m3);       // 将 mpz_t 转换为字节数组
+    SHA256_Update(&sha256, bytes3, m_size);           // 更新哈希值
+    delete[] bytes3;  // 释放内存
+
+    // 计算最终哈希值
+    SHA256_Final(hash, &sha256);
+
+    // 将哈希值转换为 mpz_t 并存储到 res 中
+    mpz_import(res, SHA256_DIGEST_LENGTH, 1, 1, 0, 0, hash);
+
+    // 将结果映射到 n 的范围内，计算 res = res mod n
+    mpz_mod(res, res, n);
+}
+
+
+/**
+ * gnerate random in length
+ */
 void GenerateRandomWithLength(mpz_t &res, int length){
     // 生成随机数
     gmp_randstate_t state;
@@ -241,6 +293,9 @@ void GenerateRandomWithLength(mpz_t &res, int length){
     gmp_randclear(state);
 }
 
+/**
+ * 生成随机数 res，使得 0 <= res < max
+ */
 void GenerateRandomInN(mpz_t &res, mpz_t &max){
     // 生成随机数
     gmp_randstate_t state;
@@ -253,4 +308,19 @@ void GenerateRandomInN(mpz_t &res, mpz_t &max){
     gmp_randseed_ui(state, seed);
     mpz_urandomm(res, state, max); // 生成一个随机数小于max
     gmp_randclear(state);
+}
+
+/**
+ * generate random ∈ Zn*
+ */
+void GenerateRandomInZnStar(mpz_t &res, mpz_t &max){
+    GenerateRandomInN(res, max);
+    mpz_t gcd;
+    mpz_inits(gcd, NULL);
+    mpz_gcd(gcd, res, max);
+    while(mpz_cmp_ui(gcd, 1) != 0) {
+        GenerateRandomInN(res, max);
+        mpz_gcd(gcd, res, max);
+    }
+    mpz_clears(gcd, NULL);
 }

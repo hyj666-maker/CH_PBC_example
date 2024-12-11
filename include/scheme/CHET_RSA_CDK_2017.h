@@ -8,7 +8,7 @@
 
 class CHET_RSA_CDK_2017{
     private:
-        RSA *rsa;
+        MyRSA *rsa;
         mpz_t phi;
 
     public:

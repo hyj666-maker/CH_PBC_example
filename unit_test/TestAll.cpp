@@ -1,7 +1,15 @@
 #include <gtest/gtest.h>
+
+TEST(AES_test, UNIVERSAL_TEST){
+    std::string command = "./AES_test";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
  
-int add(int a, int b) {
-  return a + b;
+TEST(ABE_test, UNIVERSAL_TEST) {  
+    std::string command = "./CP_ABE_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
 }
  
 TEST(CH_CDK_2017_test, UNIVERSAL_TEST) {  

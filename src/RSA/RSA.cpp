@@ -1,6 +1,6 @@
 #include <RSA/RSA.h>
 
-RSA::RSA(mpz_t *n, mpz_t *e, mpz_t *d) {
+MyRSA::MyRSA(mpz_t *n, mpz_t *e, mpz_t *d) {
     this->n = n;
     this->e = e;
     this->d = d;
@@ -12,14 +12,14 @@ RSA::RSA(mpz_t *n, mpz_t *e, mpz_t *d) {
 }
 
 // 释放密钥对
-void RSA::rsa_clear() {
+void MyRSA::rsa_clear() {
     mpz_clear(*this->n);
     mpz_clear(*this->e);
     mpz_clear(*this->d);
 }
 
 // 生成大素数 p 和 q，计算 n, φ(n) 等
-void RSA::rsa_generate_keys(unsigned long bit_size) {
+void MyRSA::rsa_generate_keys(unsigned long bit_size) {
     mpz_t p, q, phi, gcd;
     mpz_inits(p, q, phi, gcd, NULL);
 
@@ -61,12 +61,12 @@ void RSA::rsa_generate_keys(unsigned long bit_size) {
 }
 
 // 加密：c = m^e mod n
-void RSA::rsa_encrypt(mpz_t *ciphertext, const mpz_t *plaintext) {
+void MyRSA::rsa_encrypt(mpz_t *ciphertext, const mpz_t *plaintext) {
     mpz_powm(*ciphertext, *plaintext, *this->e, *this->n);
 }
 
 // 解密：m = c^d mod n
-void RSA::rsa_decrypt(mpz_t *plaintext, const mpz_t *ciphertext) {
+void MyRSA::rsa_decrypt(mpz_t *plaintext, const mpz_t *ciphertext) {
     mpz_powm(*plaintext, *ciphertext, *this->d, *this->n);
 }
 
@@ -74,7 +74,7 @@ void RSA::rsa_decrypt(mpz_t *plaintext, const mpz_t *ciphertext) {
  * RSA密钥生成函数 
  * e > n^k
  */
-void RSA::rsa_generate_keys_2(unsigned long bit_size, unsigned long int k) {
+void MyRSA::rsa_generate_keys_2(unsigned long bit_size, unsigned long int k) {
     mpz_t p, q, phi, gcd, nk;
     mpz_inits(p, q, phi, gcd, nk, NULL);
 
@@ -112,7 +112,7 @@ void RSA::rsa_generate_keys_2(unsigned long bit_size, unsigned long int k) {
  * RSA密钥生成函数 
  * e > n^k
  */
-void RSA::rsa_generate_keys_2(unsigned long bit_size, unsigned long int k, mpz_t *phi) {
+void MyRSA::rsa_generate_keys_2(unsigned long bit_size, unsigned long int k, mpz_t *phi) {
     mpz_t p, q, gcd, nk;
     mpz_inits(p, q, gcd, nk, NULL);
 
@@ -149,7 +149,7 @@ void RSA::rsa_generate_keys_2(unsigned long bit_size, unsigned long int k, mpz_t
 /**
  * 生成大素数 p 和 q，计算 n
  */
-void RSA::rsa_generate_keys_pqn(unsigned long bit_size, mpz_t *p, mpz_t *q, mpz_t *n) {
+void MyRSA::rsa_generate_keys_pqn(unsigned long bit_size, mpz_t *p, mpz_t *q, mpz_t *n) {
     // 设置随机数种子
     gmp_randstate_t state;
     gmp_randinit_default(state);
@@ -163,4 +163,56 @@ void RSA::rsa_generate_keys_pqn(unsigned long bit_size, mpz_t *p, mpz_t *q, mpz_
 
     // 计算 n = p * q
     mpz_mul(*n, *p, *q);
+}
+
+
+/**
+ * RSA密钥生成函数 
+ * input: e
+ * output: n, d
+ */
+void MyRSA::rsa_generate_keys_with_e(unsigned long bit_size, mpz_t *e) {
+    mpz_t p, q, phi, gcd, nk;
+    mpz_inits(p, q, phi, gcd, nk, NULL);
+
+    // 设置随机数种子
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, time(NULL));
+
+    // 生成两个大素数 p 和 q
+    mpz_urandomb(p, state, bit_size / 2);   // 生成随机数
+    mpz_nextprime(p, p);    // 找到大于 p 的下一个素数
+    mpz_urandomb(q, state, bit_size / 2);
+    mpz_nextprime(q, q);
+
+    // 计算 n = p * q
+    mpz_mul(*this->n, p, q);
+
+    // 计算 φ(n) = (p-1)*(q-1)
+    mpz_sub_ui(p, p, 1);
+    mpz_sub_ui(q, q, 1);
+    mpz_mul(phi, p, q);
+
+    // e
+    mpz_set(*this->e, *e);
+
+    // 计算私钥 d，使得 e * d ≡ 1 (mod φ(n))
+    mpz_invert(*this->d, *this->e, phi);    // 计算 d = e^(-1) mod φ(n)
+
+    // 清理中间变量
+    mpz_clears(p, q, phi, gcd, nk, NULL);
+}
+
+
+mpz_t *MyRSA::getN(){
+    return this->n;
+}
+
+mpz_t *MyRSA::getE(){
+    return this->e;
+}
+
+mpz_t *MyRSA::getD(){
+    return this->d;
 }

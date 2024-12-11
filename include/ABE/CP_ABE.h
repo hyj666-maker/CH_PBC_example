@@ -157,6 +157,7 @@ class CP_ABE{
         };
 
         void Encrypt(mpk *mpk, element_t *msg, std::string policy_str, ciphertext *ciphertext);
+        void Encrypt(mpk *mpk, element_t *msg, std::string policy_str, element_t *s1, element_t *s2, ciphertext *ciphertext);
 
         void Decrypt(mpk *mpk, ciphertext *ciphertext, sks *sks, element_t *res);
 

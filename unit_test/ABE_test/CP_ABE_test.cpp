@@ -15,7 +15,7 @@ pairing_t pairing;
 element_t G1, G2, GT, Zp;
 
 
-std::vector<std::string> attr_list = {"ONE","TWO", "THREE"};
+std::vector<std::string> attr_list = {"ONE","TWO","THREE"};
 const int SIZE_OF_ATTR = attr_list.size();  // S, S是Policy所有属性的子集
 const string POLICY = "(ONE&THREE)&(TWO|FOUR)";
 const int SIZE_OF_POLICY = 4;   // Policy的属性个数（不去重）
@@ -31,6 +31,8 @@ CP_ABE::ciphertext ciphertext;
 std::chrono::_V2::system_clock::time_point ts, te;
 
 CurveParams curves;
+
+int test_result = 0;
 
 void init_type(std::string &param) {
     pbc_param_init_set_str(par, param.c_str());
@@ -142,8 +144,12 @@ void CP_ABE_test() {
         PrintElement("msg", msg);
         PrintElement("res", res);
 
-        if(element_cmp(msg, res) == 0) printf("Decrypt successfully.\n");
-        else printf("Decrypt failed.\n");
+        if(element_cmp(msg, res) == 0){
+            printf("Decrypt successfully.\n");
+        }else{
+            printf("Decrypt failed.\n");
+            test_result = 1;
+        } 
     }
     printf("——————————Decrypt() finished——————————\n");
 
@@ -188,5 +194,10 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     CP_ABE_test();
 
     fclose(out);
-    return 0;
+
+    if(test_result == 0){
+        return 0;
+    }else{
+        return 1;
+    }
 }

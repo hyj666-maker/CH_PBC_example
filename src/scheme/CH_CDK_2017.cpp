@@ -5,7 +5,7 @@ void CH_CDK_2017::H(mpz_t *gs, mpz_t *m, mpz_t *res, mpz_t *n){
 }
 
 CH_CDK_2017::CH_CDK_2017(mpz_t *n, mpz_t *e, mpz_t *d){
-    this->rsa = new RSA(n,e,d);
+    this->rsa = new MyRSA(n,e,d);
 }
 
 void CH_CDK_2017::CParGen(){
