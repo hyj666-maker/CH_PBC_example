@@ -1,257 +1,211 @@
 #include <scheme/PCHBA_TLL_2020.h>
 
-/**
- * input : (y,h,m),(u11,u12,u2)
- * output: res
- */
-void PCHBA_TLL_2020::H(element_t *m, element_t *res) {
-    Hm_1(*m, *res);
-}
-
-PCHBA_TLL_2020::PCHBA_TLL_2020(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT) {
-    this->G1 = _G1;
-    this->G2 = _G2;
-    this->Zn = _Zn;
+PCHBA_TLL_2020::PCHBA_TLL_2020(element_t *_G, element_t *_H, element_t *_GT, element_t *_Zn) 
+    : abet(_G, _H, _GT, _Zn){
+    this->G = _G;
+    this->H = _H;
     this->GT = _GT;
+    this->Zn = _Zn;
 
-    element_init_same_as(this->tmp_G1, *this->G1);
-    element_init_same_as(this->tmp_G1_2, *this->G1);  
-    element_init_same_as(this->tmp_G1_3, *this->G1);  
-    element_init_same_as(this->tmp_G1_4, *this->G1);
-    element_init_same_as(this->tmp_G2, *this->G2);
-    element_init_same_as(this->tmp_Zn, *this->Zn);  
-    element_init_same_as(this->tmp_Zn_2, *this->Zn);  
+    element_init_same_as(this->tmp_G, *this->G);
+    element_init_same_as(this->tmp_G_2, *this->G);
+    element_init_same_as(this->tmp_G_3, *this->G);
+    element_init_same_as(this->tmp_G_4, *this->G);
+    element_init_same_as(this->tmp_H, *this->H);
+    element_init_same_as(this->tmp_H_2, *this->H);
+    element_init_same_as(this->tmp_H_3, *this->H);
     element_init_same_as(this->tmp_GT, *this->GT);
     element_init_same_as(this->tmp_GT_2, *this->GT);
     element_init_same_as(this->tmp_GT_3, *this->GT);
-    
-
-    element_init_same_as(this->h, *this->G2);
-    element_init_same_as(this->g, *this->G1);
-    element_init_same_as(this->x, *this->Zn);
-
-    element_init_same_as(this->a1, *this->Zn);
-    element_init_same_as(this->a2, *this->Zn);
-    element_init_same_as(this->b1, *this->Zn);
-    element_init_same_as(this->b2, *this->Zn);
-    element_init_same_as(this->a, *this->Zn);
-    element_init_same_as(this->b, *this->Zn);
-
-    element_init_same_as(this->d1, *this->Zn);
-    element_init_same_as(this->d2, *this->Zn);
-    element_init_same_as(this->d3, *this->Zn);
+    element_init_same_as(this->tmp_Zn, *this->Zn);
+    element_init_same_as(this->tmp_Zn_2, *this->Zn);
+    element_init_same_as(this->tmp_Zn_3, *this->Zn);
 
     element_init_same_as(this->r, *this->Zn);
-    element_init_same_as(this->r1, *this->Zn);
-    element_init_same_as(this->r2, *this->Zn);
+    element_init_same_as(this->R, *this->Zn);
+    element_init_same_as(this->s1, *this->Zn);
+    element_init_same_as(this->s2, *this->Zn);
 
-    
+    element_init_same_as(this->esk, *this->Zn);
 }
 
 /**
- * input : k
- * output: sk,pk
- *         mpk = g,h,H1,H2,T1,T2,array_g{g1, · · · gk},array_g_pow_a{g1^a, · · · ,gk^a}, array_h{h1, · · · hk },
- *               g_pow_a(g^α), h_pow_d_div_a(h^(d/α)), h_pow_1_div_a(h^(1/α)), h_pow_b_div_a(h^(β/α)) 
- *         msk = a1, a2,b1,b2, α, β,g_pow_d1(g^d1) ,g_pow_d2(g^d2) ,g_pow_d3(g^d3) , array_z{z1, · · · , zk }
+ * input: k
+ * output: skPCHBA, pkPCHBA
  */
-void PCHBA_TLL_2020::PG(unsigned long int k,
-                        element_t *sk, element_t *pk, 
-                        element_t *_g, element_t *_h, element_t *H1, element_t *H2, element_t *T1, element_t *T2,
-                            element_t *array_g, element_t *array_g_pow_a,
-                            element_t *array_h, element_t* g_pow_a, element_t* h_pow_d_div_a, element_t* h_pow_1_div_a, element_t* h_pow_b_div_a,
-                        element_t *_a1, element_t *_a2, element_t *_b1, element_t *_b2, element_t *_a, element_t *_b,
-                            element_t *g_pow_d1, element_t *g_pow_d2, element_t *g_pow_d3, element_t *array_z) {
-    element_random(this->h);
-    element_random(this->g);
+void PCHBA_TLL_2020::PG(int k, skPCHBA *skPCHBA, pkPCHBA *pkPCHBA) {
+    this->k = k;
+    this->abet.Setup(&skPCHBA->skABET, &pkPCHBA->pkABET, k);
 
-    // 1) chameleon key pair (sk, pk)
-    element_random(this->x);
-    element_set(*sk, this->x);
-    element_printf("sk = %B\n", *sk);
-    // pk = h^x
-    element_pow_zn(*pk, this->h, this->x);
-    element_printf("pk = %B\n", *pk);
-
-    // 2) masterpublic key mpk
-    element_set(*_g, this->g);
-    element_set(*_h, this->h);
-    // H1 = h^a1
-    element_random(this->a1);
-    element_pow_zn(*H1, this->h, this->a1);
-    // H2 = h^a2
-    element_random(this->a2);
-    element_pow_zn(*H2, this->h, this->a2);
-    // T1 =e(g,h)^(d1 *a1 + d3/α)
-    element_pairing(this->tmp_GT, this->g, this->h);
-    element_random(this->d1);
-    element_random(this->d3);
-    element_random(this->a);
-    element_mul(this->tmp_Zn, this->d1, this->a1);
-    element_div(this->tmp_Zn_2, this->d3, this->a);
-    element_add(this->tmp_Zn, this->tmp_Zn, this->tmp_Zn_2);
-    element_pow_zn(*T1, this->tmp_GT, this->tmp_Zn);
-    // T2 = e(g,h)^(d2 * a2 + d3/α)
-    element_random(this->d2);
-    element_mul(this->tmp_Zn, this->d2, this->a2);
-    element_add(this->tmp_Zn, this->tmp_Zn, this->tmp_Zn_2);
-    element_pow_zn(*T2, this->tmp_GT, this->tmp_Zn);
-    // {g1, · · · ,gk } = {g^z1 , · · · ,g^zk }, {z1, · · · , zk } ∈ Zq
-    // {g1^a, · · · ,gk^a}
-    // {h1, · · · ,hk } = {h^z1 , · · · ,h^zk }
-    for(unsigned long int i = 1; i <= k; i++){
-        element_random(array_z[i]);
-        element_pow_zn(array_g[i], this->g, array_z[i]);
-        element_pow_zn(array_g_pow_a[i], array_g[i], this->a);
-        element_pow_zn(array_h[i], this->h, array_z[i]);
-    }
-    // g_pow_a = g^α
-    element_pow_zn(*g_pow_a, this->g, this->a);
-    // h_pow_d_div_a = h^(d/α)
-    // d = d1 +d2 + d3
-    element_add(this->tmp_Zn, this->d1, this->d2);
-    element_add(this->tmp_Zn, this->tmp_Zn, this->d3);
-    element_div(this->tmp_Zn, this->tmp_Zn, this->a);
-    element_pow_zn(*h_pow_d_div_a, this->h, this->tmp_Zn);
-    // h_pow_1_div_a = h^(1/α)
-    element_invert(this->tmp_Zn, this->a);
-    element_pow_zn(*h_pow_1_div_a, this->h, this->tmp_Zn);
-    // h_pow_b_div_a = h^(β/α)
-    element_random(this->b);
-    element_div(this->tmp_Zn, this->b, this->a);
-    element_pow_zn(*h_pow_b_div_a, this->h, this->tmp_Zn);
-
-    // 3) master secret key msk
-    element_set(*_a1, this->a1);
-    element_set(*_a2, this->a2);
-    element_random(this->b1);
-    element_set(*_b1, this->b1);
-    element_random(this->b2);
-    element_set(*_b2, this->b2);
-    element_set(*_a, this->a);
-    element_set(*_b, this->b);
-    // g_pow_d1 = g^d1
-    element_pow_zn(*g_pow_d1, this->g, this->d1);
-    // g_pow_d2 = g^d2
-    element_pow_zn(*g_pow_d2, this->g, this->d2);
-    // g_pow_d3 = g^d3
-    element_pow_zn(*g_pow_d3, this->g, this->d3);
+    element_random(skPCHBA->skCHET.x);
+    // h^x
+    element_pow_zn(pkPCHBA->pkCHET.h_pow_x, pkPCHBA->pkABET.h, skPCHBA->skCHET.x);
 }
 
 /**
- * input : sk, δ, 
- * output: skδi = (x,sski)
+ * input : skPCHBA, pkPCHBA, attr_list, ID, mi
+ * output: sksPCHBA
  */
-void PCHBA_TLL_2020::KG() {  
-    // r = r1 + r2
-    element_random(this->r1);
-    element_random(this->r2);
-    element_add(this->r, this->r1, this->r2);
-    
+void PCHBA_TLL_2020::KG(skPCHBA *skPCHBA, pkPCHBA *pkPCHBA, std::vector<std::string> *attr_list, ABET::ID *ID, int mi, sksPCHBA *sksPCHBA) {
+    element_set(sksPCHBA->x, skPCHBA->skCHET.x);
+    this->abet.KeyGen(&skPCHBA->skABET, &pkPCHBA->pkABET, attr_list, ID, mi, &sksPCHBA->sksABET);
 }
  
 
 /**
- * input : ID, L, m
- * output: r(r1,r2), h
+ * input : pkPCHBA, skPCHBA, m, policy_str, ID, oj
+ * output: p,h',b(hash),C,c,epk,sigma
  */
-void PCHBA_TLL_2020::Hash(element_t *ID, element_t *L, element_t *m, element_t *r1, element_t *r2, element_t *h) {
-    // r1 = a * P
-    element_random(this->a);
-    element_mul_zn(*r1, this->P, this->a);
-    element_printf("r1 = %B\n", *r1);
-    // r2 = e(a * Ppub, QID)
-    element_mul_zn(this->tmp_G1, this->Ppub, this->a);
-    element_pairing(*r2, this->tmp_G1, this->QID);
-    element_printf("r2 = %B\n", *r2);
-    // h = a * P + m * H(L)
-    this->H(L, &this->tmp_G1);
-    element_mul_zn(this->tmp_G1, this->tmp_G1, *m);
-    element_add(*h, *r1, this->tmp_G1);
-    element_printf("h = %B\n", *h);
+void PCHBA_TLL_2020::Hash(pkPCHBA *pkPCHBA, skPCHBA *skPCHBA, element_t *m, string policy_str, ABET::ID *ID, int oj, 
+                            element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, element_t *c, element_t *epk, element_t *sigma) {
+    element_random(this->r);
+    element_random(this->R);
+    // p = pk^r
+    element_pow_zn(*p, pkPCHBA->pkCHET.h_pow_x, this->r);
+    // e = H2(R)
+    this->abet.Hash2(&this->R, &this->tmp_Zn);
+    // h' = h^e
+    element_pow_zn(*h_, pkPCHBA->pkABET.h, this->tmp_Zn);
+    // b = p * (h'^m)
+    element_pow_zn(this->tmp_H, *h_, *m);
+    element_mul(*b, *p, this->tmp_H);
 
-    // check the correctness of the r
-    // e(a * P,SID) == e(a * Ppub, QID)
-    element_pairing(this->tmp_GT, *r1, this->SID);
-    element_mul_zn(this->tmp_G1_2, this->Ppub, this->a);
-    element_pairing(this->tmp_GT_2, this->tmp_G1_2, this->QID);
-    if(element_cmp(this->tmp_GT, this->tmp_GT_2) == 0){
-        printf("Hash success\n");
-    }
-    else{
-        printf("Hash failed, r is invaid\n");
-    }
-
-}
-
-/**
- * input : h, L, m, r1
- * output: bool
- */
-bool PCHBA_TLL_2020::Check(element_t *h, element_t *L,element_t *m, element_t *r1){
-    // h = r1 + m * H(L)
-    this->H(L, &this->tmp_G1);
-    element_mul_zn(this->tmp_G1, this->tmp_G1, *m);
-    element_add(this->tmp_G1, *r1, this->tmp_G1);
-
-    return element_cmp(*h, this->tmp_G1) == 0;    
-}
-
-/**
- * input : SID, ID, L, h, m, r1, r2, m_p
- * output: r_p(r1_p, r2_p)
- */
-void PCHBA_TLL_2020::Forge(element_t *_SID, element_t *ID, element_t *L, element_t *h, element_t *m, element_t *r1, element_t *r2, element_t *m_p, 
-                                element_t *r1_p, element_t *r2_p) {
-    // r1_p = r1 + (m - m_p) * H(L)
-    element_sub(this->tmp_Zn, *m, *m_p);
-    this->H(L, &this->tmp_G1);
-    element_mul_zn(this->tmp_G1_2, this->tmp_G1, this->tmp_Zn);
-    element_add(*r1_p, *r1, this->tmp_G1_2);
-    element_printf("r1_p = %B\n", *r1_p);
+    element_random(this->s1);
+    element_random(this->s2);
+    // C
+    this->abet.Encrypt(&pkPCHBA->pkABET, &skPCHBA->skABET, &this->r, &this->R, policy_str, ID, oj, &this->s1, &this->s2, C);
+    PrintElement("Encrypt:R", this->R);
+    PrintElement("Encrypt:r", this->r);
     
-    // r2_p = r2 * e(SID, H(L))^(m-m_p)
-    element_pairing(this->tmp_GT, *_SID, this->tmp_G1);
-    element_pow_zn(this->tmp_GT_2, this->tmp_GT, this->tmp_Zn);
-    element_mul(*r2_p, *r2, this->tmp_GT_2);
-    element_printf("r2_p = %B\n", *r2_p);
 
-    // check the correctness of the r_p
-    // e(r1_p, SID) == r2_p
-    element_pairing(this->tmp_GT_3, *r1_p, *_SID);
-    if(element_cmp(this->tmp_GT_3, *r2_p) == 0){
-        printf("Forge success\n");
-    }
-    else{
-        printf("Forge failed, r_p is invaid\n");
-    }
+    // c = h^(s1+s2+R)
+    element_add(this->tmp_Zn, this->s1, this->s2);
+    element_add(this->tmp_Zn_2, this->tmp_Zn, this->R);
+    element_pow_zn(*c, pkPCHBA->pkABET.h, this->tmp_Zn_2);
+
+    // esk
+    element_random(this->esk);
+    // epk = g^esk
+    element_pow_zn(*epk, pkPCHBA->pkABET.g, this->esk);
+
+    // epk_str + c_str
+    unsigned char bytes_epk[element_length_in_bytes(*epk)];
+    unsigned char bytes_c[element_length_in_bytes(*c)];
+    element_to_bytes(bytes_epk, *epk);
+    element_to_bytes(bytes_c, *c);
+    string epk_str((char *)bytes_epk, element_length_in_bytes(*epk));
+    string c_str((char *)bytes_c, element_length_in_bytes(*c));
+    string combine = epk_str + c_str;
+    // sigma = esk + (s1 + s2) * H2(epk||c)
+    this->abet.Hash(combine, &this->tmp_Zn_2);
+    element_mul(this->tmp_Zn, this->tmp_Zn, this->tmp_Zn_2);
+    element_add(*sigma, this->esk, this->tmp_Zn);
 }
 
 /**
- * input : h, L, m_p, r1_p
+ * input : pkPCHBA, m, p, h', b, C, c, epk, sigma
  * output: bool
  */
-bool PCHBA_TLL_2020::Verify(element_t *h, element_t *L,element_t *m_p, element_t *r1_p) {
-    return this->Check(h, L, m_p, r1_p);
+bool PCHBA_TLL_2020::Check(pkPCHBA *pkPCHBA, element_t *m, element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, element_t *c, element_t *epk, element_t *sigma) {
+    // b =? p * (h'^m)
+    element_pow_zn(this->tmp_H, *h_, *m);
+    element_mul(this->tmp_H_2, *p, this->tmp_H);
+    if (element_cmp(*b, this->tmp_H_2) != 0) {
+        return false;
+    }
+    // e(g^a, ct2)^sigma =? e(epk,ct1) * e(g,ct3)^(H2(epk||c))
+    element_pairing(this->tmp_GT, pkPCHBA->pkABET.g_pow_a, C->ct2);
+    element_pow_zn(this->tmp_GT, this->tmp_GT, *sigma);
+
+    element_pairing(this->tmp_GT_2, *epk, C->ct1);
+
+    element_pairing(this->tmp_GT_3, pkPCHBA->pkABET.g, C->ct3);
+    // epk_str + c_str
+    unsigned char bytes_epk[element_length_in_bytes(*epk)];
+    unsigned char bytes_c[element_length_in_bytes(*c)];
+    element_to_bytes(bytes_epk, *epk);
+    element_to_bytes(bytes_c, *c);
+    string epk_str((char *)bytes_epk, element_length_in_bytes(*epk));
+    string c_str((char *)bytes_c, element_length_in_bytes(*c));
+    string combine = epk_str + c_str;
+    this->abet.Hash(combine, &this->tmp_Zn);
+    element_pow_zn(this->tmp_GT_3, this->tmp_GT_3, this->tmp_Zn);
+
+    element_mul(this->tmp_GT_2, this->tmp_GT_2, this->tmp_GT_3);
+
+    if (element_cmp(this->tmp_GT, this->tmp_GT_2) != 0) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * input : pkPCHBA, skPCHBA,sksPCHBA, m, p, h', b, C, c, epk, sigma,  m_p, policy_str, ID, mi
+ * output: p_p, C_p, c_p, epk_p, sigma_p
+ */
+void PCHBA_TLL_2020::Forge(pkPCHBA *pkPCHBA, skPCHBA* skPCHBA,sksPCHBA *sksPCHBA, element_t *m, element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, 
+                            element_t *c, element_t *epk, element_t *sigma, string policy_str, ABET::ID *ID, int mi,
+                            element_t *m_p, element_t *p_p, ABET::ciphertext *C_p, element_t *c_p, element_t *epk_p, element_t *sigma_p) {
+   // check
+
+   // retrive R,r
+   this->abet.Decrypt(&pkPCHBA->pkABET, C, &sksPCHBA->sksABET, &this->R, &this->r);
+   PrintElement("Decrypt:R", this->R);
+    PrintElement("Decrypt:r", this->r);
+
+    // e = H2(R)
+    this->abet.Hash2(&this->R, &this->tmp_Zn);
+    // r' = r + (m-m')*e/x
+    element_sub(this->tmp_Zn_2, *m, *m_p);
+    element_mul(this->tmp_Zn_2, this->tmp_Zn_2, this->tmp_Zn);
+    element_div(this->tmp_Zn_2, this->tmp_Zn_2, sksPCHBA->x);
+    element_add(this->tmp_Zn_3, this->r, this->tmp_Zn_2);
+    // p' = pk^r'
+    element_pow_zn(*p_p, pkPCHBA->pkCHET.h_pow_x, this->tmp_Zn_3);
+
+    // s1',s2'
+    element_random(this->s1);
+    element_random(this->s2);
+    // s' = s1' + s2'
+    element_add(this->tmp_Zn, this->s1, this->s2);
+
+    // C'
+    // TODO oj ? mi     mi
+    this->abet.Encrypt(&pkPCHBA->pkABET, &skPCHBA->skABET, &this->tmp_Zn_3, &this->R, policy_str, ID, mi, &this->s1, &this->s2, C_p);
+
+    // esk'
+    element_random(this->esk);
+    // epk' = g^esk'
+    element_pow_zn(*epk_p, pkPCHBA->pkABET.g, this->esk);
+
+    // c' = h^(s1'+s2'+R)
+    element_add(this->tmp_Zn, this->s1, this->s2);
+    element_add(this->tmp_Zn_2, this->tmp_Zn, this->R);
+    element_pow_zn(*c_p, pkPCHBA->pkABET.h, this->tmp_Zn_2);
+
+    // epk_str + c_str
+    unsigned char bytes_epk[element_length_in_bytes(*epk_p)];
+    unsigned char bytes_c[element_length_in_bytes(*c_p)];
+    element_to_bytes(bytes_epk, *epk_p);
+    element_to_bytes(bytes_c, *c_p);
+    string epk_str((char *)bytes_epk, element_length_in_bytes(*epk_p));
+    string c_str((char *)bytes_c, element_length_in_bytes(*c_p));
+    string combine = epk_str + c_str;
+    // sigma' = esk' + (s1' + s2') * H2(epk'||c')
+    this->abet.Hash(combine, &this->tmp_Zn_2);
+    element_mul(this->tmp_Zn, this->tmp_Zn, this->tmp_Zn_2);
+    element_add(*sigma_p, this->esk, this->tmp_Zn);
+}
+
+/**
+ * input : pkPCHBA, m_p, p_p, h', b, C_p, c_p, epk_p, sigma_p
+ * output: bool
+ */
+bool PCHBA_TLL_2020::Verify(pkPCHBA *pkPCHBA, element_t *m_p, element_t *p_p, element_t *h_, element_t *b, ABET::ciphertext *C_p, element_t *c_p, element_t *epk_p, element_t *sigma_p) {
+    return this->Check(pkPCHBA, m_p, p_p, h_, b, C_p, c_p, epk_p, sigma_p);
 }
 
 
 PCHBA_TLL_2020::~PCHBA_TLL_2020() {
-    element_clear(this->tmp_G1);
-    element_clear(this->tmp_G1_2);
-    element_clear(this->tmp_G1_3);
-    element_clear(this->tmp_G1_4);
-    element_clear(this->tmp_G2);
-    element_clear(this->tmp_Zn);
-    element_clear(this->tmp_Zn_2);
-    element_clear(this->tmp_GT);
-    element_clear(this->tmp_GT_2);
-    element_clear(this->tmp_GT_3);
-
-    element_clear(this->P);
-    element_clear(this->x);
-    element_clear(this->Ppub);
-    element_clear(this->SID);
-    element_clear(this->QID);
-    element_clear(this->a);
+   
 }

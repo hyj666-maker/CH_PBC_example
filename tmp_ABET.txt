@@ -1,0 +1,5 @@
+Setup 0 time: 154.556000 ms.
+KeyGen 0 time: 428.177000 ms.
+Encrypt 0 time: 1417.681000 ms.
+Decrypt 0 time: 28.844000 ms.
+-----------------------------------

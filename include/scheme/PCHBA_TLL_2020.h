@@ -1,59 +1,91 @@
-#ifndef IMPORT_ELEMENTLIST
-#define IMPORT_ELEMENTLIST
-#include "base/ElementList.h"
-#endif //IMPORT_ELEMENTLIST
-
-#ifndef IMPORT_UTIL_FUNC
-#define IMPORT_UTIL_FUNC
-#include "utils/func.h"
-#endif //IMPORT_UTIL_FUNC
-
-
 #ifndef PCHBA_TLL_2020_H
 #define PCHBA_TLL_2020_H
 
-#include <stdexcept>  // 包含 std::invalid_argument
+#include <stdexcept>
+#include "utils/func.h"
+#include <ABE/ABET.h>
 
 class PCHBA_TLL_2020 {
     protected:
-    element_t *G1, *G2, *Zn, *GT;
-    element_t tmp_G1, tmp_G1_2,tmp_G1_3,tmp_G1_4, tmp_G2, tmp_Zn,tmp_Zn_2, tmp_GT,tmp_GT_2,tmp_GT_3;
+        ABET abet;
 
-    element_t h;  // generator of group H
-    element_t g;  // generator of group G
-    element_t x;
-    element_t a1, a2,b1,b2, a,b;  // a1, a2,b1,b2,α, β ∈ Z∗q
-    element_t d1,d2,d3;  // (d1,d2,d3) ∈ Zq
+        element_t *G, *H, *Zn, *GT;
+        element_t tmp_G,tmp_G_2,tmp_G_3,tmp_G_4,tmp_H,tmp_H_2,tmp_H_3,tmp_GT,tmp_GT_2,tmp_GT_3,tmp_Zn,tmp_Zn_2,tmp_Zn_3;
 
-    element_t r,r1,r2;  // (r1,r2) ∈ Z∗q
-
+        int k;
+        element_t r,R;
+        element_t s1,s2;
+        element_t esk;
 
     public:
-    PCHBA_TLL_2020(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT);
+        struct skCHET{
+            element_t x;
+            void Init(element_t *_Zn){
+                element_init_same_as(x, *_Zn);
+            }
+            ~skCHET(){
+                element_clear(x);
+            }
+        };
+        
+        struct pkCHET{
+            element_t h_pow_x;
+            void Init(element_t *_H){
+                element_init_same_as(h_pow_x, *_H);
+            }
+            ~pkCHET(){
+                element_clear(h_pow_x);
+            }
+        };
 
-    void PG(unsigned long int k,
-            element_t *sk, element_t *pk, 
-            element_t *_g, element_t *_h, element_t *H1, element_t *H2, element_t *T1, element_t *T2,
-                element_t *array_g, element_t *array_g_pow_a,
-                element_t *array_h, element_t* g_pow_a, element_t* h_pow_d_div_a, element_t* h_pow_1_div_a, element_t* h_pow_b_div_a,
-            element_t *_a1, element_t *_a2, element_t *_b1, element_t *_b2, element_t *_a, element_t *_b,
-                element_t *g_pow_d1, element_t *g_pow_d2, element_t *g_pow_d3, element_t *array_z);
+        struct skPCHBA{
+            ABET::msk skABET;
+            PCHBA_TLL_2020::skCHET skCHET;
+            void Init(element_t *_G, element_t *_H, element_t *_Zn, int k){
+                skABET.Init(_G, _H, _Zn, k);
+                skCHET.Init(_Zn);
+            }
+        };
 
-    void KG(element_t *_x, element_t *ID, element_t *SID);
+        struct pkPCHBA{
+            ABET::mpk pkABET;
+            PCHBA_TLL_2020::pkCHET pkCHET;
+            void Init(element_t *_G, element_t *_H, element_t *_GT, int k){
+                pkABET.Init(_G, _H, _GT, k);
+                pkCHET.Init(_H);
+            }
+        };
 
-    void H(element_t *m, element_t *res);
+        struct sksPCHBA{
+            element_t x;
+            ABET::sks sksABET;
+            void Init(element_t *_G, element_t *_H, element_t *_Zn, int y_size, int I){
+                element_init_same_as(x, *_Zn);
+                sksABET.Init(_G, _H, y_size, I);
+            }
+            ~sksPCHBA(){
+                element_clear(x);
+            }
+        };
 
-    void Hash(element_t *ID, element_t *L, element_t *m, element_t *r1, element_t *r2, element_t *h);
+        PCHBA_TLL_2020(element_t *_G, element_t *_H, element_t *_GT, element_t *_Zn);
 
-    bool Check(element_t *h, element_t *L,element_t *m, element_t *r1);
+        void PG(int k, skPCHBA *skPCHBA, pkPCHBA *pkPCHBA);
 
-    void Forge(element_t *SID, element_t *ID, element_t *L, element_t *h, element_t *m, element_t *r1, element_t *r2, element_t *m_p, 
-                                element_t *r1_p, element_t *r2_p);
+        void KG(skPCHBA *skPCHBA, pkPCHBA *pkPCHBA, std::vector<std::string> *attr_list, ABET::ID *ID, int mi, sksPCHBA *sksPCHBA);
 
-    bool Verify(element_t *h, element_t *L,element_t *m_p, element_t *r1_p);
+        void Hash(pkPCHBA *pkPCHBA, skPCHBA *skPCHBA, element_t *m, string policy_str, ABET::ID *ID, int oj, 
+                            element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, element_t *c, element_t *epk, element_t *sigma);
 
+        bool Check(pkPCHBA *pkPCHBA, element_t *m, element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, element_t *c, element_t *epk, element_t *sigma);
 
-    ~PCHBA_TLL_2020();
+        void Forge(pkPCHBA *pkPCHBA, skPCHBA* skPCHBA,sksPCHBA *sksPCHBA, element_t *m, element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, 
+                            element_t *c, element_t *epk, element_t *sigma, string policy_str, ABET::ID *ID, int mi,
+                            element_t *m_p, element_t *p_p, ABET::ciphertext *C_p, element_t *c_p, element_t *epk_p, element_t *sigma_p);
+
+        bool Verify(pkPCHBA *pkPCHBA, element_t *m, element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, element_t *c, element_t *epk, element_t *sigma);
+
+        ~PCHBA_TLL_2020();
 };
 
 

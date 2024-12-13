@@ -15,14 +15,23 @@ pbc_param_t par;
 pairing_t pairing;
 element_t G1, G2, GT, Zp;
 
-unsigned long int k;
-element_t sk,pk; 
-element_t g,h,H1,H2,T1,T2;
-element_t *array_g, *array_g_pow_a, *array_h;
-element_t g_pow_a, h_pow_d_div_a, h_pow_1_div_a, h_pow_b_div_a;
-element_t a1, a2,b1,b2,a,b;
-element_t g_pow_d1, g_pow_d2, g_pow_d3;
-element_t *array_z;
+std::vector<std::string> attr_list = {"ONE","TWO","THREE"};
+const int SIZE_OF_ATTR = attr_list.size();  // S, S是Policy所有属性的子集
+const string POLICY = "(ONE&THREE)&(TWO|FOUR)";
+const int SIZE_OF_POLICY = 4;   // Policy的属性个数（不去重）
+
+const int K = 10;
+const int I = 7;  // modifier
+const int J = 4;  // owner
+PCHBA_TLL_2020::skPCHBA skPCHBA;
+PCHBA_TLL_2020::pkPCHBA pkPCHBA;
+ABET::ID ID;
+PCHBA_TLL_2020::sksPCHBA sksPCHBA;
+ABET::ciphertext C,C_p;
+
+element_t m,m_p;
+element_t p,h_,b,c,epk,sigma;
+element_t p_p,c_p,epk_p,sigma_p;
 
 
 
@@ -39,41 +48,26 @@ void init_type(std::string &param) {
     element_init_GT(GT, pairing);
     element_init_Zr(Zp, pairing);
 
-    element_init_same_as(sk, Zp);
-    element_init_same_as(pk, G2);
-    element_init_same_as(g, G1);
-    element_init_same_as(h, G2);
-    element_init_same_as(H1, G2);
-    element_init_same_as(H2, G2);
-    element_init_same_as(T1, GT);
-    element_init_same_as(T2, GT);
-    array_g = new element_t[k+1];
-    array_g_pow_a = new element_t[k+1];
-    array_h = new element_t[k+1];
-    array_z = new element_t[k+1];
-    for (unsigned long int i = 0; i <= k; i++)
-    {
-        element_init_same_as(array_g[i], G1);
-        element_init_same_as(array_g_pow_a[i], G1);
-        element_init_same_as(array_h[i], G2);
-        element_init_same_as(array_z[i], Zp);
-    }
-    element_init_same_as(g_pow_a, G1);
-    element_init_same_as(h_pow_d_div_a, G2);
-    element_init_same_as(h_pow_1_div_a, G2);
-    element_init_same_as(h_pow_b_div_a, G2);
-
-    element_init_same_as(a1, Zp);
-    element_init_same_as(a2, Zp);
-    element_init_same_as(b1, Zp);
-    element_init_same_as(b2, Zp);
-    element_init_same_as(a, Zp);
-    element_init_same_as(b, Zp);
-    element_init_same_as(g_pow_d1, G1);
-    element_init_same_as(g_pow_d2, G1);
-    element_init_same_as(g_pow_d3, G1);
+    skPCHBA.Init(&G1, &G2, &Zp, K);
+    pkPCHBA.Init(&G1, &G2, &GT, K);
+    ID.Init(&Zp, K);
+    sksPCHBA.Init(&G1, &G2, &Zp, SIZE_OF_ATTR, I);
+    C.Init(&G1, &G2, &GT, &Zp, SIZE_OF_POLICY);
+    C_p.Init(&G1, &G2, &GT, &Zp, SIZE_OF_POLICY);
     
+    element_init_same_as(m, Zp);
+    element_init_same_as(p, G2);
+    element_init_same_as(h_, G2);
+    element_init_same_as(b, G2);
+    element_init_same_as(c, G2);
+    element_init_same_as(epk, G1);
+    element_init_same_as(sigma, Zp);
 
+    element_init_same_as(m_p, Zp);
+    element_init_same_as(p_p, G2);
+    element_init_same_as(c_p, G2);
+    element_init_same_as(epk_p, G1);
+    element_init_same_as(sigma_p, Zp);
 }
 
 
@@ -88,26 +82,12 @@ void OutTime(std::string name, int id, double us) {
 void PCHBA_TLL_2020_test() {
     printf("PCHBA_TLL_2020_test begin\n");
 
-    k = 10;
-    printf("k = %d\n", k);
-
-    unsigned long int m_bit_length = element_length_in_bytes(m) * 8;
-    std::cout << "Bit length of m: " << m_bit_length << std::endl;
-
-    PCHBA_TLL_2020 *test = new PCHBA_TLL_2020(&G1, &G2, &Zp, &GT);
+    PCHBA_TLL_2020 *test = new PCHBA_TLL_2020(&G1, &G2, &GT, &Zp);
     
     printf("——————————PG() start——————————\n");
     for(int _ = 0;_ < turns_pg;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->PG(k, 
-                &sk, &pk, 
-                &g, &h, &H1, &H2, &T1, &T2, 
-                    array_g, array_g_pow_a, 
-                    array_h, &g_pow_a, &h_pow_d_div_a, &h_pow_1_div_a, &h_pow_b_div_a, 
-                &a1, &a2, &b1, &b2, &a, &b, 
-                    &g_pow_d1, &g_pow_d2, &g_pow_d3, array_z);
-        // size of x
-        // printf("sizeof(x):  %d bytes\n",element_length_in_bytes(x));
+        test->PG(K, &skPCHBA, &pkPCHBA);
         te = std::chrono::high_resolution_clock::now();
         OutTime("PG", _, time_cast(te, ts));
     }
@@ -116,9 +96,7 @@ void PCHBA_TLL_2020_test() {
     printf("——————————KG() start——————————\n");
     for(int _ = 0;_ < turns_kg;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->KG(&x, &ID, &SID);
-        // size of SID
-        printf("sizeof(SID):  %d bytes\n",element_length_in_bytes(SID));
+        test->KG(&skPCHBA, &pkPCHBA, &attr_list, &ID, I, &sksPCHBA);
         te = std::chrono::high_resolution_clock::now();
         OutTime("keygen", _, time_cast(te, ts));
     }
@@ -127,34 +105,32 @@ void PCHBA_TLL_2020_test() {
     printf("——————————Hash() start——————————\n");
     for(int _ = 0;_ < turns_h;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->Hash(&ID, &L, &m, &r1, &r2, &h);
-        // size of h
-        printf("sizeof(h):  %d bytes\n",element_length_in_bytes(h));
-        
-        if(test->Check(&h, &L, &m, &r1)){
+        test->Hash(&pkPCHBA,&skPCHBA,&m, POLICY,&ID,J, &p, &h_, &b, &C, &c, &epk, &sigma);
+        te = std::chrono::high_resolution_clock::now();
+        OutTime("hash", _, time_cast(te, ts));
+
+        if(test->Check(&pkPCHBA, &m, &p, &h_, &b, &C, &c, &epk, &sigma)){
             printf("Check success\n");
         }
         else{
             printf("Check failed\n");
         }
-        te = std::chrono::high_resolution_clock::now();
-        OutTime("hash", _, time_cast(te, ts));
     }
     printf("——————————Hash() finished——————————\n");
 
     printf("——————————Forge() start——————————\n");
     for(int _ = 0;_ < turns_f;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->Forge(&SID, &ID, &L, &h, &m, &r1, &r2, &m_p, &r1_p, &r2_p);
+        test->Forge(&pkPCHBA, &skPCHBA, &sksPCHBA, &m, &p, &h_, &b, &C, &c, &epk, &sigma, POLICY, &ID, I,&m_p, &p_p, &C_p, &c_p, &epk_p, &sigma_p);
         te = std::chrono::high_resolution_clock::now();
-       
-        if(test->Verify(&h, &L, &m_p, &r1_p)){
+        OutTime("collision", _, time_cast(te, ts));
+
+        if(test->Verify(&pkPCHBA, &m_p, &p_p, &h_, &b, &C_p, &c_p, &epk_p, &sigma_p)){
             printf("Verify success\n");
         }
         else{
             printf("Verify failed\n");
         }
-        OutTime("collision", _, time_cast(te, ts));
     }
     printf("——————————Forge() finished——————————\n");
 

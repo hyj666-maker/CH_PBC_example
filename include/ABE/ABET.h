@@ -208,7 +208,7 @@ class ABET{
 
         void Setup(msk *msk, mpk *mpk, int k);
 
-        void KeyGen(msk *msk, mpk *mpk, std::vector<std::string> *attr_list, ID *ID, int i, sks *sks);
+        void KeyGen(msk *msk, mpk *mpk, std::vector<std::string> *attr_list, ID *ID, int mi, sks *sks);
 
         void Hash(std::string m, element_t *res);
         void Hash2(element_t *m, element_t *res);
