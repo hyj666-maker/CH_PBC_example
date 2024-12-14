@@ -284,6 +284,10 @@ class ABET{
         void Decrypt(mpk *mpk, ciphertext *ciphertext, sks *sks, element_t *res_R, element_t *res_r);
 
         ~ABET();
+
+        const int MODIFIER = 1;
+        const int OWNER = 2;
+        void GetID_(mpk *mpk, ID *ID, int mi_oj, int type, element_t *ID_);
 };
 
 

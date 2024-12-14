@@ -21,8 +21,8 @@ const string POLICY = "(ONE&THREE)&(TWO|FOUR)";
 const int SIZE_OF_POLICY = 4;   // Policy的属性个数（不去重）
 
 const int K = 10;
-const int I = 5;
-const int J = 5;
+const int I = 5;  // modifier
+const int J = 5;  // owner
 ABET::ID id;
 ABET::mpk mpk;
 ABET::msk msk;
@@ -125,9 +125,8 @@ void ABET_test() {
     for(int _ = 0;_ < turns_h;_++) {
         element_random(r);
         element_random(R);
-        PrintElementAndSize("R", R);
-        PrintElementAndSize("r", r);
-        
+        PrintElement("R", R);
+        PrintElement("r", r);
 
         element_random(s1);
         element_random(s2);

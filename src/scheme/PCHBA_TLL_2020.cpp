@@ -73,9 +73,10 @@ void PCHBA_TLL_2020::Hash(pkPCHBA *pkPCHBA, skPCHBA *skPCHBA, element_t *m, stri
     element_random(this->s1);
     element_random(this->s2);
     // C
-    this->abet.Encrypt(&pkPCHBA->pkABET, &skPCHBA->skABET, &this->r, &this->R, policy_str, ID, oj, &this->s1, &this->s2, C);
     PrintElement("Encrypt:R", this->R);
     PrintElement("Encrypt:r", this->r);
+    this->abet.Encrypt(&pkPCHBA->pkABET, &skPCHBA->skABET, &this->r, &this->R, policy_str, ID, oj, &this->s1, &this->s2, C);
+
     
 
     // c = h^(s1+s2+R)
@@ -146,11 +147,11 @@ bool PCHBA_TLL_2020::Check(pkPCHBA *pkPCHBA, element_t *m, element_t *p, element
 void PCHBA_TLL_2020::Forge(pkPCHBA *pkPCHBA, skPCHBA* skPCHBA,sksPCHBA *sksPCHBA, element_t *m, element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, 
                             element_t *c, element_t *epk, element_t *sigma, string policy_str, ABET::ID *ID, int mi,
                             element_t *m_p, element_t *p_p, ABET::ciphertext *C_p, element_t *c_p, element_t *epk_p, element_t *sigma_p) {
-   // check
+    // check
 
-   // retrive R,r
-   this->abet.Decrypt(&pkPCHBA->pkABET, C, &sksPCHBA->sksABET, &this->R, &this->r);
-   PrintElement("Decrypt:R", this->R);
+    // retrive R,r
+    this->abet.Decrypt(&pkPCHBA->pkABET, C, &sksPCHBA->sksABET, &this->R, &this->r);
+    PrintElement("Decrypt:R", this->R);
     PrintElement("Decrypt:r", this->r);
 
     // e = H2(R)
@@ -170,7 +171,7 @@ void PCHBA_TLL_2020::Forge(pkPCHBA *pkPCHBA, skPCHBA* skPCHBA,sksPCHBA *sksPCHBA
     element_add(this->tmp_Zn, this->s1, this->s2);
 
     // C'
-    // TODO oj ? mi     mi
+    // TODO oj ? mi 
     this->abet.Encrypt(&pkPCHBA->pkABET, &skPCHBA->skABET, &this->tmp_Zn_3, &this->R, policy_str, ID, mi, &this->s1, &this->s2, C_p);
 
     // esk'
@@ -205,6 +206,55 @@ bool PCHBA_TLL_2020::Verify(pkPCHBA *pkPCHBA, element_t *m_p, element_t *p_p, el
     return this->Check(pkPCHBA, m_p, p_p, h_, b, C_p, c_p, epk_p, sigma_p);
 }
 
+/**
+ * input : pkPCHBA, skPCHBA, m, p, h', b, C, c, epk, sigma, m',p',C',c',epk',sigma', ID, mi,
+ * output: bool
+ */
+bool PCHBA_TLL_2020::Judge(pkPCHBA *pkPCHBA, skPCHBA *skPCHBA, 
+                            element_t *m, element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, element_t *c, element_t *epk, element_t *sigma,
+                            element_t *m_p, element_t *p_p, ABET::ciphertext *C_p, element_t *c_p, element_t *epk_p, element_t *sigma_p,
+                            ABET::ID *ID, int mi) {
+    // step 1
+    element_pow_zn(this->tmp_H, *h_, *m);
+    element_mul(this->tmp_H_2, *p, this->tmp_H);
+    if (element_cmp(*b, this->tmp_H_2) != 0) {
+        return false;
+    }
+    element_pow_zn(this->tmp_H, *h_, *m_p);
+    element_mul(this->tmp_H_2, *p_p, this->tmp_H);
+    if (element_cmp(*b, this->tmp_H_2) != 0) {
+        return false;
+    }
+
+    // step 2
+
+    // // step 3
+    // // delta_sk = c'/c
+    // element_div(this->tmp_H, *c_p, *c);
+    // // ct_0_3 * delta_sk
+    // element_mul(this->tmp_H_2, C->ct_0.ct0_3, this->tmp_H);
+    // if(element_cmp(C_p->ct_0.ct0_3, this->tmp_H_2) != 0) {
+    //     return false;
+    // }
+
+    // step 4
+    // ct1^(1/a^2)
+    element_mul(this->tmp_Zn, skPCHBA->skABET.a, skPCHBA->skABET.a);
+    element_invert(this->tmp_Zn, this->tmp_Zn);
+    element_pow_zn(this->tmp_H, C->ct1, this->tmp_Zn);
+    // e(g,ct1^(1/a^2))
+    element_pairing(this->tmp_GT, pkPCHBA->pkABET.g, this->tmp_H);
+    // ID_i
+    this->abet.GetID_(&pkPCHBA->pkABET, ID, mi, abet.MODIFIER, &this->tmp_G);
+    element_pairing(this->tmp_GT_2, this->tmp_G, C->ct_0.ct0_3);
+    if (element_cmp(this->tmp_GT, this->tmp_GT_2) != 0) {
+        return false;
+    }
+
+
+
+    return true;
+}
 
 PCHBA_TLL_2020::~PCHBA_TLL_2020() {
    

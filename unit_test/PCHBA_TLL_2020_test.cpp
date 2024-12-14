@@ -134,6 +134,18 @@ void PCHBA_TLL_2020_test() {
     }
     printf("——————————Forge() finished——————————\n");
 
+    printf("——————————Judge() start——————————\n");
+    bool judgeRes;
+    ts = std::chrono::high_resolution_clock::now();
+    judgeRes = test->Judge(&pkPCHBA, &skPCHBA, &m, &p, &h_, &b, &C, &c, &epk, &sigma, &m_p, &p_p, &C_p, &c_p, &epk_p, &sigma_p, &ID, I);
+    te = std::chrono::high_resolution_clock::now();
+    OutTime("Judge", 0, time_cast(te, ts));
+
+    if(judgeRes) printf("Judge success\n");
+    else printf("Judge failed\n");
+    
+    printf("——————————Judge() finished——————————\n");
+
     if(out_file) fprintf(out, "-----------------------------------\n");
     if(visiable) printf("\n");
 }

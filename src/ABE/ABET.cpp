@@ -211,7 +211,7 @@ void ABET::KeyGen(msk *msk, mpk *mpk, std::vector<std::string> *attr_list, ID *I
     element_random(this->tmp_Zn);
     // t = 1
     // g^d1
-    element_pow_zn(sks->sk_prime.sk_1, mpk->g, this->d1);
+    element_set(sks->sk_prime.sk_1, msk->g_pow_d1);
     // H(0111)^b1r1a1
     std::string y0111 = "0111";
     this->Hash(y0111, &this->tmp_G);
@@ -237,7 +237,7 @@ void ABET::KeyGen(msk *msk, mpk *mpk, std::vector<std::string> *attr_list, ID *I
 
     // t = 2
     // g^d2
-    element_pow_zn(sks->sk_prime.sk_2, mpk->g, this->d2);
+    element_set(sks->sk_prime.sk_2, msk->g_pow_d2);
     // H(0112)^b1r1a2
     std::string y0112 = "0112";
     this->Hash(y0112, &this->tmp_G);
@@ -268,11 +268,7 @@ void ABET::KeyGen(msk *msk, mpk *mpk, std::vector<std::string> *attr_list, ID *I
 
     // sk1 = g^d * (IDi)^(a*r) * g^(b*R)
     // IDi
-    element_set(this->tmp_G, mpk->g);
-    for(int i=1;i<=mi;i++){
-        element_pow_zn(this->tmp_G_2, *mpk->gk[k-i+1], *ID->Ik[i]);
-        element_mul(this->tmp_G, this->tmp_G, this->tmp_G_2);
-    }
+    this->GetID_(mpk, ID, mi, MODIFIER, &this->tmp_G);
     // IDi^(a*r)
     element_add(this->tmp_Zn, this->r1, this->r2);
     element_mul(this->tmp_Zn, msk->a, this->tmp_Zn);
@@ -370,7 +366,7 @@ void ABET::Encrypt(mpk *mpk, msk *msk, element_t *r, element_t *R, std::string p
     // ct_prime = (R || 0^(l-|R|)) xor H2(e(g,h^(d/a))^s)
     // H2(e(g,h^(d/a))^s)
     element_pairing(this->tmp_GT, mpk->g, mpk->h_pow_d_div_a);
-    element_add(this->tmp_Zn, *s1, *s2);
+    element_add(this->tmp_Zn, this->s1, this->s2);
     element_pow_zn(this->tmp_GT, this->tmp_GT, this->tmp_Zn);
     this->Hash2(&this->tmp_GT, &this->tmp_Zn);
     element_mul(ciphertext->ct_prime, *R, this->tmp_Zn);
@@ -378,12 +374,8 @@ void ABET::Encrypt(mpk *mpk, msk *msk, element_t *r, element_t *R, std::string p
     // ct1 = IDj^(a*s)
     // ct2 = IDj^s
     // ct3 = ct1^s
-    element_set(this->tmp_H, mpk->h);
-    for(int i=1;i<=oj;i++){
-        element_pow_zn(this->tmp_H_2, *mpk->hk[k-i+1], *ID->Ik[i]);
-        element_mul(this->tmp_H, this->tmp_H, this->tmp_H_2);
-    }
-    element_add(this->tmp_Zn, *s1, *s2);
+    this->GetID_(mpk, ID, oj, OWNER, &this->tmp_H);
+    element_add(this->tmp_Zn, this->s1, this->s2);
     element_pow_zn(ciphertext->ct2, this->tmp_H, this->tmp_Zn);
     element_mul(this->tmp_Zn_2, msk->a, this->tmp_Zn);
     element_pow_zn(ciphertext->ct1, this->tmp_H, this->tmp_Zn_2);
@@ -550,7 +542,7 @@ void ABET::Decrypt(mpk *mpk, ciphertext *ciphertext, sks *sks, element_t *res_R,
     element_mul(den, this->tmp_GT, this->tmp_GT_2);
     element_mul(den, den, this->tmp_GT_3);
 
-    // res = num / den
+    // res = - num / den
     element_div(num, num, den);
     element_neg(num, num);
     this->Hash2(&num, &this->tmp_Zn);
@@ -559,6 +551,30 @@ void ABET::Decrypt(mpk *mpk, ciphertext *ciphertext, sks *sks, element_t *res_R,
 
     element_clear(num);
     element_clear(den);
+}
+
+/**
+ * get ID^
+ * input: mpk, ID, mi_oj, type
+ * output: ID_
+ */
+void ABET::GetID_(mpk *mpk, ID *ID, int mi_oj, int type, element_t *ID_){
+    if(type == MODIFIER){
+        element_set(this->tmp_G, mpk->g);
+        for(int i=1;i<=mi_oj;i++){
+            element_pow_zn(this->tmp_G_2, *mpk->gk[k-i+1], *ID->Ik[i]);
+            element_mul(this->tmp_G, this->tmp_G, this->tmp_G_2);
+        }
+        element_set(*ID_, this->tmp_G);
+    }else if(type == OWNER){
+        element_set(this->tmp_H, mpk->h);
+        for(int i=1;i<=mi_oj;i++){
+            element_pow_zn(this->tmp_H_2, *mpk->hk[k-i+1], *ID->Ik[i]);
+            element_mul(this->tmp_H, this->tmp_H, this->tmp_H_2);
+        }
+        element_set(*ID_, this->tmp_H);
+    }
+    
 }
 
 

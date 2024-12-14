@@ -85,6 +85,11 @@ class PCHBA_TLL_2020 {
 
         bool Verify(pkPCHBA *pkPCHBA, element_t *m, element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, element_t *c, element_t *epk, element_t *sigma);
 
+        bool Judge(pkPCHBA *pkPCHBA, skPCHBA *skPCHBA, 
+                            element_t *m, element_t *p, element_t *h_, element_t *b, ABET::ciphertext *C, element_t *c, element_t *epk, element_t *sigma,
+                            element_t *m_p, element_t *p_p, ABET::ciphertext *C_p, element_t *c_p, element_t *epk_p, element_t *sigma_p,
+                            ABET::ID *ID, int mi);
+
         ~PCHBA_TLL_2020();
 };
 
