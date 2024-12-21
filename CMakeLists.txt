@@ -8,7 +8,7 @@ SET(CMAKE_BUILD_TYPE "Debug")
 find_package(OpenSSL REQUIRED)
 include_directories(include)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread -mavx2 -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread -mavx2 -O0")
 add_compile_options(-Wunknown-pragmas)
 
 FIND_PACKAGE(OpenMP REQUIRED)
@@ -32,6 +32,22 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -ggdb")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS}")
 
 link_libraries(gmp pbc OpenSSL::SSL)
+
+add_executable(RABE_test  
+        src/ABE/RABE.cpp
+        src/curve/params.cpp
+        src/utils/func.cpp
+        unit_test/ABE_test/RABE_test.cpp
+        src/ABE/data_structure/access_structure.cpp
+        src/ABE/data_structure/binary_tree.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/multiway_tree.cpp
+        src/ABE/data_structure/num_vector.cpp
+        src/ABE/policy/policy_generation.cpp
+        src/ABE/policy/policy_resolution.cpp
+        src/ABE/data_structure/binary_tree_RABE.cpp
+)
 
 add_executable(AES_test
         src/SE/AES.cpp

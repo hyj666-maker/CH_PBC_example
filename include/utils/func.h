@@ -37,4 +37,6 @@ void GenerateRandomWithLength(mpz_t &res, int length);
 void GenerateRandomInN(mpz_t &res, mpz_t &max);
 void GenerateRandomInZnStar(mpz_t &res, mpz_t &max);
 
+time_t TimeCast(int year, int month, int day, int hour, int minute, int second);
+
 #endif //UTIL_FUNC_H
