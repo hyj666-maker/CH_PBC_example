@@ -188,11 +188,6 @@ class RABE{
             void Init(element_t *_G, element_t *_H, int y_size){
                 sk0_prime.Init(_H);
                 sk_prime_prime.Init(_G);
-                for(int i = 0;i < y_size;i++){
-                    sk* sk_y_tmp = new sk();
-                    sk_y_tmp->Init(_G);
-                    sk_y.push_back(sk_y_tmp);
-                }
             }
             ~dkidt(){
                 for(int i = 0;i < sk_y.size();i++){
