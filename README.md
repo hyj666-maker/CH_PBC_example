@@ -1,14 +1,13 @@
-## CH Schemes Implementation（on PBC Library）
-
 Fine-Grained and Controlled Rewriting in Blockchains Chameleon-Hashing Gone Attribute-Based
-📌todo
+PCH_DSS_2019
+[ ] lamda 线性组合
 ---
 Revocable Policy-Based Chameleon Hash
-📌todo
+RPCH_XNM_2021
 ---
 Policy-based Chameleon Hash for Blockchain Rewriting with Black-box Accountability
 PCHBA_TLL_2020
-📌todo
+[ ] Judge
 ---
 ---
 Fully Collision-Resistant Chameleon-Hashes from Simpler and Post-Quantum Assumptions
@@ -24,23 +23,22 @@ Redactable Blockchain or Rewriting History in Bitcoin and Friends
 On the Key Exposure Problem in Chameleon Hashes
 • 4 shcemes
 CH_KEF_NoMH_AM_2004
-📌todo
+[ ] todo
 CH_SDH_DL_AM_2004
 ---
 Comments and Improvements on Key-Exposure Free Chameleon Hashing Based on Factoring
 CH_KEF_F_CTZ_2010
-📌hash check failed
+[ ] hash check failed
 ---
 Key exposure free chameleon hash schemes based on discrete logarithm problem
 CH_KEF_DLP_LLA_2012
-• CH♾️
 ---
 Identity-based chameleon hashing and signatures withoutkey exposure
 IB_CH_KEF_CZS_2014
 ---
 Efficient Identity-Based Chameleon Hash For Mobile Devices
 EIB_CH_MD
-📌命名未规范
+[ ] 命名未规范
 ---
 Chameleon-Hashes with Ephemeral Trapdoors And Applications to Invisible Sanitizable Signatures
 CH_CDK_2017
@@ -60,5 +58,5 @@ ID_B_CollRes_XSL_2021
 ---
 Discrete logarithm based chameleon hashing and signatures withoutkey exposure
 DLB_CH_KEF
-📌命名未规范
+[ ] 命名未规范
 ---
