@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cstring>
 
+int test_result = 1;
+
 FILE *out = NULL;
 
 int turns = 0, turns_pg = 1, turns_kg = 1, turns_h = 1, turns_f = 1;
@@ -32,7 +34,7 @@ std::chrono::_V2::system_clock::time_point ts, te;
 
 CurveParams curves;
 
-int test_result = 0;
+
 
 void init_type(std::string &param) {
     pbc_param_init_set_str(par, param.c_str());
@@ -146,9 +148,9 @@ void CP_ABE_test() {
 
         if(element_cmp(msg, res) == 0){
             printf("Decrypt successfully.\n");
+            test_result = 0;
         }else{
             printf("Decrypt failed.\n");
-            test_result = 1;
         } 
     }
     printf("——————————Decrypt() finished——————————\n");
@@ -195,9 +197,5 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
 
     fclose(out);
 
-    if(test_result == 0){
-        return 0;
-    }else{
-        return 1;
-    }
+    return test_result;
 }

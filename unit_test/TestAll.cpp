@@ -1,12 +1,24 @@
 #include <gtest/gtest.h>
 
+TEST(RPCH_XNM_2021_test, UNIVERSAL_TEST) {  
+    std::string command = "./RPCH_XNM_2021_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
+
+TEST(RABE_test, UNIVERSAL_TEST) {  
+    std::string command = "./RABE_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
+
 TEST(AES_test, UNIVERSAL_TEST){
-    std::string command = "./AES_test";
+    std::string command = "./AES_test a 1 all";
     int result = system(command.c_str());
     ASSERT_EQ(result, 0);
 }
  
-TEST(ABE_test, UNIVERSAL_TEST) {  
+TEST(CP_ABE_test, UNIVERSAL_TEST) {  
     std::string command = "./CP_ABE_test a 1 all";
     int result = system(command.c_str());
     ASSERT_EQ(result, 0);

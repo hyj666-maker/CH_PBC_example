@@ -73,110 +73,6 @@ void PCH_DSS_2019::H4(mpz_t *r, string A, element_t *u1, element_t *u2){
     Hm_1(this->tmp_Zn_2, *u2);
 }
 
-/**
- * K ← encode(k, r)
- * input: k,r
- * output: K
- */
-void PCH_DSS_2019::encode(element_t *K, mpz_t *k, mpz_t * r) {
-    // TODO: 优化 encode 和 decode 函数
-    PrintElement("encode:K", *K);
-    // size_t k_len = (mpz_sizeinbase(*k, 2) + 7) / 8;
-    // size_t r_len = (mpz_sizeinbase(*r, 2) + 7) / 8;
-    // printf("encode: k_len: %zu\n", k_len);
-    // printf("encode: r_len: %zu\n", r_len);
-    // PrintMpz("encode: k", *k);
-    // PrintMpz("encode: r", *r);
-
-    // unsigned char *buffer = (unsigned char *)malloc(128);
-    // memset(buffer, 0, 128);
-
-    // size_t k_len_actual = 0, r_len_actual = 0;
-    // mpz_export(buffer, &k_len_actual, 1, 1, 0, 0, *k);
-    // mpz_export(buffer + k_len, &r_len_actual, 1, 1, 0, 0, *r);
-    // printf("encode: k_len_actual: %zu\n", k_len_actual);
-    // printf("encode: r_len_actual: %zu\n", r_len_actual);
-
-    // element_from_bytes(*K, buffer);
-    
-    // // print buffer
-    // for (size_t i = 0; i < 128; i++) {
-    //     printf("%02x", buffer[i]);
-    // }
-    // printf("\n");
-
-    // free(buffer);
-
-    // 合并 k 和 r
-    mpz_t combined;
-    mpz_init(combined);
-
-    // 获取 k 的位宽
-    size_t k_bits = 256;
-    mpz_mul_2exp(combined, *r, k_bits); // r 左移 k 的位数
-    mpz_add(combined, combined, *r);    // 合并 k
-    PrintMpz("encode: combined", combined);
-
-    // 将 combined 映射到 K
-    element_set_mpz(*K, combined);
-    // // 获取 mpz_t 的字节长度
-    // size_t byte_size = (mpz_sizeinbase(combined, 2) + 7) / 8;
-    // // 分配字节数组
-    // unsigned char *buffer = (unsigned char *)malloc(byte_size);
-    // // 导出 mpz_t 到字节数组
-    // mpz_export(buffer, NULL, 1, 1, 0, 0, combined);
-    // // 将字节数组导入到 element_t
-    // element_from_bytes(*K, buffer);
-    // // 释放缓冲区
-    // free(buffer);
-
-    mpz_clear(combined);
-}
-
-/**
- * (k, r) ← decode(K)
- * input: K, k_len, r_len
- * output: k, r
- */
-void PCH_DSS_2019::decode(mpz_t *k, mpz_t *r, element_t *K, size_t k_len, size_t r_len) {
-    PrintElement("decode:K", *K);
-    // printf("decode: k_len: %zu\n", k_len);
-    // printf("decode: r_len: %zu\n", r_len);
-    // size_t K_len = element_length_in_bytes(*K);
-    // printf("decode: K_len: %zu\n", K_len);
-    // unsigned char *buffer = (unsigned char *)malloc(128);
-    // memset(buffer, 0, 128);
-
-    // element_to_bytes(buffer, *K);
-    
-    // // print buffer
-    // for (size_t i = 0; i < 128; i++) {
-    //     printf("%02x", buffer[i]);
-    // }
-    // printf("\n");
-
-    // mpz_import(*k, k_len, 1, 1, 0, 0, buffer);         
-    // mpz_import(*r, r_len, 1, 1, 0, 0, buffer + k_len); 
-
-    // PrintMpz("decode: k", *k);
-    // PrintMpz("decode: r", *r);
-    // free(buffer);
-
-    mpz_t combined;
-    mpz_init(combined);
-
-    // 将 K 转换回 combined
-    element_to_mpz(combined, *K);
-    PrintMpz("decode: combined", combined);
-    
-    size_t k_bits = 256;
-
-    // 提取 k 和 r
-    mpz_fdiv_q_2exp(*r, combined, k_bits); // 提取高位部分为 r
-    mpz_fdiv_r_2exp(*k, combined, k_bits); // 提取低位部分为 k
-
-    mpz_clear(combined);
-}
 
 /**
  * input : pkPCH, m, policy_str
@@ -208,20 +104,15 @@ void PCH_DSS_2019::Hash(pkPCH *pkPCH, mpz_t *m, string policy_str, h *h,r *r) {
     mpz_mul(h->h2, tmp1, tmp2);
     mpz_mod(h->h2, h->h2, *this->rsa.getN());
 
-    // rr ∈ {0,1}^k
-    GenerateRandomWithLength(rr, this->k);
-    // kk = kGenSE(1^k), let k = 256
-    this->aes.KGen(256, &kk);
+    this->aes.KGen(256, &this->K);
     // (u1,u2)<-H4((r,A))
     H4(&rr, policy_str, &u1, &u2);
 
-    // K ← encode(k, r)
-    encode(&K, &kk, &rr);
 
-    this->cp_abe.Encrypt(&pkPCH->mpkABE, &K, policy_str, &u1, &u2, &h->ct);
+    this->cp_abe.Encrypt(&pkPCH->mpkABE, &this->K, policy_str, &u1, &u2, &h->ct);
 
     // ct_
-    this->aes.Enc(&kk, this->rsa.getD(), &h->ct_);
+    this->aes.Enc(&this->K, this->rsa.getD(), &h->ct_);
 
     mpz_clears(tmp1, tmp2, rr, kk, NULL);
 }
@@ -269,10 +160,9 @@ void PCH_DSS_2019::Forge(pkPCH * pkPCH, sksPCH *sksPCH, mpz_t *m, mpz_t *m_p, h 
     mpz_inits(kk,rr,d2,x1,x1_p,y1,x2,x2_p,y2,NULL);
 
     cp_abe.Decrypt(&pkPCH->mpkABE, &h->ct, &sksPCH->sksABE, &this->K);
-    decode(&kk, &rr, &this->K, 256/8, (this->k)/8);
 
-    // DecSE(kk, ct_) -> d2
-    this->aes.Dec(&kk, &h->ct_, &d2);
+    // DecSE(K, ct_) -> d2
+    this->aes.Dec(&this->K, &h->ct_, &d2);
 
     // x1 = H1(m, N1, N2)
     H1(m, &pkPCH->pkCHET.N1, &h->N2, &pkPCH->pkCHET.N1, &x1);

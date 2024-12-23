@@ -101,9 +101,6 @@ class PCH_DSS_2019 {
         void H2(mpz_t *m, mpz_t *N1, mpz_t *N2, mpz_t * n, mpz_t *res);
         void H4(mpz_t *r, string A, element_t *u1, element_t *u2);
 
-        void encode(element_t *K, mpz_t *k, mpz_t * r);
-        void decode(mpz_t *k, mpz_t *r, element_t *K, size_t k_len, size_t r_len);
-
         void Hash(pkPCH *pkPCH, mpz_t *m, string policy_str, h *h, r *r);
 
         bool Check(pkPCH *pkPCH, mpz_t *m, h *h, r *r);
