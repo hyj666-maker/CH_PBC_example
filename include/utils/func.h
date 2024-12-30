@@ -3,6 +3,10 @@
 
 #include <pbc/pbc.h>
 #include <string>
+#include <ABE/data_structure/element_t_matrix.h>
+#include <ABE/data_structure/element_t_vector.h>
+#include <ABE/data_structure/num_vector.h>
+
 void Hm(element_t &m, element_t &res, element_t &tmp_Zp, element_t &g);
 
 void Hgsm(element_t &gs, element_t &m, element_t &res, element_t &tmp_Zp, element_t &g);
@@ -38,5 +42,11 @@ void GenerateRandomInN(mpz_t &res, mpz_t &max);
 void GenerateRandomInZnStar(mpz_t &res, mpz_t &max);
 
 time_t TimeCast(int year, int month, int day, int hour, int minute, int second);
+
+element_t_matrix* inverse(element_t_matrix *M);
+
+element_t_vector* getCoordinateAxisUnitVector(element_t_matrix *M);
+
+signed long int gaussElimination(element_t_vector *x, element_t_matrix *A, element_t_vector *b);
 
 #endif //UTIL_FUNC_H

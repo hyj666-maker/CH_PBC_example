@@ -73,6 +73,9 @@ add_executable(AES_test
         src/utils/func.cpp
         unit_test/SE_test/AES_test.cpp
         src/curve/params.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
 )
 
 add_executable(PCH_DSS_2019_test
@@ -148,29 +151,44 @@ add_executable(CH_KEF_F_CTZ_2010_test
         src/scheme/CH_KEF_F_CTZ_2010.cpp
         src/utils/func.cpp
         unit_test/CH_KEF_F_CTZ_2010_test.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
 )
 
 add_executable(CH_KEF_NoMH_AM_2004_test
         src/scheme/CH_KEF_NoMH_AM_2004.cpp
         src/utils/func.cpp
         unit_test/CH_KEF_NoMH_AM_2004_test.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
 )
 
 add_executable(CH_CDK_2017_test 
         src/scheme/CH_CDK_2017.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         src/RSA/RSA.cpp
         unit_test/CH_CDK_2017_test.cpp)
 
 add_executable(MCH_CDK_2017_test 
         src/scheme/MCH_CDK_2017.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         src/RSA/RSA.cpp
         unit_test/MCH_CDK_2017_test.cpp)
 
 add_executable(CHET_RSA_CDK_2017_test 
         src/scheme/CHET_RSA_CDK_2017.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         src/RSA/RSA.cpp
         unit_test/CHET_RSA_CDK_2017_test.cpp)
 
@@ -178,66 +196,99 @@ add_executable(IB_CH_KEF_CZS_2014_test src/scheme/IB_CH_KEF_CZS_2014.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/IB_CH_KEF_CZS_2014_test.cpp)
 
 add_executable(CH_KEF_DLP_LLA_2012_test src/scheme/CH_KEF_DLP_LLA_2012.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/CH_KEF_DLP_LLA_2012_test.cpp)
 
 add_executable(CR_CH_DSS_2020_test src/scheme/CR_CH_DSS_2020.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/CR_CH_DSS_2020_test.cpp)
 
 add_executable(FCR_CH_PreQA_DKS_2020_test src/scheme/FCR_CH_PreQA_DKS_2020.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/FCR_CH_PreQA_DKS_2020_test.cpp)
 
 add_executable(CH_SDH_DL_AM_2004_test src/scheme/CH_SDH_DL_AM_2004.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/CH_SDH_DL_AM_2004_test.cpp)
 
 add_executable(ID_B_CollRes_XSL_2021_test src/scheme/ID_B_CollRes_XSL_2021.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/ID_B_CollRes_XSL_2021_test.cpp)
 
 add_executable(CH_KEF_CZK_2004_test src/scheme/CH_KEF_CZK_2004.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/CH_KEF_CZK_2004_test.cpp)
 
 add_executable(CH_ET_test src/scheme/CH_ET.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/CH_ET_test.cpp)
 
 add_executable(EIB_CH_MD_test src/scheme/EIB_CH_MD.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/EIB_CH_MD_test.cpp)
 
 add_executable(DLB_CH_KEF_test src/scheme/DLB_CH_KEF.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/DLB_CH_KEF_test.cpp)
 
 add_executable(IB_CH_ZSS_2003_test 
         src/scheme/IB_CH_ZSS_2003.cpp
         src/curve/params.cpp
         src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
         unit_test/IB_CH_ZSS_2003_test.cpp)
         
 
