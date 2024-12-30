@@ -2,8 +2,6 @@
 
 ### PCH_DSS_2019
 
-- lamda 线性组合
-
 ------
 
 ## Revocable Policy-Based Chameleon Hash
@@ -76,9 +74,7 @@
 
 ## Efficient Identity-Based Chameleon Hash For Mobile Devices
 
-### EIB_CH_MD
-
-- 命名未规范
+### IB_CH_MD_LSX_2022
 
 ------
 
@@ -100,8 +96,9 @@
 
 ### IB_CH_ZSS_2003
 
-- scheme 1
-- scheme 2
+#### scheme 1
+
+#### scheme 2
 
 ------
 
@@ -119,8 +116,6 @@
 
 ## Discrete logarithm based chameleon hashing and signatures withoutkey exposure
 
-### DLB_CH_KEF
-
-- 命名未规范
+### CH_KEF_DL_CZT_2011
 
 ------

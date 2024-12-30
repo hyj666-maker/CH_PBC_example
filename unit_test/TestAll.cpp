@@ -59,13 +59,13 @@ TEST(CR_CH_DSS_2020_test, UNIVERSAL_TEST) {
     int result = system(command.c_str());
 }
 
-TEST(DLB_CH_KEF_test, UNIVERSAL_TEST) {  
-    std::string command = "./DLB_CH_KEF_test a 1 all";
+TEST(CH_KEF_DL_CZT_2011_test, UNIVERSAL_TEST) {  
+    std::string command = "./CH_KEF_DL_CZT_2011_test a 1 all";
     int result = system(command.c_str());
 }
 
-TEST(EIB_CH_MD_test, UNIVERSAL_TEST) {  
-    std::string command = "./EIB_CH_MD_test a 1 all";
+TEST(IB_CH_MD_LSX_2022_test, UNIVERSAL_TEST) {  
+    std::string command = "./IB_CH_MD_LSX_2022_test a 1 all";
     int result = system(command.c_str());
 }
 

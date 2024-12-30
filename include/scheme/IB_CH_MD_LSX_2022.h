@@ -9,10 +9,10 @@
 #endif //IMPORT_UTIL_FUNC
 
 
-#ifndef EIB_CH_MD_H
-#define EIB_CH_MD_H
+#ifndef IB_CH_MD_LSX_2022_H
+#define IB_CH_MD_LSX_2022_H
 
-class EIB_CH_MD {
+class IB_CH_MD_LSX_2022 {
     protected:
     element_t *G1, *G2, *Zn, *GT;
     element_t tmp_G1, tmp_G1_2, tmp_G2, tmp_Zn, tmp_Zn_2, tmp_Zn_3, tmp_GT,tmp_GT_2,tmp_GT_3,tmp_GT_hash;
@@ -22,7 +22,7 @@ class EIB_CH_MD {
     element_t egg,eg2g;
 
     public:
-    EIB_CH_MD(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT);
+    IB_CH_MD_LSX_2022(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT);
 
     void PG();
 
@@ -34,8 +34,8 @@ class EIB_CH_MD {
 
     bool Verify(element_t *h, element_t *m_p, element_t *r_1_p, element_t *r_2_p, element_t *L);
 
-    ~EIB_CH_MD();
+    ~IB_CH_MD_LSX_2022();
 };
 
 
-#endif //EIB_CH_MD_H
+#endif //IB_CH_MD_LSX_2022_H

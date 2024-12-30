@@ -1,6 +1,6 @@
-#include <scheme/EIB_CH_MD.h>
+#include <scheme/IB_CH_MD_LSX_2022.h>
 
-EIB_CH_MD::EIB_CH_MD(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT) {
+IB_CH_MD_LSX_2022::IB_CH_MD_LSX_2022(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT) {
     this->G1 = _G1;
     this->G2 = _G2;
     this->Zn = _Zn;
@@ -31,7 +31,7 @@ EIB_CH_MD::EIB_CH_MD(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *
     element_init_same_as(this->tmp_Zn_3, *this->Zn);
 }
 
-void EIB_CH_MD::PG() {
+void IB_CH_MD_LSX_2022::PG() {
     element_random(this->g);  // G1生成元g, order p
 
     element_random(this->a);
@@ -44,7 +44,7 @@ void EIB_CH_MD::PG() {
     element_pairing(this->eg2g, this->g2, this->g);
 }
 
-void EIB_CH_MD::KG(element_t *L, element_t *t, element_t *td1, element_t *td2) {
+void IB_CH_MD_LSX_2022::KG(element_t *L, element_t *t, element_t *td1, element_t *td2) {
     element_set(*td1, *t);
 
     element_sub(this->tmp_Zn, this->b, *t);
@@ -54,7 +54,7 @@ void EIB_CH_MD::KG(element_t *L, element_t *t, element_t *td1, element_t *td2) {
     element_pow_zn(*td2, this->g, this->tmp_Zn_3);
 }
 
-void EIB_CH_MD::Hash(element_t *h, element_t *L, element_t *m, element_t *r_1, element_t *r_2) {
+void IB_CH_MD_LSX_2022::Hash(element_t *h, element_t *L, element_t *m, element_t *r_1, element_t *r_2) {
     element_pow_zn(this->tmp_GT, this->eg2g, *m);
     element_pow_zn(this->tmp_GT_2, this->egg, *r_1);
     //g1 / g^ID
@@ -66,7 +66,7 @@ void EIB_CH_MD::Hash(element_t *h, element_t *L, element_t *m, element_t *r_1, e
     element_mul(*h, *h, this->tmp_GT_3);
 }
 
-void EIB_CH_MD::Forge(element_t *h, element_t *m, element_t *r_1, element_t *r_2, element_t *m_p, element_t *r_1_p, element_t *r_2_p, element_t *td1, element_t *td2) {
+void IB_CH_MD_LSX_2022::Forge(element_t *h, element_t *m, element_t *r_1, element_t *r_2, element_t *m_p, element_t *r_1_p, element_t *r_2_p, element_t *td1, element_t *td2) {
     element_sub(this->tmp_Zn, *m, *m_p);
     element_mul(this->tmp_Zn_2, this->tmp_Zn, *td1);
     element_add(*r_1_p, *r_1, this->tmp_Zn_2);
@@ -76,13 +76,13 @@ void EIB_CH_MD::Forge(element_t *h, element_t *m, element_t *r_1, element_t *r_2
     element_mul(*r_2_p, *r_2, this->tmp_G1);
 }
 
-bool EIB_CH_MD::Verify(element_t *h, element_t *m_p, element_t *r_1_p, element_t *r_2_p, element_t *L) {
+bool IB_CH_MD_LSX_2022::Verify(element_t *h, element_t *m_p, element_t *r_1_p, element_t *r_2_p, element_t *L) {
     this->Hash(&this->tmp_GT_hash,L,m_p,r_1_p,r_2_p);
 
     return element_cmp(*h, this->tmp_GT_hash) == 0;
 }
 
-EIB_CH_MD::~EIB_CH_MD() {
+IB_CH_MD_LSX_2022::~IB_CH_MD_LSX_2022() {
     element_clear(this->g);
 
     element_clear(this->a);

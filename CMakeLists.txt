@@ -264,23 +264,24 @@ add_executable(CH_ET_test src/scheme/CH_ET.cpp
         src/ABE/data_structure/num_vector.cpp
         unit_test/CH_ET_test.cpp)
 
-add_executable(EIB_CH_MD_test src/scheme/EIB_CH_MD.cpp
+add_executable(IB_CH_MD_LSX_2022_test 
+        src/scheme/IB_CH_MD_LSX_2022.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
         src/ABE/data_structure/element_t_matrix.cpp
         src/ABE/data_structure/element_t_vector.cpp
         src/ABE/data_structure/num_vector.cpp
-        unit_test/EIB_CH_MD_test.cpp)
+        unit_test/IB_CH_MD_LSX_2022_test.cpp)
 
-add_executable(DLB_CH_KEF_test src/scheme/DLB_CH_KEF.cpp
+add_executable(CH_KEF_DL_CZT_2011_test src/scheme/CH_KEF_DL_CZT_2011.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
         src/ABE/data_structure/element_t_matrix.cpp
         src/ABE/data_structure/element_t_vector.cpp
         src/ABE/data_structure/num_vector.cpp
-        unit_test/DLB_CH_KEF_test.cpp)
+        unit_test/CH_KEF_DL_CZT_2011_test.cpp)
 
 add_executable(IB_CH_ZSS_2003_test 
         src/scheme/IB_CH_ZSS_2003.cpp

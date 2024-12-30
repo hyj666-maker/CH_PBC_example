@@ -1,4 +1,4 @@
-#include <scheme/DLB_CH_KEF.h>
+#include <scheme/IB_CH_MD_LSX_2022.h>
 #include "curve/params.h"
 #include <chrono>
 #include <iostream>
@@ -15,10 +15,8 @@ pbc_param_t par;
 pairing_t pairing;
 element_t G1, G2, GT, Zp;
 
-element_t m, m_p, r_1, r_2, r_1_p, r_2_p, h, L;
-element_t x;  // trapdoor key
-element_t y;  // hash key
-element_t a;
+element_t m, m_p, r_1, r_2, r_1_p, r_2_p, h, L, t;
+element_t td1,td2;  // trapdoor tdID(td1, td2)
 
 std::chrono::_V2::system_clock::time_point ts, te;
 
@@ -33,20 +31,22 @@ void init_type(std::string &param) {
     element_init_GT(GT, pairing);
     element_init_Zr(Zp, pairing);
 
-    element_init_same_as(x, Zp);
-    element_init_same_as(y, G1);
-    element_init_same_as(a, Zp);
+    element_init_same_as(L, Zp);  // identity
+    element_init_same_as(t, Zp);  // t ∈ Zp
 
     element_init_same_as(m, Zp);  
     element_init_same_as(m_p, Zp); 
-    element_init_same_as(L, Zp);
 
-    element_init_same_as(r_1, G1);
-    element_init_same_as(r_2, G1);  
-    element_init_same_as(r_1_p, G1); 
+    element_init_same_as(r_1, Zp);  // r1 ∈ Zp
+    element_init_same_as(r_2, G1);  // r2 ∈ G
+    element_init_same_as(r_1_p, Zp); 
     element_init_same_as(r_2_p, G1); 
 
-    element_init_same_as(h, G1); 
+    element_init_same_as(h, GT);  // ? hash  ∈ GT or G1
+
+    element_init_same_as(td1, Zp);
+    element_init_same_as(td2, G1);
+
 }
 
 
@@ -58,10 +58,11 @@ void OutTime(std::string name, int id, double us) {
 
 #define time_cast(a, b) std::chrono::duration_cast<std::chrono::microseconds>(a - b).count()
     
-void DLB_CH_KEF_test() {
-    printf("DLB_CH_KEF_test begin\n");
-    DLB_CH_KEF *test = new DLB_CH_KEF(&G1, &G2, &Zp, &GT);
-    
+void IB_CH_MD_LSX_2022_test() {
+    printf("IB_CH_MD_LSX_2022_test begin\n");
+
+    IB_CH_MD_LSX_2022 *test = new IB_CH_MD_LSX_2022(&G1, &G2, &Zp, &GT);
+
     for(int _ = 0;_ < turns_pg;_++) {
         ts = std::chrono::high_resolution_clock::now();
         test->PG();
@@ -70,22 +71,22 @@ void DLB_CH_KEF_test() {
     }
     printf("PG() finished\n");
 
-
     for(int _ = 0;_ < turns_kg;_++) {
-        element_random(x);
+        element_random(L);  // L :identity
+        element_random(t);  // t
         ts = std::chrono::high_resolution_clock::now();
-        test->KG(&x, &y);
+        test->KG(&L, &t, &td1, &td2);
         te = std::chrono::high_resolution_clock::now();
         OutTime("keygen", _, time_cast(te, ts));
     }
     printf("KG() finished\n");
 
     for(int _ = 0;_ < turns_h;_++) {
-        element_random(m);
-        element_random(L);  // L :identity
-        element_random(a);
+        element_random(m);  // m :message
+        element_random(r_1);  // r1 
+        element_random(r_2);  // r2
         ts = std::chrono::high_resolution_clock::now();
-        test->Hash(&L, &m, &r_1, &r_2, &a, &y, &h);
+        test->Hash(&h, &L, &m, &r_1, &r_2);
         te = std::chrono::high_resolution_clock::now();
         OutTime("hash", _, time_cast(te, ts));
     }
@@ -94,9 +95,9 @@ void DLB_CH_KEF_test() {
     for(int _ = 0;_ < turns_f;_++) {
         element_random(m_p);
         ts = std::chrono::high_resolution_clock::now();
-        test->Forge(&h,&x,&L,&m, &m_p, &r_1, &r_2, &r_1_p, &r_2_p);
+        test->Forge(&h,&m, &r_1, &r_2,&m_p, &r_1_p, &r_2_p, &td1, &td2);
         te = std::chrono::high_resolution_clock::now();
-        printf("%d\n", test->Verify(&h, &L, &m_p, &r_1_p, &x));
+        printf("%d\n", test->Verify(&h, &m_p, &r_1_p, &r_2_p, &L));
         OutTime("collision", _, time_cast(te, ts));
     }
     printf("Forge() finished\n");
@@ -136,10 +137,10 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     else if(strcmp(argv[1], "f") == 0) init_type(curves.f_param);
     else if(strcmp(argv[1], "d224") == 0) init_type(curves.d224_param);
     else return 0;
-    out = fopen("tmp_DLB_CH_KEF.txt", "w");
+    out = fopen("tmp_IB_CH_MD_LSX_2022.txt", "w");
     fflush(out);
 
-    DLB_CH_KEF_test();
+    IB_CH_MD_LSX_2022_test();
 
     fclose(out);
     return 0;

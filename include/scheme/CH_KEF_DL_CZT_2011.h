@@ -9,10 +9,10 @@
 #endif //IMPORT_UTIL_FUNC
 
 
-#ifndef DLB_CH_KEF_H
-#define DLB_CH_KEF_H
+#ifndef CH_KEF_DL_CZT_2011_H
+#define CH_KEF_DL_CZT_2011_H
 
-class DLB_CH_KEF {
+class CH_KEF_DL_CZT_2011 {
     protected:
     element_t *G1, *G2, *Zn, *GT;
     element_t P_pub, tmp_G1, tmp_G1_2, tmp_G1_hash, tmp_G2, tmp_Zn,tmp_Zn_2, tmp_GT; 
@@ -28,7 +28,7 @@ class DLB_CH_KEF {
     // void base_hash(element_t *ID, element_t *L, element_t *H, element_t *m, element_t *r_1, element_t *r_2);
 
     public:
-    DLB_CH_KEF(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT);
+    CH_KEF_DL_CZT_2011(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT);
 
     // int public_key_size() {
     //     return CountSize(this->P) + CountSize(this->P_pub);
@@ -44,8 +44,8 @@ class DLB_CH_KEF {
 
     bool Verify(element_t *h, element_t *L,element_t *m_p, element_t *r_1_p, element_t *x);
 
-    ~DLB_CH_KEF();
+    ~CH_KEF_DL_CZT_2011();
 };
 
 
-#endif //DLB_CH_KEF_H
+#endif //CH_KEF_DL_CZT_2011_H
