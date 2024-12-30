@@ -5,6 +5,8 @@
 #include <cstring>
 #include "pbc/pbc.h"
 
+int test_result = 1;
+
 FILE *out = NULL;
 
 int turns = 0, turns_pg = 1, turns_kg = 1, turns_h = 1, turns_f = 1;
@@ -105,6 +107,7 @@ void ID_B_CollRes_XSL_2021_test() {
         
         if(test->Verify(&I, &m_p, &r1_p, &r2_p, &h)){
             printf("Verify success\n");
+            test_result = 0;
         }
         else{
             printf("Verify failed\n");
@@ -154,5 +157,5 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     ID_B_CollRes_XSL_2021_test();
 
     fclose(out);
-    return 0;
+    return test_result;
 }

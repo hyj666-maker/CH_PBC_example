@@ -5,6 +5,8 @@
 #include <cstring>
 #include "pbc/pbc.h"
 
+int test_result = 1;
+
 FILE *out = NULL;
 
 int turns = 0, turns_pg = 1, turns_kg = 1, turns_h = 1, turns_f = 1;
@@ -97,8 +99,14 @@ void IB_CH_MD_LSX_2022_test() {
         ts = std::chrono::high_resolution_clock::now();
         test->Forge(&h,&m, &r_1, &r_2,&m_p, &r_1_p, &r_2_p, &td1, &td2);
         te = std::chrono::high_resolution_clock::now();
-        printf("%d\n", test->Verify(&h, &m_p, &r_1_p, &r_2_p, &L));
         OutTime("collision", _, time_cast(te, ts));
+
+        if(test->Verify(&h, &m_p, &r_1_p, &r_2_p, &L)){
+            printf("Verify() success\n");
+            test_result = 0;
+        }else{
+            printf("Verify() failed\n");
+        }
     }
     printf("Forge() finished\n");
 
@@ -143,5 +151,5 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     IB_CH_MD_LSX_2022_test();
 
     fclose(out);
-    return 0;
+    return test_result;
 }

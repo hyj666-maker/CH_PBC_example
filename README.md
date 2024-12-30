@@ -46,8 +46,6 @@
 
 ### CH_KEF_NoMH_AM_2004
 
-- todo
-
 ### CH_SDH_DL_AM_2004
 
 ------

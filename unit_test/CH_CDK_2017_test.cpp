@@ -1,5 +1,7 @@
 #include <scheme/CH_CDK_2017.h>
 
+int test_result = 1;
+
 mpz_t n; 
 mpz_t e; 
 mpz_t d; 
@@ -66,11 +68,12 @@ int main(int argc, char *argv[]){
     printf("Check\n");
     if(test->CHashCheck(&h,&m_p,&tag_p,&n,&e,&r_p)){
         printf("Hash check successful!\n");
+        test_result = 0;
     }else{
         printf("Hash check failed.\n");
     }
 
     test->CH_CDK_2017_clear();
     test_clear();
-    return 0;
+    return test_result;
 }

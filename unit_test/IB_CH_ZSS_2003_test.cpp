@@ -5,6 +5,8 @@
 #include <cstring>
 #include "pbc/pbc.h"
 
+int test_result = 1;
+
 FILE *out = NULL;
 
 int turns = 0, turns_setup = 1, turns_extract = 1, turns_hash = 1, turns_forge = 1, rev_G1G2;
@@ -84,8 +86,14 @@ void IB_CH_S1_test() {
         ts = std::chrono::high_resolution_clock::now();
         test->Forge(&ID, &S_ID, &m, &m_p, &R, &R_p);
         te = std::chrono::high_resolution_clock::now();
-        printf("%d\n", test->Verify(&H, &R_p, &ID, &m_p));
         OutTime("collision", _, time_cast(te, ts));
+
+        if(test->Verify(&H, &R_p, &ID, &m_p)){
+            printf("Verify success.\n");
+            test_result = 0;
+        }else{
+            printf("Verify failed.\n");
+        }
     }
 
     if(out_file) fprintf(out, "-----------------------------------\n");
@@ -126,8 +134,14 @@ void IB_CH_S2_test() {
         ts = std::chrono::high_resolution_clock::now();
         test->Forge(&ID, &S_ID, &m, &m_p, &R, &R_p);
         te = std::chrono::high_resolution_clock::now();
-        printf("%d\n", test->Verify(&H, &R_p, &ID, &m_p));
         OutTime("collision", _, time_cast(te, ts));
+
+        if(test->Verify(&H, &R_p, &ID, &m_p)){
+            printf("Verify success.\n");
+            test_result = 0;
+        }else{
+            printf("Verify failed.\n");
+        }
     }
 
     if(out_file) fprintf(out, "-----------------------------------\n");
@@ -173,5 +187,5 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     else if(strcmp(argv[5], "S2") == 0) IB_CH_S2_test();
 
     fclose(out);
-    return 0;
+    return test_result;
 }

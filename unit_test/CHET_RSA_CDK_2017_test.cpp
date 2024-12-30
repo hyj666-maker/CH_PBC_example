@@ -1,5 +1,7 @@
 #include <scheme/CHET_RSA_CDK_2017.h>
 
+int test_result = 1;
+
 mpz_t n;  // public key
 mpz_t e; 
 mpz_t d; 
@@ -89,6 +91,7 @@ int main(int argc, char *argv[]){
         printf("Check\n");
         if(test->CHashCheck(&h,&m_p,&n,&etd_n,&e,&r_p)){
             printf("Hash check successful!\n");
+            test_result = 0;
         }else{
             printf("Hash check failed.\n");
         }
@@ -101,5 +104,5 @@ int main(int argc, char *argv[]){
 
     test->CHET_RSA_CDK_2017_clear();
     test_clear();
-    return 0;
+    return test_result;
 }

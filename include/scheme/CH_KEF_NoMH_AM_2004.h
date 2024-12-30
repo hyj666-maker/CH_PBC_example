@@ -2,61 +2,55 @@
 #define CH_KEF_NoMH_AM_2004_H
 
 #include <stdio.h>
-#include <gmp.h>
+#include "base/ElementList.h"
 #include <utils/func.h>
 
 class CH_KEF_NoMH_AM_2004{
     private:
-        mpz_t p,q;
+        element_t *G1, *G2, *Zn, *GT;
+        element_t tmp_G1, tmp_G1_2, tmp_G2, tmp_Zn,tmp_Zn_2, tmp_GT,tmp_GT_2,tmp_GT_3;
         
 
     public:
         struct pk{
-            mpz_t g,y;
+            element_t g,y;
 
-            void Init(){
-                mpz_init(g);
-                mpz_init(y);
+            void Init(element_t *_Zn){
+                element_init_same_as(g, *_Zn);
+                element_init_same_as(y, *_Zn);
             }
-
             ~pk(){
-                mpz_clear(g);
-                mpz_clear(y);
+                element_clear(g);
+                element_clear(y);
             }
         };
 
         struct sk{
-            mpz_t x;
+            element_t x;
 
-            void Init(){
-                mpz_init(x);
+            void Init(element_t *_Zn){
+                element_init_same_as(x, *_Zn);
             }
-
             ~sk(){
-                mpz_clear(x);
+                element_clear(x);
             }
         };
 
-        CH_KEF_NoMH_AM_2004();
+        CH_KEF_NoMH_AM_2004(element_t *G1, element_t *G2, element_t *GT, element_t *Zn);
 
         ~CH_KEF_NoMH_AM_2004();
 
-        void GenKey(int k, pk *pk, sk *sk);
+        void KeyGen(pk *pk, sk *sk);
 
-        void Find_generator(mpz_t *g, mpz_t *p, mpz_t *q);
+        void Hash(pk *pk, element_t *m, element_t *r, element_t *s, element_t *h);
 
+        void H(element_t *m1, element_t *m2, element_t *res);
 
-        void Hash(pk *pk, mpz_t *m, mpz_t *r, mpz_t *s, mpz_t *h);
+        void Forge(pk *pk,sk *sk, element_t *m_p, element_t *h, element_t *r_p, element_t *s_p);
 
-        void H(mpz_t *m1, mpz_t *m2, mpz_t *res);
+        bool Check(pk *pk, element_t *m, element_t *r, element_t *s, element_t *h);
 
-        void Forge(pk *pk,sk *sk, mpz_t *m_p, mpz_t *h, mpz_t *r_p, mpz_t *s_p);
-
-     
-        bool Check(pk *pk, mpz_t *m, mpz_t *r, mpz_t *s, mpz_t *h);
-
-        bool Verify(pk *pk, mpz_t *m_p, mpz_t *r_p, mpz_t *s_p, mpz_t *h);
-
+        bool Verify(pk *pk, element_t *m_p, element_t *r_p, element_t *s_p, element_t *h);
 };
 
 #endif  //CH_KEF_NoMH_AM_2004_H

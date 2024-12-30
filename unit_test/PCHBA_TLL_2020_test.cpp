@@ -5,6 +5,8 @@
 #include <cstring>
 #include "pbc/pbc.h"
 
+int test_result = 1;
+
 FILE *out = NULL;
 
 int turns = 0, turns_pg = 1, turns_kg = 1, turns_h = 1, turns_f = 1;
@@ -144,8 +146,12 @@ void PCHBA_TLL_2020_test() {
     te = std::chrono::high_resolution_clock::now();
     OutTime("Judge", 0, time_cast(te, ts));
 
-    if(judgeRes) printf("Judge success\n");
-    else printf("Judge failed\n");
+    if(judgeRes){
+        printf("Judge success\n");
+        test_result  = 0;
+    }else{
+        printf("Judge failed\n");
+    } 
     
     printf("——————————Judge() finished——————————\n");
 
@@ -190,5 +196,5 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     PCHBA_TLL_2020_test();
 
     fclose(out);
-    return 0;
+    return test_result;
 }

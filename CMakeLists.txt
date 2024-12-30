@@ -159,6 +159,7 @@ add_executable(CH_KEF_F_CTZ_2010_test
 add_executable(CH_KEF_NoMH_AM_2004_test
         src/scheme/CH_KEF_NoMH_AM_2004.cpp
         src/utils/func.cpp
+        src/curve/params.cpp
         unit_test/CH_KEF_NoMH_AM_2004_test.cpp
         src/ABE/data_structure/element_t_matrix.cpp
         src/ABE/data_structure/element_t_vector.cpp
