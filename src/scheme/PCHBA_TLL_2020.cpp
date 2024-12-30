@@ -148,6 +148,9 @@ void PCHBA_TLL_2020::Forge(pkPCHBA *pkPCHBA, skPCHBA* skPCHBA,sksPCHBA *sksPCHBA
                             element_t *c, element_t *epk, element_t *sigma, string policy_str, ABET::ID *ID, int mi,
                             element_t *m_p, element_t *p_p, ABET::ciphertext *C_p, element_t *c_p, element_t *epk_p, element_t *sigma_p) {
     // check
+    if (!this->Check(pkPCHBA, m, p, h_, b, C, c, epk, sigma)) {
+        throw std::runtime_error("Hash Check failed");
+    }
 
     // retrive R,r
     this->abet.Decrypt(&pkPCHBA->pkABET, C, &sksPCHBA->sksABET, &this->R, &this->r);
@@ -171,7 +174,6 @@ void PCHBA_TLL_2020::Forge(pkPCHBA *pkPCHBA, skPCHBA* skPCHBA,sksPCHBA *sksPCHBA
     element_add(this->tmp_Zn, this->s1, this->s2);
 
     // C'
-    // TODO oj ? mi 
     this->abet.Encrypt(&pkPCHBA->pkABET, &skPCHBA->skABET, &this->tmp_Zn_3, &this->R, policy_str, ID, mi, &this->s1, &this->s2, C_p);
 
     // esk'
@@ -226,7 +228,24 @@ bool PCHBA_TLL_2020::Judge(pkPCHBA *pkPCHBA, skPCHBA *skPCHBA,
         return false;
     }
 
-    // step 2
+    // // step 2
+    // // g^sigma =? epk * g^(sk*H2(epk||c))
+    // // epk_str + c_str
+    // unsigned char bytes_epk[element_length_in_bytes(*epk)];
+    // unsigned char bytes_c[element_length_in_bytes(*c)];
+    // element_to_bytes(bytes_epk, *epk);
+    // element_to_bytes(bytes_c, *c);
+    // string epk_str((char *)bytes_epk, element_length_in_bytes(*epk));
+    // string c_str((char *)bytes_c, element_length_in_bytes(*c));
+    // string combine = epk_str + c_str;
+    // this->abet.Hash(combine, &this->tmp_Zn);
+    // element_mul(this->tmp_Zn, skPCHBA->skCHET.x, this->tmp_Zn);
+    // element_pow_zn(this->tmp_G, pkPCHBA->pkABET.g, this->tmp_Zn);
+    // element_mul(this->tmp_G, *epk, this->tmp_G);
+    // element_pow_zn(this->tmp_G_2, pkPCHBA->pkABET.g, *sigma);
+    // if (element_cmp(this->tmp_G, this->tmp_G_2) != 0) {
+    //     return false;
+    // }
 
     // // step 3
     // // delta_sk = c'/c

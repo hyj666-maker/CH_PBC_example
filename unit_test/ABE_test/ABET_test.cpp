@@ -15,7 +15,7 @@ pairing_t pairing;
 element_t G1, G2, GT, Zp;
 
 
-std::vector<std::string> attr_list = {"ONE","TWO","THREE"};
+std::vector<std::string> attr_list = {"ONE","TWO","THREE","FOUR"};
 const int SIZE_OF_ATTR = attr_list.size();  // S, S是Policy所有属性的子集
 const string POLICY = "(ONE&THREE)&(TWO|FOUR)";
 const int SIZE_OF_POLICY = 4;   // Policy的属性个数（不去重）

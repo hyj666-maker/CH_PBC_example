@@ -317,6 +317,8 @@ void ABET::Hash2(element_t *m, element_t *res){
  * output: ct
  */
 void ABET::Encrypt(mpk *mpk, msk *msk, element_t *r, element_t *R, std::string policy_str, ID *ID, int oj, element_t *s1, element_t *s2, ciphertext *ciphertext){
+    this->policy_str = policy_str;
+
     policy_resolution pr;
     policy_generation pg;
     element_random(this->tmp_Zn);
@@ -486,25 +488,76 @@ void ABET::Decrypt(mpk *mpk, ciphertext *ciphertext, sks *sks, element_t *res_R,
     this->Hash2(&this->tmp_GT, &this->tmp_Zn);
     element_div(*res_R, ciphertext->ct_prime, this->tmp_Zn);
 
-    // retrive r
-    // num
-    element_t num,den;
-    element_init_same_as(num, *this->GT);
-    element_init_same_as(den, *this->GT);
-
+    // compute Yi
+    // get original matrix
+    policy_resolution pr;
+    policy_generation pg;
+    element_random(this->tmp_Zn);
+    vector<string>* postfix_expression = pr.infixToPostfix(this->policy_str);
+    binary_tree* binary_tree_expression = pr.postfixToBinaryTree(postfix_expression, this->tmp_Zn);
+    pg.generatePolicyInMatrixForm(binary_tree_expression);
+    element_t_matrix* M = pg.getPolicyInMatrixFormFromTree(binary_tree_expression);
+    // get matrix with attributes
+    element_t_matrix* attributesMatrix = new element_t_matrix();
     unsigned long int rows = ciphertext->ct_y.size();
-    
-    element_set1(this->tmp_G);
-    element_set1(this->tmp_G_2);
-    element_set1(this->tmp_G_3);
     for(unsigned long int i=0; i<rows;i++){
         // judge whether the attribute is in the policy
         if(attr_map.find(pai[i]) == attr_map.end()){
             continue;
         }
-        element_mul(this->tmp_G, this->tmp_G, ciphertext->ct_y[i]->ct_1);
-        element_mul(this->tmp_G_2, this->tmp_G_2, ciphertext->ct_y[i]->ct_2);
-        element_mul(this->tmp_G_3, this->tmp_G_3, ciphertext->ct_y[i]->ct_3);
+        element_t_vector *v = new element_t_vector();
+        for (signed long int j = 0; j < M->col(); ++j) {
+            v->pushBack(M->getElement(i, j));
+        }
+        attributesMatrix->pushBack(v);
+    }
+    // get inverse matrix
+    element_t_matrix* inverse_attributesMatrix = inverse(attributesMatrix);
+
+    unsigned long int r = inverse_attributesMatrix->row();
+    unsigned long int c = inverse_attributesMatrix->col();
+    printf("rows: %ld, cols: %ld\n", r, c);
+    for(int i = 0;i < r;i++){
+        for(int j = 0;j < c;j++){
+            element_printf("%B ", inverse_attributesMatrix->getElement(i, j));
+        }
+        printf("\n");
+    }
+    element_t_vector* unit = getCoordinateAxisUnitVector(inverse_attributesMatrix);
+
+    element_t_vector* x= new element_t_vector(inverse_attributesMatrix->col(), inverse_attributesMatrix->getElement(0, 0));
+
+    signed long int type = gaussElimination(x, inverse_attributesMatrix, unit);
+    if (-1 == type) {
+        throw std::runtime_error("POLICY_NOT_SATISFIED");
+    }
+    printf("type: %ld\n", type);
+    // print x
+    printf("Yi:\n");
+    x->printVector();
+
+    // retrive r
+    // num
+    element_t num,den;
+    element_init_same_as(num, *this->GT);
+    element_init_same_as(den, *this->GT);
+    
+    element_set1(this->tmp_G);
+    element_set1(this->tmp_G_2);
+    element_set1(this->tmp_G_3);
+    int count = 0;
+    for(unsigned long int i=0; i<rows;i++){
+        // judge whether the attribute is in the policy
+        if(attr_map.find(pai[i]) == attr_map.end()){
+            continue;
+        }
+        element_pow_zn(this->tmp_G_4, ciphertext->ct_y[i]->ct_1, x->getElement(count));
+        element_mul(this->tmp_G, this->tmp_G, this->tmp_G_4);
+        element_pow_zn(this->tmp_G_4, ciphertext->ct_y[i]->ct_2, x->getElement(count));
+        element_mul(this->tmp_G_2, this->tmp_G_2, this->tmp_G_4);
+        element_pow_zn(this->tmp_G_4, ciphertext->ct_y[i]->ct_3, x->getElement(count));
+        element_mul(this->tmp_G_3, this->tmp_G_3, this->tmp_G_4);
+        count++;
     }
     // ct_prime * e(tmp_G, sk0_1) * e(tmp_G_2, sk0_2) * e(tmp_G_3, sk0_3)
     element_pairing(this->tmp_GT, this->tmp_G, sks->sk_0.sk0_1);
@@ -518,14 +571,19 @@ void ABET::Decrypt(mpk *mpk, ciphertext *ciphertext, sks *sks, element_t *res_R,
     element_set1(this->tmp_G);
     element_set1(this->tmp_G_2);
     element_set1(this->tmp_G_3);
+    count = 0;
     for(unsigned long int i=0; i<rows;i++){
         // judge whether the attribute is in the policy
         if(attr_map.find(pai[i]) == attr_map.end()){
             continue;
         }
-        element_mul(this->tmp_G, this->tmp_G, sks->sk_y[attr_map[pai[i]]]->sk_1);
-        element_mul(this->tmp_G_2, this->tmp_G_2, sks->sk_y[attr_map[pai[i]]]->sk_2);
-        element_mul(this->tmp_G_3, this->tmp_G_3, sks->sk_y[attr_map[pai[i]]]->sk_3);
+        element_pow_zn(this->tmp_G_4, sks->sk_y[attr_map[pai[i]]]->sk_1, x->getElement(count));
+        element_mul(this->tmp_G, this->tmp_G, this->tmp_G_4);
+        element_pow_zn(this->tmp_G_4, sks->sk_y[attr_map[pai[i]]]->sk_2, x->getElement(count));
+        element_mul(this->tmp_G_2, this->tmp_G_2, this->tmp_G_4);
+        element_pow_zn(this->tmp_G_4, sks->sk_y[attr_map[pai[i]]]->sk_3, x->getElement(count));
+        element_mul(this->tmp_G_3, this->tmp_G_3, this->tmp_G_4);
+        count++;
     }
     // sk_prime_1 * tmp_G
     element_mul(this->tmp_G, sks->sk_prime.sk_1, this->tmp_G);

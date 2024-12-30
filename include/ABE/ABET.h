@@ -26,6 +26,7 @@ class ABET{
 
         unordered_map<unsigned long int, string> pai;  // π(i) -> attr
         unordered_map<string, unsigned long int> attr_map;  // attr -> index of attr_list
+        string policy_str;
 
     public:
         ABET(element_t *_G, element_t *_H, element_t *_GT, element_t *_Zn);

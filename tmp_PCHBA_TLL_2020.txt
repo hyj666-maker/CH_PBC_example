@@ -1,0 +1,6 @@
+PG 0 time: 132.816000 ms.
+keygen 0 time: 52442.623000 ms.
+hash 0 time: 34599.469000 ms.
+collision 0 time: 4176.827000 ms.
+Judge 0 time: 5.744000 ms.
+-----------------------------------

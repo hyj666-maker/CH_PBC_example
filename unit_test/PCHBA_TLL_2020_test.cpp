@@ -21,8 +21,8 @@ const string POLICY = "(ONE&THREE)&(TWO|FOUR)";
 const int SIZE_OF_POLICY = 4;   // Policy的属性个数（不去重）
 
 const int K = 10;
-const int I = 7;  // modifier
-const int J = 4;  // owner
+const int I = 5;  // modifier
+const int J = 5;  // owner
 PCHBA_TLL_2020::skPCHBA skPCHBA;
 PCHBA_TLL_2020::pkPCHBA pkPCHBA;
 ABET::ID ID;
@@ -51,6 +51,9 @@ void init_type(std::string &param) {
     skPCHBA.Init(&G1, &G2, &Zp, K);
     pkPCHBA.Init(&G1, &G2, &GT, K);
     ID.Init(&Zp, K);
+    for(int i = 1;i<=K;i++){
+        element_random(*ID.Ik[i]);
+    }
     sksPCHBA.Init(&G1, &G2, &Zp, SIZE_OF_ATTR, I);
     C.Init(&G1, &G2, &GT, &Zp, SIZE_OF_POLICY);
     C_p.Init(&G1, &G2, &GT, &Zp, SIZE_OF_POLICY);
