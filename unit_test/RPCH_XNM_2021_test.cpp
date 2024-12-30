@@ -107,7 +107,7 @@ void RPCH_XNM_2021_test() {
         ts = std::chrono::high_resolution_clock::now();
         test->KG(&pkRPCH, &skRPCH, st, &id, &attr_list, &skidRPCH);
         te = std::chrono::high_resolution_clock::now();
-        OutTime("keygen", _, time_cast(te, ts));
+        OutTime("KG", _, time_cast(te, ts));
 
     }
     printf("——————————KG() finished——————————\n");
@@ -117,7 +117,7 @@ void RPCH_XNM_2021_test() {
         ts = std::chrono::high_resolution_clock::now();
         test->KUpt(&pkRPCH, st, rl, T, &kut);
         te = std::chrono::high_resolution_clock::now();
-        OutTime("KeyGen", _, time_cast(te, ts));
+        OutTime("KUpt", _, time_cast(te, ts));
 
         printf("size of kut.ku_theta: %ld\n", kut.ku_theta.size());
     }
@@ -128,7 +128,7 @@ void RPCH_XNM_2021_test() {
         ts = std::chrono::high_resolution_clock::now();
         test->DKGen(&pkRPCH, &skidRPCH, &kut, &dkidtRPCH);
         te = std::chrono::high_resolution_clock::now();
-        OutTime("KeyGen", _, time_cast(te, ts));
+        OutTime("DKGen", _, time_cast(te, ts));
 
         printf("size of kut.ku_theta: %ld\n", kut.ku_theta.size());
     }
@@ -149,7 +149,7 @@ void RPCH_XNM_2021_test() {
         ts = std::chrono::high_resolution_clock::now();
         test->Hash(&pkRPCH, &m, POLICY, T, &h, &r);
         te = std::chrono::high_resolution_clock::now();
-        OutTime("hash", _, time_cast(te, ts));
+        OutTime("Hash", _, time_cast(te, ts));
 
         PrintMpzAndSize("h1", h.h1);
         PrintMpzAndSize("h2", h.h2);
@@ -177,7 +177,7 @@ void RPCH_XNM_2021_test() {
         else{
             printf("Verify failed\n");
         }
-        OutTime("collision", _, time_cast(te, ts));
+        OutTime("Forge", _, time_cast(te, ts));
     }
     printf("——————————Forge() finished——————————\n");
 

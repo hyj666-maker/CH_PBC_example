@@ -1,0 +1,8 @@
+PG 0 time: 39.061000 ms.
+keygen 0 time: 496.739000 ms.
+KeyGen 0 time: 16.997000 ms.
+KeyGen 0 time: 19.860000 ms.
+Rev 0 time: 0.027000 ms.
+hash 0 time: 1276.879000 ms.
+collision 0 time: 11669.282000 ms.
+-----------------------------------

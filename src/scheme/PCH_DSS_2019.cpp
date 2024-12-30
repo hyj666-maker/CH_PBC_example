@@ -153,9 +153,6 @@ bool PCH_DSS_2019::Check(pkPCH *pkPCH, mpz_t *m, h *h, r *r) {
  * output: r'
  */
 void PCH_DSS_2019::Forge(pkPCH * pkPCH, sksPCH *sksPCH, mpz_t *m, mpz_t *m_p, h *h, PCH_DSS_2019::r *r, PCH_DSS_2019::r *r_p) {
-    // assume that S satisfies the policy
-    // TODO need judge
-
     mpz_t kk,rr,d2,x1,x1_p,y1,x2,x2_p,y2;
     mpz_inits(kk,rr,d2,x1,x1_p,y1,x2,x2_p,y2,NULL);
 

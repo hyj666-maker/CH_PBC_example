@@ -22,6 +22,7 @@ class RABE{
 
         unordered_map<unsigned long int, string> pai;  // π(i) -> attr
         unordered_map<string, unsigned long int> attr_map;  // attr -> index of attr_list
+        string policy_str;
     
     public:
         struct mpk

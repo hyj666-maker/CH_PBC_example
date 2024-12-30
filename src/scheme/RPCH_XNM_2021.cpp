@@ -179,9 +179,6 @@ bool RPCH_XNM_2021::Check(pkRPCH *pkRPCH, mpz_t *m, h *h, r *r) {
  * output: r'
  */
 void RPCH_XNM_2021::Forge(pkRPCH * pkRPCH, dkidtRPCH *dkidtRPCH, mpz_t *m, mpz_t *m_p, h *h, RPCH_XNM_2021::r *r, RPCH_XNM_2021::r *r_p) {
-    // assume that S satisfies the policy
-    // TODO need judge
-
     mpz_t kk,rr,d2,x1,x1_p,y1,x2,x2_p,y2;
     mpz_inits(kk,rr,d2,x1,x1_p,y1,x2,x2_p,y2,NULL);
 
@@ -231,5 +228,22 @@ bool RPCH_XNM_2021::Verify(pkRPCH *pkRPCH, mpz_t *m_p, h *h, r *r_p) {
 
 
 RPCH_XNM_2021::~RPCH_XNM_2021() {
+    element_clear(this->tmp_G);
+    element_clear(this->tmp_G_2);
+    element_clear(this->tmp_G_3);
+    element_clear(this->tmp_G_4);
+    element_clear(this->tmp_H);
+    element_clear(this->tmp_H_2);
+    element_clear(this->tmp_H_3);
+    element_clear(this->tmp_GT);
+    element_clear(this->tmp_GT_2);
+    element_clear(this->tmp_GT_3);
+    element_clear(this->tmp_Zn);
+    element_clear(this->tmp_Zn_2);
+    element_clear(this->tmp_Zn_3);
+
+    element_clear(this->s1);
+    element_clear(this->s2);
+    element_clear(this->K);
    
 }
