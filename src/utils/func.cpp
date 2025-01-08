@@ -151,6 +151,36 @@ void Hm_4(element_t &m1, element_t &m2, element_t &m3, element_t &res) {
     element_from_hash(res, hash, SHA256_DIGEST_LENGTH);
 }
 
+/**
+ * @param m1: message 1
+ * @param m2: message 2
+ * @param m3: message 3
+ * @param m4: message 4
+ * @param res: hash value
+ */
+void Hm_5(element_t &m1, element_t &m2, element_t &m3, element_t &m4, element_t &res) {
+    // 计算SHA-256哈希
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+
+    unsigned char bytes1[element_length_in_bytes(m1)];
+    element_to_bytes(bytes1, m1);
+    SHA256_Update(&sha256, bytes1, sizeof(bytes1));
+    unsigned char bytes2[element_length_in_bytes(m2)];
+    element_to_bytes(bytes2, m2);
+    SHA256_Update(&sha256, bytes2, sizeof(bytes2));
+    unsigned char bytes3[element_length_in_bytes(m3)];
+    element_to_bytes(bytes3, m3);
+    SHA256_Update(&sha256, bytes3, sizeof(bytes3));
+    unsigned char bytes4[element_length_in_bytes(m4)];
+    element_to_bytes(bytes4, m4);
+    SHA256_Update(&sha256, bytes4, sizeof(bytes4));
+        
+    SHA256_Final(hash, &sha256);
+    element_from_hash(res, hash, SHA256_DIGEST_LENGTH);
+}
+
 int CountSize(element_t &t) {
     return element_length_in_bytes(t);
 }

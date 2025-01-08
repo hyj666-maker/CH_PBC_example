@@ -33,6 +33,16 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS}")
 
 link_libraries(gmp pbc OpenSSL::SSL)
 
+add_executable(CH_FS_ECC_CCTY_2024_test
+        src/scheme/CH_FS_ECC_CCTY_2024.cpp
+        src/utils/func.cpp
+        src/curve/params.cpp
+        unit_test/CH_FS_ECC_CCTY_2024_test.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
+)
+
 add_executable(RABE_test  
         src/ABE/RABE.cpp
         src/curve/params.cpp

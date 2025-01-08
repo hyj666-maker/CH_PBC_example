@@ -36,6 +36,12 @@
 
 ------
 
+## Reconstructing Chameleon Hash: Full Security and the Multi-Party Setting
+
+### CH_FS_ECC_CCTY_2024
+
+------
+
 ## Redactable Blockchain or Rewriting History in Bitcoin and Friends
 
 ------
