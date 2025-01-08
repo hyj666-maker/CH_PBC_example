@@ -238,14 +238,14 @@ add_executable(FCR_CH_PreQA_DKS_2020_test src/scheme/FCR_CH_PreQA_DKS_2020.cpp
         src/ABE/data_structure/num_vector.cpp
         unit_test/FCR_CH_PreQA_DKS_2020_test.cpp)
 
-add_executable(CH_SDH_DL_AM_2004_test src/scheme/CH_SDH_DL_AM_2004.cpp
+add_executable(CH_KEF_MH_SDH_DL_AM_2004_test src/scheme/CH_KEF_MH_SDH_DL_AM_2004.cpp
         src/curve/params.cpp
         src/base/ElementList.cpp
         src/utils/func.cpp
         src/ABE/data_structure/element_t_matrix.cpp
         src/ABE/data_structure/element_t_vector.cpp
         src/ABE/data_structure/num_vector.cpp
-        unit_test/CH_SDH_DL_AM_2004_test.cpp)
+        unit_test/CH_KEF_MH_SDH_DL_AM_2004_test.cpp)
 
 add_executable(ID_B_CollRes_XSL_2021_test src/scheme/ID_B_CollRes_XSL_2021.cpp
         src/curve/params.cpp

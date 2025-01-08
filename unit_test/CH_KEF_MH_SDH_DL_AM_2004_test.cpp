@@ -1,4 +1,4 @@
-#include <scheme/CH_SDH_DL_AM_2004.h>
+#include <scheme/CH_KEF_MH_SDH_DL_AM_2004.h>
 #include "curve/params.h"
 #include <chrono>
 #include <iostream>
@@ -56,8 +56,8 @@ void OutTime(std::string name, int id, double us) {
 
 #define time_cast(a, b) std::chrono::duration_cast<std::chrono::microseconds>(a - b).count()
     
-void CH_SDH_DL_AM_2004_test() {
-    printf("CH_SDH_DL_AM_2004_test begin\n");
+void CH_KEF_MH_SDH_DL_AM_2004_test() {
+    printf("CH_KEF_MH_SDH_DL_AM_2004_test begin\n");
 
     element_random(label);
     element_random(m);
@@ -68,7 +68,7 @@ void CH_SDH_DL_AM_2004_test() {
     unsigned long int m_bit_length = element_length_in_bytes(m) * 8;
     std::cout << "Bit length of m: " << m_bit_length << std::endl;
 
-    CH_SDH_DL_AM_2004 *test = new CH_SDH_DL_AM_2004(&G1, &G2, &Zp, &GT);
+    CH_KEF_MH_SDH_DL_AM_2004 *test = new CH_KEF_MH_SDH_DL_AM_2004(&G1, &G2, &Zp, &GT);
     
     printf("——————————PG() start——————————\n");
     for(int _ = 0;_ < turns_pg;_++) {
@@ -149,10 +149,10 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     else if(strcmp(argv[1], "f") == 0) init_type(curves.f_param);
     else if(strcmp(argv[1], "d224") == 0) init_type(curves.d224_param);
     else return 0;
-    out = fopen("tmp_CH_SDH_DL_AM_2004.txt", "w");
+    out = fopen("tmp_CH_KEF_MH_SDH_DL_AM_2004.txt", "w");
     fflush(out);
 
-    CH_SDH_DL_AM_2004_test();
+    CH_KEF_MH_SDH_DL_AM_2004_test();
 
     fclose(out);
     return test_result;

@@ -59,8 +59,8 @@ TEST(CH_KEF_DLP_LLA_2012_test, UNIVERSAL_TEST) {
     ASSERT_EQ(result, 0);
 }
 
-TEST(CH_SDH_DL_AM_2004_test, UNIVERSAL_TEST) {  
-    std::string command = "./CH_SDH_DL_AM_2004_test a 1 all";
+TEST(CH_KEF_MH_SDH_DL_AM_2004_test, UNIVERSAL_TEST) {  
+    std::string command = "./CH_KEF_MH_SDH_DL_AM_2004_test a 1 all";
     int result = system(command.c_str());
     ASSERT_EQ(result, 0);
 }

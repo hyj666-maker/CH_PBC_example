@@ -1,3 +1,5 @@
+# 实现
+
 ## Fine-Grained and Controlled Rewriting in Blockchains Chameleon-Hashing Gone Attribute-Based
 
 ### PCH_DSS_2019
@@ -42,11 +44,15 @@
 
 ## On the Key Exposure Problem in Chameleon Hashes
 
-- 4 shcemes
-
 ### CH_KEF_NoMH_AM_2004
 
-### CH_SDH_DL_AM_2004
+### CH_KEF_MH_RSA_F_AM_2004
+
+### CH_KEF_MH_RSANN_F_AM_2004
+
+- todo
+
+### CH_KEF_MH_SDH_DL_AM_2004
 
 ------
 

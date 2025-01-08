@@ -9,12 +9,12 @@
 #endif //IMPORT_UTIL_FUNC
 
 
-#ifndef CH_SDH_DL_AM_2004_H
-#define CH_SDH_DL_AM_2004_H
+#ifndef CH_KEF_MH_SDH_DL_AM_2004_H
+#define CH_KEF_MH_SDH_DL_AM_2004_H
 
 #include <stdexcept>  // 包含 std::invalid_argument
 
-class CH_SDH_DL_AM_2004 {
+class CH_KEF_MH_SDH_DL_AM_2004 {
     protected:
     element_t *G1, *G2, *Zn, *GT;
     element_t tmp_G1, tmp_G1_2, tmp_G2, tmp_Zn,tmp_Zn_2, tmp_GT,tmp_GT_2,tmp_GT_3;
@@ -27,7 +27,7 @@ class CH_SDH_DL_AM_2004 {
 
 
     public:
-    CH_SDH_DL_AM_2004(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT);
+    CH_KEF_MH_SDH_DL_AM_2004(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT);
 
     void PG();
 
@@ -41,8 +41,8 @@ class CH_SDH_DL_AM_2004 {
 
     bool Verify(element_t *label, element_t *m_p, element_t *r_p, element_t *y, element_t *h);
 
-    ~CH_SDH_DL_AM_2004();
+    ~CH_KEF_MH_SDH_DL_AM_2004();
 };
 
 
-#endif //CH_SDH_DL_AM_2004_H
+#endif //CH_KEF_MH_SDH_DL_AM_2004_H

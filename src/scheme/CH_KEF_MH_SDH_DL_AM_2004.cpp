@@ -1,10 +1,10 @@
-#include <scheme/CH_SDH_DL_AM_2004.h>
+#include <scheme/CH_KEF_MH_SDH_DL_AM_2004.h>
 
-void CH_SDH_DL_AM_2004::H(element_t *m, element_t *res) {
+void CH_KEF_MH_SDH_DL_AM_2004::H(element_t *m, element_t *res) {
     Hm(*m, *res, this->tmp_Zn, *this->G1);
 }
 
-CH_SDH_DL_AM_2004::CH_SDH_DL_AM_2004(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT) {
+CH_KEF_MH_SDH_DL_AM_2004::CH_KEF_MH_SDH_DL_AM_2004(element_t *_G1, element_t *_G2, element_t *_Zn, element_t *_GT) {
     this->G1 = _G1;
     this->G2 = _G2;
     this->Zn = _Zn;
@@ -29,7 +29,7 @@ CH_SDH_DL_AM_2004::CH_SDH_DL_AM_2004(element_t *_G1, element_t *_G2, element_t *
  * input : 
  * output: 
  */
-void CH_SDH_DL_AM_2004::PG() {
+void CH_KEF_MH_SDH_DL_AM_2004::PG() {
     element_random(this->g);
 }
 
@@ -37,7 +37,7 @@ void CH_SDH_DL_AM_2004::PG() {
  * input : 
  * output: y
  */
-void CH_SDH_DL_AM_2004::KG(element_t *y) {  
+void CH_KEF_MH_SDH_DL_AM_2004::KG(element_t *y) {  
     element_pow_zn(*y, this->g, this->x);
 }
  
@@ -46,7 +46,7 @@ void CH_SDH_DL_AM_2004::KG(element_t *y) {
  * input : label, m, r, y
  * output: h
  */
-void CH_SDH_DL_AM_2004::Hash(element_t *label, element_t *m, element_t *r, element_t *y, element_t *h) {
+void CH_KEF_MH_SDH_DL_AM_2004::Hash(element_t *label, element_t *m, element_t *r, element_t *y, element_t *h) {
     // H(m)
     this->H(m, &this->tmp_Zn);
     // e = H(label)
@@ -68,7 +68,7 @@ void CH_SDH_DL_AM_2004::Hash(element_t *label, element_t *m, element_t *r, eleme
  * input : (this->x) ,h, m, label, r, m_p
  * output: r_p
  */
-void CH_SDH_DL_AM_2004::Forge(element_t *h, element_t *m, element_t *label, element_t *r, element_t *m_p, element_t *r_p) {
+void CH_KEF_MH_SDH_DL_AM_2004::Forge(element_t *h, element_t *m, element_t *label, element_t *r, element_t *m_p, element_t *r_p) {
     // H(m) - H(m')
     this->H(m, &this->tmp_Zn);
     this->H(m_p, &this->tmp_Zn_2);
@@ -87,12 +87,12 @@ void CH_SDH_DL_AM_2004::Forge(element_t *h, element_t *m, element_t *label, elem
  * input : label, m_p, r_p, y, h
  * output: bool
  */
-bool CH_SDH_DL_AM_2004::Verify(element_t *label, element_t *m_p, element_t *r_p, element_t *y, element_t *h) {
+bool CH_KEF_MH_SDH_DL_AM_2004::Verify(element_t *label, element_t *m_p, element_t *r_p, element_t *y, element_t *h) {
     this->Hash(label, m_p, r_p, y, &this->tmp_G1);
     return element_cmp(*h, this->tmp_G1) == 0;
 }
 
-CH_SDH_DL_AM_2004::~CH_SDH_DL_AM_2004() {
+CH_KEF_MH_SDH_DL_AM_2004::~CH_KEF_MH_SDH_DL_AM_2004() {
     element_clear(this->tmp_G1);
     element_clear(this->tmp_G1_2);
     element_clear(this->tmp_G2);
