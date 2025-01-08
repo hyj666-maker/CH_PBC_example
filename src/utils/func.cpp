@@ -277,7 +277,9 @@ void Hgsm_n_2(mpz_t &m1, mpz_t &m2, mpz_t &m3, mpz_t &n, mpz_t &res) {
 
 
 /**
- * gnerate random in length
+ * generate random in length
+ * @param res
+ * @param length
  */
 void GenerateRandomWithLength(mpz_t &res, int length){
     // 生成随机数

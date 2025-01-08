@@ -1,5 +1,11 @@
 #include <gtest/gtest.h>
 
+TEST(CH_KEF_MH_RSA_F_AM_2004_test, UNIVERSAL_TEST) {  
+    std::string command = "./CH_KEF_MH_RSA_F_AM_2004_test";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
+
 TEST(CH_KEF_NoMH_AM_2004_test, UNIVERSAL_TEST) {  
     std::string command = "./CH_KEF_NoMH_AM_2004_test a 1 all";
     int result = system(command.c_str());

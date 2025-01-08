@@ -175,6 +175,15 @@ add_executable(CH_CDK_2017_test
         src/RSA/RSA.cpp
         unit_test/CH_CDK_2017_test.cpp)
 
+add_executable(CH_KEF_MH_RSA_F_AM_2004_test 
+        src/scheme/CH_KEF_MH_RSA_F_AM_2004.cpp
+        src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
+        src/RSA/RSA.cpp
+        unit_test/CH_KEF_MH_RSA_F_AM_2004_test.cpp)
+
 add_executable(MCH_CDK_2017_test 
         src/scheme/MCH_CDK_2017.cpp
         src/utils/func.cpp

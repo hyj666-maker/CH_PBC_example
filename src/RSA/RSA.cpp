@@ -168,7 +168,8 @@ void MyRSA::rsa_generate_keys_pqn(unsigned long bit_size, mpz_t *p, mpz_t *q, mp
 
 /**
  * RSA密钥生成函数 
- * input: e
+ * @param bit_size
+ * @param e
  * output: n, d
  */
 void MyRSA::rsa_generate_keys_with_e(unsigned long bit_size, mpz_t *e) {
