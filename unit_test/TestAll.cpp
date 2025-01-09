@@ -1,5 +1,34 @@
 #include <gtest/gtest.h>
 
+TEST(RABE_TMM_test , UNIVERSAL_TEST) {  
+    std::string command = "./RABE_TMM_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
+TEST(RABE_test, UNIVERSAL_TEST) {  
+    std::string command = "./RABE_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
+TEST(AES_test, UNIVERSAL_TEST){
+    std::string command = "./AES_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
+TEST(CP_ABE_test, UNIVERSAL_TEST) {  
+    std::string command = "./CP_ABE_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
+
+
+
+TEST(RPCH_TMM_2022_test, UNIVERSAL_TEST) {  
+    std::string command = "./RPCH_TMM_2022_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
+
 TEST(CH_FS_ECC_CCTY_2024_test, UNIVERSAL_TEST) {  
     std::string command = "./CH_FS_ECC_CCTY_2024_test a 1 all";
     int result = system(command.c_str());
@@ -20,24 +49,6 @@ TEST(CH_KEF_NoMH_AM_2004_test, UNIVERSAL_TEST) {
 
 TEST(RPCH_XNM_2021_test, UNIVERSAL_TEST) {  
     std::string command = "./RPCH_XNM_2021_test a 1 all";
-    int result = system(command.c_str());
-    ASSERT_EQ(result, 0);
-}
-
-TEST(RABE_test, UNIVERSAL_TEST) {  
-    std::string command = "./RABE_test a 1 all";
-    int result = system(command.c_str());
-    ASSERT_EQ(result, 0);
-}
-
-TEST(AES_test, UNIVERSAL_TEST){
-    std::string command = "./AES_test a 1 all";
-    int result = system(command.c_str());
-    ASSERT_EQ(result, 0);
-}
- 
-TEST(CP_ABE_test, UNIVERSAL_TEST) {  
-    std::string command = "./CP_ABE_test a 1 all";
     int result = system(command.c_str());
     ASSERT_EQ(result, 0);
 }

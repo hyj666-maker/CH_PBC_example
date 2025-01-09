@@ -59,6 +59,22 @@ add_executable(RABE_test
         src/ABE/data_structure/binary_tree_RABE.cpp
 )
 
+add_executable(RABE_TMM_test  
+        src/ABE/RABE_TMM.cpp
+        src/curve/params.cpp
+        src/utils/func.cpp
+        unit_test/ABE_test/RABE_TMM_test.cpp
+        src/ABE/data_structure/access_structure.cpp
+        src/ABE/data_structure/binary_tree.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/multiway_tree.cpp
+        src/ABE/data_structure/num_vector.cpp
+        src/ABE/policy/policy_generation.cpp
+        src/ABE/policy/policy_resolution.cpp
+        src/ABE/data_structure/binary_tree_RABE.cpp
+)
+
 add_executable(RPCH_XNM_2021_test
     src/scheme/RPCH_XNM_2021.cpp
     src/SE/AES.cpp
@@ -67,6 +83,23 @@ add_executable(RPCH_XNM_2021_test
     src/RSA/RSA.cpp
     unit_test/RPCH_XNM_2021_test.cpp
     src/ABE/RABE.cpp
+    src/ABE/data_structure/access_structure.cpp
+    src/ABE/data_structure/binary_tree.cpp
+    src/ABE/data_structure/element_t_matrix.cpp
+    src/ABE/data_structure/element_t_vector.cpp
+    src/ABE/data_structure/multiway_tree.cpp
+    src/ABE/data_structure/num_vector.cpp
+    src/ABE/policy/policy_generation.cpp
+    src/ABE/policy/policy_resolution.cpp
+    src/ABE/data_structure/binary_tree_RABE.cpp
+)
+
+add_executable(RPCH_TMM_2022_test
+    src/scheme/RPCH_TMM_2022.cpp
+    src/curve/params.cpp
+    src/utils/func.cpp
+    unit_test/RPCH_TMM_2022_test.cpp
+    src/ABE/RABE_TMM.cpp
     src/ABE/data_structure/access_structure.cpp
     src/ABE/data_structure/binary_tree.cpp
     src/ABE/data_structure/element_t_matrix.cpp
