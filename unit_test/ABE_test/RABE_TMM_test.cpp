@@ -31,7 +31,7 @@ RABE_TMM::kut kut;
 RABE_TMM::dkidt dkidt;
 RABE_TMM::ciphertext ciphertext;
 
-vector<RABE_TMM::revokedPreson> rl;
+vector<RABE_TMM::revokedPreson *> rl;
 binary_tree_RABE *st;
 
 element_t id;
@@ -88,7 +88,7 @@ void RABE_TMM_test() {
     printf("——————————Setup() start——————————\n");
     for(int _ = 0;_ < turns_pg;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->Setup(N ,&mpk, &msk, rl, st);
+        test->Setup(N ,&mpk, &msk, &rl, st);
         te = std::chrono::high_resolution_clock::now();
         OutTime("Setup", _, time_cast(te, ts));
 
@@ -136,7 +136,7 @@ void RABE_TMM_test() {
     printf("——————————KUpt() start——————————\n");
     for(int _ = 0;_ < turns_kg;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->KUpt(&mpk, st, rl, T, &kut);
+        test->KUpt(&mpk, st, &rl, T, &kut);
         te = std::chrono::high_resolution_clock::now();
         OutTime("KeyGen", _, time_cast(te, ts));
 
@@ -202,7 +202,7 @@ void RABE_TMM_test() {
     for(int _ = 0;_ < turns_f;_++) {
         ts = std::chrono::high_resolution_clock::now();
         time_t target_time = TimeCast(2025, 12, 31, 0, 0, 0);
-        test->Rev(rl, &id, target_time);
+        test->Rev(&rl, &id, target_time);
         te = std::chrono::high_resolution_clock::now();
         OutTime("Rev", _, time_cast(te, ts));
     }

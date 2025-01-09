@@ -34,10 +34,10 @@ RPCH_TMM_2022::RPCH_TMM_2022(mpz_t *_n,mpz_t *_e, mpz_t *_d, element_t *_G, elem
  * input : k, n
  * output: skRPCH, pkRPCH, _rl, _st
  */
-void RPCH_TMM_2022::PG(int k, int n, skRPCH *skRPCH, pkRPCH *pkRPCH, vector<RABE_TMM::revokedPreson> &_rl, binary_tree_RABE* &_st) {
+void RPCH_TMM_2022::PG(int k, int n, skRPCH *skRPCH, pkRPCH *pkRPCH, std::vector<RABE_TMM::revokedPreson *> *rl, binary_tree_RABE *&st) {
     this->k = k;
     
-    this->rabe.Setup(n, &pkRPCH->mpkRABE, &skRPCH->mskRABE, _rl, _st);
+    this->rabe.Setup(n, &pkRPCH->mpkRABE, &skRPCH->mskRABE, rl, st);
 
     element_random(skRPCH->skCHET.x);
     // y = g^x
@@ -48,8 +48,8 @@ void RPCH_TMM_2022::PG(int k, int n, skRPCH *skRPCH, pkRPCH *pkRPCH, vector<RABE
  * input : pkRPCH, skRPCH, _st, id, attr_list
  * output: skidRPCH
  */
-void RPCH_TMM_2022::KG(pkRPCH *pkRPCH, skRPCH *skRPCH, binary_tree_RABE* &_st, element_t *id, vector<string> *attr_list, skidRPCH *skidRPCH) {
-    this->rabe.KGen(&pkRPCH->mpkRABE, &skRPCH->mskRABE, _st, id, attr_list, &skidRPCH->skidRABE);
+void RPCH_TMM_2022::KG(pkRPCH *pkRPCH, skRPCH *skRPCH, binary_tree_RABE *st, element_t *id, vector<string> *attr_list, skidRPCH *skidRPCH) {
+    this->rabe.KGen(&pkRPCH->mpkRABE, &skRPCH->mskRABE, st, id, attr_list, &skidRPCH->skidRABE);
     element_set(skidRPCH->skCHET.x, skRPCH->skCHET.x);
 }
 
@@ -77,8 +77,8 @@ void RPCH_TMM_2022::H4(mpz_t *r, string A, element_t *u1, element_t *u2){
  * input : pkRPCH, _st, _rl, t
  * output: kut
  */
-void RPCH_TMM_2022::KUpt(pkRPCH *pkRPCH, binary_tree_RABE* &_st, vector<RABE_TMM::revokedPreson> &_rl, time_t t, RABE_TMM::kut *kut){
-    this->rabe.KUpt(&pkRPCH->mpkRABE, _st, _rl, t, kut);
+void RPCH_TMM_2022::KUpt(pkRPCH *pkRPCH, binary_tree_RABE *st, std::vector<RABE_TMM::revokedPreson *> *rl, time_t t, RABE_TMM::kut *kut){
+    this->rabe.KUpt(&pkRPCH->mpkRABE, st, rl, t, kut);
 }
 
 /**
@@ -93,8 +93,8 @@ void RPCH_TMM_2022::DKGen(pkRPCH *pkRPCH, skidRPCH *skidRPCH, RABE_TMM::kut *kut
 /**
  * input : _rl, id, t
  */
-void RPCH_TMM_2022::Rev(vector<RABE_TMM::revokedPreson> &_rl, element_t *id, time_t t){
-    this->rabe.Rev(_rl, id, t);
+void RPCH_TMM_2022::Rev(std::vector<RABE_TMM::revokedPreson *> *rl, element_t *id, time_t t){
+    this->rabe.Rev(rl, id, t);
 }
 
 

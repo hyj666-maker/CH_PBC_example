@@ -81,17 +81,17 @@ class RPCH_TMM_2022 {
 
         RPCH_TMM_2022(mpz_t *_n,mpz_t *_e, mpz_t *_d, element_t *_G, element_t *_H, element_t *_Zn, element_t *_GT);
 
-        void PG(int k, int n, skRPCH *skRPCH, pkRPCH *pkRPCH, vector<RABE_TMM::revokedPreson> &_rl, binary_tree_RABE* &_st);
+        void PG(int k, int n, skRPCH *skRPCH, pkRPCH *pkRPCH, std::vector<RABE_TMM::revokedPreson *> *rl, binary_tree_RABE *&st);
 
-        void KG(pkRPCH *pkRPCH, skRPCH *skRPCH, binary_tree_RABE* &_st, element_t *id, vector<string> *attr_list, skidRPCH *skidRPCH);
+        void KG(pkRPCH *pkRPCH, skRPCH *skRPCH, binary_tree_RABE *st, element_t *id, vector<string> *attr_list, skidRPCH *skidRPCH);
 
         void H1(mpz_t *m, mpz_t *N1, mpz_t *N2, mpz_t * n, mpz_t *res);
         void H2(mpz_t *m, mpz_t *N1, mpz_t *N2, mpz_t * n, mpz_t *res);
         void H4(mpz_t *r, string A, element_t *u1, element_t *u2);
 
-        void KUpt(pkRPCH *pkRPCH, binary_tree_RABE* &_st, vector<RABE_TMM::revokedPreson> &_rl, time_t t, RABE_TMM::kut *kut);
+        void KUpt(pkRPCH *pkRPCH, binary_tree_RABE *st, std::vector<RABE_TMM::revokedPreson *> *rl, time_t t, RABE_TMM::kut *kut);
         void DKGen(pkRPCH *pkRPCH, skidRPCH *skidRPCH, RABE_TMM::kut *kut, dkidtRPCH *dkidtRPCH);
-        void Rev(vector<RABE_TMM::revokedPreson> &_rl, element_t *id, time_t t);
+        void Rev(std::vector<RABE_TMM::revokedPreson *> *rl, element_t *id, time_t t);
 
         void Hash(pkRPCH *pkRPCH, element_t *m, string policy_str, time_t t, 
                             element_t *b, element_t *r, element_t *h, RABE_TMM::ciphertext *C);
