@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cstring>
 
+int test_result = 1;
+
 FILE *out = NULL;
 
 int turns = 0, turns_pg = 1, turns_kg = 1, turns_h = 1, turns_f = 1;
@@ -29,7 +31,7 @@ RABE::kut kut;
 RABE::dkidt dkidt;
 RABE::ciphertext ciphertext;
 
-vector<RABE::revokedPreson> rl;
+vector<RABE::revokedPreson *> rl;
 binary_tree_RABE *st;
 
 element_t id;
@@ -43,7 +45,7 @@ std::chrono::_V2::system_clock::time_point ts, te;
 
 CurveParams curves;
 
-int test_result = 0;
+
 
 void init_type(std::string &param) {
     pbc_param_init_set_str(par, param.c_str());
@@ -86,7 +88,7 @@ void RABE_test() {
     printf("——————————Setup() start——————————\n");
     for(int _ = 0;_ < turns_pg;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->Setup(N ,&mpk, &msk, rl, st);
+        test->Setup(N ,&mpk, &msk, &rl, st);
         te = std::chrono::high_resolution_clock::now();
         OutTime("Setup", _, time_cast(te, ts));
 
@@ -134,7 +136,7 @@ void RABE_test() {
     printf("——————————KUpt() start——————————\n");
     for(int _ = 0;_ < turns_kg;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->KUpt(&mpk, st, rl, T, &kut);
+        test->KUpt(&mpk, st, &rl, T, &kut);
         te = std::chrono::high_resolution_clock::now();
         OutTime("KeyGen", _, time_cast(te, ts));
 
@@ -189,9 +191,9 @@ void RABE_test() {
 
         if(element_cmp(msg, res) == 0){
             printf("Decrypt successfully.\n");
+            test_result = 0;
         }else{
             printf("Decrypt failed.\n");
-            test_result = 1;
         } 
     }
     printf("——————————Decrypt() finished——————————\n");
@@ -200,7 +202,7 @@ void RABE_test() {
     for(int _ = 0;_ < turns_f;_++) {
         ts = std::chrono::high_resolution_clock::now();
         time_t target_time = TimeCast(2025, 12, 31, 0, 0, 0);
-        test->Rev(rl, &id, target_time);
+        test->Rev(&rl, &id, target_time);
         te = std::chrono::high_resolution_clock::now();
         OutTime("Rev", _, time_cast(te, ts));
     }
@@ -248,9 +250,5 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
 
     fclose(out);
 
-    if(test_result == 0){
-        return 0;
-    }else{
-        return 1;
-    }
+    return test_result;
 }

@@ -138,8 +138,6 @@ class RABE{
             }
         };
 
-        vector<revokedPreson> rl;
-        binary_tree_RABE *st;
 
         struct kuTheta{
             binary_tree_node_RABE *theta;
@@ -259,15 +257,15 @@ class RABE{
 
         ~RABE();
 
-        void Setup(int n, mpk *mpk, msk *msk, vector<revokedPreson> &_rl, binary_tree_RABE* &_st);
+        void Setup(int n, mpk *mpk, msk *msk, vector<revokedPreson *> *rl, binary_tree_RABE *&st);
 
         void Hash(std::string m, element_t *res);
 
-        void KGen(mpk *mpk, msk *msk, binary_tree_RABE* &_st, element_t *id, std::vector<std::string> *attr_list, skid *skid);
+        void KGen(mpk *mpk, msk *msk, binary_tree_RABE *st, element_t *id, std::vector<std::string> *attr_list, skid *skid);
 
-        vector<binary_tree_node_RABE *> KUNodes(binary_tree_RABE* &_st, vector<revokedPreson> &_rl, time_t t);
+        vector<binary_tree_node_RABE *> KUNodes(binary_tree_RABE *st, vector<revokedPreson *> *rl, time_t t);
 
-        void KUpt(mpk *mpk, binary_tree_RABE* &_st, vector<revokedPreson> &_rl, time_t t, kut *kut);
+        void KUpt(mpk *mpk, binary_tree_RABE *st, vector<revokedPreson *> *rl, time_t t, kut *kut);
 
         void DKGen(mpk *mpk, skid *skid, kut *kut, dkidt *dkidt);
 
@@ -275,7 +273,7 @@ class RABE{
 
         void Dec(mpk *mpk, ciphertext *ciphertext, dkidt *dkidt, element_t *res);
 
-        void Rev(vector<revokedPreson> &_rl, element_t *id, time_t t);
+        void Rev(vector<revokedPreson *> *rl, element_t *id, time_t t);
 };
 
 #endif  // RABE_H

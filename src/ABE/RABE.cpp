@@ -61,7 +61,7 @@ void RABE::Hash(std::string m, element_t *res){
  * input: n
  * output: mpk, msk, st, rl
  */
-void RABE::Setup(int n, mpk *mpk, msk *msk, vector<revokedPreson> &_rl, binary_tree_RABE* &_st){
+void RABE::Setup(int n, mpk *mpk, msk *msk, vector<revokedPreson *> *rl, binary_tree_RABE *&st){
     element_random(msk->g);
     element_random(msk->h);
     element_random(msk->a1);
@@ -94,18 +94,17 @@ void RABE::Setup(int n, mpk *mpk, msk *msk, vector<revokedPreson> &_rl, binary_t
     element_pow_zn(mpk->T2, this->tmp_GT, this->tmp_Zn);
 
     // initialize rl
-    this->rl.clear();
-    _rl = this->rl;
+    rl->clear();
+
     // initialize st
-    this->st = new binary_tree_RABE(n, this->G, this->Zn);
-    _st = this->st;
+    st = new binary_tree_RABE(n, this->G, this->Zn);
 }
 
 /**
  * input: mpk, msk, st, id, attr_list
  * output: skid, st
  */
-void RABE::KGen(mpk *mpk, msk *msk, binary_tree_RABE* &_st, element_t *id, std::vector<std::string> *attr_list, skid *skid){
+void RABE::KGen(mpk *mpk, msk *msk, binary_tree_RABE *st, element_t *id, std::vector<std::string> *attr_list, skid *skid){
     element_random(this->r1);
     element_random(this->r2);
     // sk0 = (h^(b1r1), h^(b2r2), h^(r1+r2))
@@ -243,7 +242,7 @@ void RABE::KGen(mpk *mpk, msk *msk, binary_tree_RABE* &_st, element_t *id, std::
     time_t target_time = TimeCast(2025, 12, 31, 0, 0, 0);
     
     // find and set an unassigned node
-    binary_tree_node_RABE *node = _st->setLeafNode(id, target_time);
+    binary_tree_node_RABE *node = st->setLeafNode(id, target_time);
 
     // set sk_theta
     while(node != NULL){
@@ -268,22 +267,22 @@ void RABE::KGen(mpk *mpk, msk *msk, binary_tree_RABE* &_st, element_t *id, std::
     }
 }
 
-vector<binary_tree_node_RABE *> RABE::KUNodes(binary_tree_RABE *&_st, vector<revokedPreson> &_rl, time_t t)
+vector<binary_tree_node_RABE *> RABE::KUNodes(binary_tree_RABE *st, vector<revokedPreson *> *rl, time_t t)
 {
     // get rl_ids
     vector<element_t *> rl_ids; 
-    for(int i = 0;i < _rl.size();i++){
-        rl_ids.push_back(&(_rl[i].id));
+    for(int i = 0;i < rl->size();i++){
+        rl_ids.push_back(&(rl->at(i)->id));
     }
-    return _st->KUNodes(rl_ids, t);
+    return st->KUNodes(rl_ids, t);
 }
 
 /**
  * input: mpk, st, rl, t
  * output: kut
  */
-void RABE::KUpt(mpk *mpk, binary_tree_RABE *&_st, vector<revokedPreson> &_rl, time_t t, kut *kut){
-    vector<binary_tree_node_RABE *> thetas = this->KUNodes(_st, _rl, t);
+void RABE::KUpt(mpk *mpk, binary_tree_RABE *st, vector<revokedPreson *> *rl, time_t t, kut *kut){
+    vector<binary_tree_node_RABE *> thetas = this->KUNodes(st, rl, t);
 
     kut->t = t;
     for(int i = 0;i < thetas.size();i++){
@@ -627,10 +626,10 @@ void RABE::Dec(mpk *mpk, ciphertext *ciphertext, dkidt *dkidt, element_t *res)
 /**
  * input: rl, id, t
  */
-void RABE::Rev(vector<revokedPreson> &_rl, element_t *id, time_t t){
-    revokedPreson rp;
-    rp.Init(this->Zn);
-    element_set(rp.id, *id);
-    rp.time = t;
-    _rl.push_back(rp);
+void RABE::Rev(vector<revokedPreson *> *rl, element_t *id, time_t t){
+    revokedPreson *rp = new revokedPreson();
+    rp->Init(this->Zn);
+    element_set(rp->id, *id);
+    rp->time = t;
+    rl->push_back(rp);
 }

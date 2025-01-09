@@ -32,7 +32,7 @@ RPCH_XNM_2021::RPCH_XNM_2021(mpz_t *_n,mpz_t *_e, mpz_t *_d, element_t *_G, elem
  * input : k, n
  * output: skRPCH, pkRPCH, _rl, _st
  */
-void RPCH_XNM_2021::PG(int k, int n, skRPCH *skRPCH, pkRPCH *pkRPCH, vector<RABE::revokedPreson> &_rl, binary_tree_RABE* &_st) {
+void RPCH_XNM_2021::PG(int k, int n, skRPCH *skRPCH, pkRPCH *pkRPCH, vector<RABE::revokedPreson *> *rl, binary_tree_RABE *&st) {
     this->k = k;
     // e > N
     this->rsa.rsa_generate_keys_2(k, 1);
@@ -42,15 +42,15 @@ void RPCH_XNM_2021::PG(int k, int n, skRPCH *skRPCH, pkRPCH *pkRPCH, vector<RABE
     mpz_set(pkRPCH->pkCHET.N1, *(this->rsa.getN()));
     mpz_set(pkRPCH->pkCHET.e, *(this->rsa.getE()));
 
-    this->rabe.Setup(n, &pkRPCH->mpkRABE, &skRPCH->mskRABE, _rl, _st);
+    this->rabe.Setup(n, &pkRPCH->mpkRABE, &skRPCH->mskRABE, rl, st);
 }
 
 /**
  * input : pkRPCH, skRPCH, _st, id, attr_list
  * output: skidRPCH
  */
-void RPCH_XNM_2021::KG(pkRPCH *pkRPCH, skRPCH *skRPCH, binary_tree_RABE* &_st, element_t *id, vector<string> *attr_list, skidRPCH *skidRPCH) {
-    this->rabe.KGen(&pkRPCH->mpkRABE, &skRPCH->mskRABE, _st, id, attr_list, &skidRPCH->skidRABE);
+void RPCH_XNM_2021::KG(pkRPCH *pkRPCH, skRPCH *skRPCH, binary_tree_RABE *st, element_t *id, vector<string> *attr_list, skidRPCH *skidRPCH) {
+    this->rabe.KGen(&pkRPCH->mpkRABE, &skRPCH->mskRABE, st, id, attr_list, &skidRPCH->skidRABE);
     mpz_set(skidRPCH->skCHET.d1, skRPCH->skCHET.d1);
 }
 
@@ -78,8 +78,8 @@ void RPCH_XNM_2021::H4(mpz_t *r, string A, element_t *u1, element_t *u2){
  * input : pkRPCH, _st, _rl, t
  * output: kut
  */
-void RPCH_XNM_2021::KUpt(pkRPCH *pkRPCH, binary_tree_RABE* &_st, vector<RABE::revokedPreson> &_rl, time_t t, RABE::kut *kut){
-    this->rabe.KUpt(&pkRPCH->mpkRABE, _st, _rl, t, kut);
+void RPCH_XNM_2021::KUpt(pkRPCH *pkRPCH, binary_tree_RABE *st, vector<RABE::revokedPreson *> *rl, time_t t, RABE::kut *kut){
+    this->rabe.KUpt(&pkRPCH->mpkRABE, st, rl, t, kut);
 }
 
 /**
@@ -94,8 +94,8 @@ void RPCH_XNM_2021::DKGen(pkRPCH *pkRPCH, skidRPCH *skidRPCH, RABE::kut *kut, dk
 /**
  * input : _rl, id, t
  */
-void RPCH_XNM_2021::Rev(vector<RABE::revokedPreson> &_rl, element_t *id, time_t t){
-    this->rabe.Rev(_rl, id, t);
+void RPCH_XNM_2021::Rev(vector<RABE::revokedPreson *> *rl, element_t *id, time_t t){
+    this->rabe.Rev(rl, id, t);
 }
 
 
