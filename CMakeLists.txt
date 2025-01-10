@@ -190,6 +190,21 @@ add_executable(CP_ABE_test
         src/ABE/policy/policy_resolution.cpp
 )
 
+add_executable(MA_ABE_test  
+        src/ABE/MA_ABE.cpp
+        src/curve/params.cpp
+        src/utils/func.cpp
+        unit_test/ABE_test/MA_ABE_test.cpp
+        src/ABE/data_structure/access_structure.cpp
+        src/ABE/data_structure/binary_tree.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/multiway_tree.cpp
+        src/ABE/data_structure/num_vector.cpp
+        src/ABE/policy/policy_generation.cpp
+        src/ABE/policy/policy_resolution.cpp
+)
+
 add_executable(CH_KEF_F_CTZ_2010_test
         src/scheme/CH_KEF_F_CTZ_2010.cpp
         src/utils/func.cpp

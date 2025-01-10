@@ -1,0 +1,12 @@
+GlobalSetup 0 time: 8.786000 ms.
+AuthSetup 0 time: 5.231000 ms.
+AuthSetup 1 time: 7.950000 ms.
+AuthSetup 2 time: 6.801000 ms.
+AuthSetup 3 time: 4.837000 ms.
+KeyGen 0 time: 36.484000 ms.
+KeyGen 1 time: 37.285000 ms.
+KeyGen 2 time: 34.044000 ms.
+KeyGen 3 time: 33.416000 ms.
+Encrypt 0 time: 147.256000 ms.
+Decrypt 0 time: 137960.000000 ms.
+-----------------------------------

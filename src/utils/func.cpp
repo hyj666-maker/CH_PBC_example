@@ -44,6 +44,14 @@ void Hm_1(element_t &m, element_t &res) {
     SHA256_Final(hash, &sha256);
     element_from_hash(res, hash, SHA256_DIGEST_LENGTH);
 }
+void Hm_1(string m, element_t &res) {
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+    SHA256_Update(&sha256, m.c_str(), m.length());
+    SHA256_Final(hash, &sha256);
+    element_from_hash(res, hash, SHA256_DIGEST_LENGTH);
+}
 
 void Hgsm_1(element_t &gs, element_t &m, element_t &res) {
     // 计算SHA-256哈希
