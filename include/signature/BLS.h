@@ -11,15 +11,21 @@ class BLS{
         element_t tmp_G,tmp_G_2,tmp_G_3,tmp_G_4,tmp_H,tmp_H_2,tmp_H_3,tmp_GT,tmp_GT_2,tmp_GT_3,tmp_Zn,tmp_Zn_2,tmp_Zn_3;
 
     public:
-        struct pk{
+        struct pp{
             element_t g;
-            element_t y;
             void Init(element_t *_G){
                 element_init_same_as(g, *_G);
+            }
+            ~pp(){
+                element_clear(g);
+            }
+        };
+        struct pk{
+            element_t y;
+            void Init(element_t *_G){
                 element_init_same_as(y, *_G);
             }
             ~pk(){
-                element_clear(g);
                 element_clear(y);
             }
         };
@@ -36,15 +42,16 @@ class BLS{
 
         BLS(element_t *_G, element_t *_H, element_t *_GT, element_t *_Zn);
 
-        void Setup();
+        void Setup(pp *pp);
+        void Setup(pp *pp, element_t *g);
 
-        void KeyGen(pk *pk, sk *sk);
+        void KeyGen(pp *pp, pk *pk, sk *sk);
 
         void H(std::string m, element_t *res);
 
         void Sign(sk *sk, std::string message, element_t *signature);
 
-        bool Verify(pk *pk, std::string message, element_t *signature);
+        bool Verify(pp *pp, pk *pk, std::string message, element_t *signature);
 
         ~BLS();
         

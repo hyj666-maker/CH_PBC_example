@@ -16,6 +16,7 @@ pbc_param_t par;
 pairing_t pairing;
 element_t G1, G2, GT, Zp;
 
+BLS::pp pp;
 BLS::pk pk;
 BLS::sk sk;
 string message;
@@ -36,6 +37,7 @@ void init_type(std::string &param) {
     element_init_GT(GT, pairing);
     element_init_Zr(Zp, pairing);
 
+    pp.Init(&G1);
     pk.Init(&G1);
     sk.Init(&Zp);
     element_init_same_as(signature, G2);
@@ -57,7 +59,7 @@ void BLS_test() {
     printf("——————————KeyGen() start——————————\n");
     for(int _ = 0;_ < turns_pg;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->KeyGen(&pk, &sk);
+        test->KeyGen(&pp, &pk, &sk);
         te = std::chrono::high_resolution_clock::now();
         OutTime("KeyGen", _, time_cast(te, ts));
     }
@@ -82,7 +84,7 @@ void BLS_test() {
     for(int _ = 0;_ < turns_f;_++) {
         bool verify_result;
         ts = std::chrono::high_resolution_clock::now();
-        verify_result = test->Verify(&pk, message, &signature);
+        verify_result = test->Verify(&pp, &pk, message, &signature);
         te = std::chrono::high_resolution_clock::now();
         OutTime("Decrypt", _, time_cast(te, ts));
 

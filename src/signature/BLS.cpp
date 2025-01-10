@@ -22,20 +22,32 @@ BLS::BLS(element_t *_G, element_t *_H, element_t *_GT, element_t *_Zn)
     element_init_same_as(this->tmp_Zn_3, *this->Zn);
 }
 
-void BLS::Setup()
+/**
+ * @param pp: public parameters
+ */
+void BLS::Setup(pp *pp)
 {
-
+    element_random(pp->g);
+}
+/**
+ * @param pp: public parameters
+ * @param g: generator g
+ */
+void BLS::Setup(pp *pp, element_t *g)
+{
+    element_set(pp->g, *g);
 }
 
+
 /**
+ * @param pp: public parameters
  * @param pk: public key
  * @param sk: secret key
  */
-void BLS::KeyGen(pk *pk, sk *sk)
+void BLS::KeyGen(pp *pp, pk *pk, sk *sk)
 {
-    element_random(pk->g);
     element_random(sk->a);
-    element_pow_zn(pk->y, pk->g, sk->a);
+    element_pow_zn(pk->y, pp->g, sk->a);
 }
 
 /**
@@ -59,13 +71,14 @@ void BLS::Sign(sk *sk, std::string message, element_t *signature)
 }
 
 /**
+ * @param pp: public parameters
  * @param pk: public key
  * @param message: message to verify
  * @param signature: signature of message
  */
-bool BLS::Verify(pk *pk, std::string message, element_t *signature)
+bool BLS::Verify(pp *pp, pk *pk, std::string message, element_t *signature)
 {
-    element_pairing(tmp_GT, pk->g, *signature);
+    element_pairing(tmp_GT, pp->g, *signature);
     H(message, &tmp_H);
     element_pairing(tmp_GT_2, pk->y, tmp_H);
     return element_cmp(tmp_GT, tmp_GT_2) == 0;

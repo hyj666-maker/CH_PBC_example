@@ -110,6 +110,7 @@ class MA_ABE{
         void Hu(string u, element_t *res);
 
         void GlobalSetup(gpk *gpk);
+        void GlobalSetup(gpk *gpk, element_t *g);
 
         void AuthSetup(gpk *gpk, string A, pkTheta *pkTheta, skTheta *skTheta);
 

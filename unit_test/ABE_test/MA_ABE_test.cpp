@@ -26,6 +26,7 @@ const string B = "TWO";
 const string C = "THREE";
 const string D = "FOUR";
 const string ATTRIBUTES[] = {A, B, C, D};
+const int SIZE_OF_ATTRIBUTES = sizeof(ATTRIBUTES) / sizeof(ATTRIBUTES[0]);
 
 const string GID = "GID of A B C D with attribute ONE TOW THREE FOUR";
 
@@ -85,7 +86,7 @@ void MA_ABE_test() {
     printf("——————————GlobalSetup() finished——————————\n");
 
     printf("——————————AuthSetup() start——————————\n");
-    for(int _ = 0;_ < 4;_++) {
+    for(int _ = 0;_ < SIZE_OF_ATTRIBUTES;_++) {
         MA_ABE::pkTheta *pkTheta = new MA_ABE::pkTheta;
         MA_ABE::skTheta *skTheta = new MA_ABE::skTheta;
         pkTheta->Init(&G1, &GT);

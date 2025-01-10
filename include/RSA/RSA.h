@@ -5,6 +5,8 @@
 #include <gmp.h>
 #include <stdlib.h>
 #include <time.h>
+#include <utils/func.h>
+#include <sys/time.h>
 
 class MyRSA{
     private:
@@ -13,7 +15,10 @@ class MyRSA{
         mpz_t *d;
     
     public:
+        MyRSA();
         MyRSA(mpz_t *n, mpz_t *e, mpz_t *d);
+
+        void KeyGen(mpz_t *n, mpz_t *e, mpz_t *d, unsigned long k);
 
         void rsa_clear();
 

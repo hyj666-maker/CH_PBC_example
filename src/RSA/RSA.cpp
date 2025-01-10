@@ -1,5 +1,7 @@
 #include <RSA/RSA.h>
 
+MyRSA::MyRSA() {}
+
 MyRSA::MyRSA(mpz_t *n, mpz_t *e, mpz_t *d) {
     this->n = n;
     this->e = e;
@@ -18,7 +20,9 @@ void MyRSA::rsa_clear() {
     mpz_clear(*this->d);
 }
 
-// 生成大素数 p 和 q，计算 n, φ(n) 等
+/**
+ * @param bit_size key size
+ */
 void MyRSA::rsa_generate_keys(unsigned long bit_size) {
     mpz_t p, q, phi, gcd;
     mpz_inits(p, q, phi, gcd, NULL);
@@ -57,6 +61,46 @@ void MyRSA::rsa_generate_keys(unsigned long bit_size) {
     mpz_invert(*this->d, *this->e, phi);    // 计算 d = e^(-1) mod φ(n)
 
     // 清理中间变量
+    mpz_clears(p, q, phi, gcd, NULL);
+}
+/**
+ * @param n
+ * @param e
+ * @param d
+ * @param k length of n
+ */
+void MyRSA::KeyGen(mpz_t *n, mpz_t *e, mpz_t *d, unsigned long k) {
+    mpz_t p, q, phi, gcd;
+    mpz_inits(p, q, phi, gcd, NULL);
+
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    unsigned long long seed = tv.tv_sec * 1000000 + tv.tv_usec;
+    gmp_randseed_ui(state, seed);
+
+    mpz_urandomb(p, state, k / 2);
+    mpz_nextprime(p, p); 
+    mpz_urandomb(q, state, k / 2);
+    mpz_nextprime(q, q);
+
+    PrintMpz("p", p);
+    PrintMpz("q", q);
+    
+    // n = p * q
+    mpz_mul(*n, p, q);
+
+    // φ(n) = (p-1)*(q-1)
+    mpz_sub_ui(p, p, 1);
+    mpz_sub_ui(q, q, 1);
+    mpz_mul(phi, p, q);
+
+    // e = 65537
+    mpz_set_ui(*e, 65537);
+    // d = e^(-1) mod φ(n)
+    mpz_invert(*d, *e, phi);    
+
     mpz_clears(p, q, phi, gcd, NULL);
 }
 

@@ -31,6 +31,14 @@ MA_ABE::MA_ABE(element_t *_G, element_t *_H, element_t *_GT, element_t *_Zn){
 void MA_ABE::GlobalSetup(gpk *gpk){
     element_random(gpk->g);
 }
+/**
+ * GlobalSetup(g) -> gp
+ * @param gpk global public key
+ * @param g generator g
+ */
+void MA_ABE::GlobalSetup(gpk *gpk, element_t *g){
+    element_set(gpk->g, *g);
+}
 
 /**
  * AuthSetup(theta) -> (pktheta, sktheta)

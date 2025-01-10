@@ -240,6 +240,20 @@ void Hm_n(mpz_t &m, mpz_t &res,  mpz_t &n) {
     // 将结果映射到 n 的范围内，计算 res = res mod n
     mpz_mod(res, res, n);
 }
+/**
+ * hash mod n
+ */
+void Hm_n(mpz_t &res, string m, mpz_t &n) {
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+    SHA256_Update(&sha256, m.c_str(), m.length());
+    SHA256_Final(hash, &sha256);
+    
+    mpz_import(res, SHA256_DIGEST_LENGTH, 1, 1, 0, 0, hash);
+
+    mpz_mod(res, res, n);
+}
 
 /**
  * hash mod n

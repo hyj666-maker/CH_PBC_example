@@ -37,6 +37,7 @@ void PrintMpzAndSize(std::string mpz_name, mpz_t &mpz);
 int CountSize(element_t &t);
 
 void Hm_n(mpz_t &m, mpz_t &res,  mpz_t &n);
+void Hm_n(mpz_t &res, string m, mpz_t &n);
 void Hgsm_n(mpz_t &gs, mpz_t &m, mpz_t &res,  mpz_t &n);
 void Hgsm_n_2(mpz_t &m1, mpz_t &m2, mpz_t &m3, mpz_t &n, mpz_t &res);
 

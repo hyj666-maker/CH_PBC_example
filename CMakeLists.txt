@@ -149,9 +149,37 @@ add_executable(PCH_DSS_2019_test
     src/ABE/policy/policy_resolution.cpp
 )
 
+add_executable(DPCH_MXN_2022_test
+    src/scheme/DPCH_MXN_2022.cpp
+    src/SE/AES.cpp
+    src/curve/params.cpp
+    src/utils/func.cpp
+    src/RSA/RSA.cpp
+    unit_test/DPCH_MXN_2022_test.cpp
+    src/ABE/MA_ABE.cpp
+    src/signature/BLS.cpp
+    src/ABE/data_structure/access_structure.cpp
+    src/ABE/data_structure/binary_tree.cpp
+    src/ABE/data_structure/element_t_matrix.cpp
+    src/ABE/data_structure/element_t_vector.cpp
+    src/ABE/data_structure/multiway_tree.cpp
+    src/ABE/data_structure/num_vector.cpp
+    src/ABE/policy/policy_generation.cpp
+    src/ABE/policy/policy_resolution.cpp
+)
+
 add_executable(RSA_test
     src/RSA/RSA.cpp
+    src/utils/func.cpp
     unit_test/RSA_test/RSA_test.cpp    
+    src/ABE/data_structure/access_structure.cpp
+    src/ABE/data_structure/binary_tree.cpp
+    src/ABE/data_structure/element_t_matrix.cpp
+    src/ABE/data_structure/element_t_vector.cpp
+    src/ABE/data_structure/multiway_tree.cpp
+    src/ABE/data_structure/num_vector.cpp
+    src/ABE/policy/policy_generation.cpp
+    src/ABE/policy/policy_resolution.cpp
 )
 
 add_executable(ABET_test  
@@ -242,6 +270,15 @@ add_executable(CH_CDK_2017_test
         src/ABE/data_structure/num_vector.cpp
         src/RSA/RSA.cpp
         unit_test/CH_CDK_2017_test.cpp)
+
+add_executable(CH_ET_BC_CDK_2017_test 
+        src/scheme/CH_ET_BC_CDK_2017.cpp
+        src/utils/func.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
+        src/RSA/RSA.cpp
+        unit_test/CH_ET_BC_CDK_2017_test.cpp)
 
 add_executable(CH_KEF_MH_RSA_F_AM_2004_test 
         src/scheme/CH_KEF_MH_RSA_F_AM_2004.cpp

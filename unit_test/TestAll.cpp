@@ -1,5 +1,15 @@
 #include <gtest/gtest.h>
 
+TEST(BLS_test, UNIVERSAL_TEST) {  
+    std::string command = "./BLS_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
+TEST(MA_ABE_test, UNIVERSAL_TEST) {  
+    std::string command = "./MA_ABE_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
 TEST(RABE_TMM_test , UNIVERSAL_TEST) {  
     std::string command = "./RABE_TMM_test a 1 all";
     int result = system(command.c_str());
