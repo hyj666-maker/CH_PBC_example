@@ -1,0 +1,89 @@
+#include <signature/BLS.h>
+
+BLS::BLS(element_t *_G, element_t *_H, element_t *_GT, element_t *_Zn)
+{
+    this->G1 = _G;
+    this->G2 = _H;
+    this->GT = _GT;
+    this->Zn = _Zn;
+
+    element_init_same_as(this->tmp_G, *this->G1);
+    element_init_same_as(this->tmp_G_2, *this->G1);
+    element_init_same_as(this->tmp_G_3, *this->G1);
+    element_init_same_as(this->tmp_G_4, *this->G1);
+    element_init_same_as(this->tmp_H, *this->G2);
+    element_init_same_as(this->tmp_H_2, *this->G2);
+    element_init_same_as(this->tmp_H_3, *this->G2);
+    element_init_same_as(this->tmp_GT, *this->GT);
+    element_init_same_as(this->tmp_GT_2, *this->GT);
+    element_init_same_as(this->tmp_GT_3, *this->GT);
+    element_init_same_as(this->tmp_Zn, *this->Zn);
+    element_init_same_as(this->tmp_Zn_2, *this->Zn);
+    element_init_same_as(this->tmp_Zn_3, *this->Zn);
+}
+
+void BLS::Setup()
+{
+
+}
+
+/**
+ * @param pk: public key
+ * @param sk: secret key
+ */
+void BLS::KeyGen(pk *pk, sk *sk)
+{
+    element_random(pk->g);
+    element_random(sk->a);
+    element_pow_zn(pk->y, pk->g, sk->a);
+}
+
+/**
+ * @param m: message to hash
+ * @param res: result of hash
+ */
+void BLS::H(std::string m, element_t *res)
+{   
+    Hm_1(m, *res);
+}
+
+/**
+ * @param sk: secret key
+ * @param message: message to sign
+ * @param signature: signature of message
+ */
+void BLS::Sign(sk *sk, std::string message, element_t *signature)
+{   
+    H(message, &tmp_H);
+    element_pow_zn(*signature, tmp_H, sk->a);
+}
+
+/**
+ * @param pk: public key
+ * @param message: message to verify
+ * @param signature: signature of message
+ */
+bool BLS::Verify(pk *pk, std::string message, element_t *signature)
+{
+    element_pairing(tmp_GT, pk->g, *signature);
+    H(message, &tmp_H);
+    element_pairing(tmp_GT_2, pk->y, tmp_H);
+    return element_cmp(tmp_GT, tmp_GT_2) == 0;
+}
+
+BLS::~BLS()
+{
+    element_clear(this->tmp_G);
+    element_clear(this->tmp_G_2);
+    element_clear(this->tmp_G_3);
+    element_clear(this->tmp_G_4);
+    element_clear(this->tmp_H);
+    element_clear(this->tmp_H_2);
+    element_clear(this->tmp_H_3);
+    element_clear(this->tmp_GT);
+    element_clear(this->tmp_GT_2);
+    element_clear(this->tmp_GT_3);
+    element_clear(this->tmp_Zn);
+    element_clear(this->tmp_Zn_2);
+    element_clear(this->tmp_Zn_3);
+}

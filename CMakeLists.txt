@@ -111,6 +111,16 @@ add_executable(RPCH_TMM_2022_test
     src/ABE/data_structure/binary_tree_RABE.cpp
 )
 
+add_executable(BLS_test
+        src/signature/BLS.cpp
+        src/utils/func.cpp
+        unit_test/signature_test/BLS_test.cpp
+        src/curve/params.cpp
+        src/ABE/data_structure/element_t_matrix.cpp
+        src/ABE/data_structure/element_t_vector.cpp
+        src/ABE/data_structure/num_vector.cpp
+)
+
 add_executable(AES_test
         src/SE/AES.cpp
         src/utils/func.cpp
