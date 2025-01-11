@@ -29,7 +29,6 @@ class BLS{
                 element_clear(y);
             }
         };
-
         struct sk{
             element_t a;
             void Init(element_t *_Zn){
@@ -37,6 +36,15 @@ class BLS{
             }
             ~sk(){
                 element_clear(a);
+            }
+        };
+        struct signature{
+            element_t sigma;
+            void Init(element_t *_H){
+                element_init_same_as(sigma, *_H);
+            }
+            ~signature(){
+                element_clear(sigma);
             }
         };
 
@@ -49,9 +57,9 @@ class BLS{
 
         void H(std::string m, element_t *res);
 
-        void Sign(sk *sk, std::string message, element_t *signature);
+        void Sign(sk *sk, std::string message, signature *signature);
 
-        bool Verify(pp *pp, pk *pk, std::string message, element_t *signature);
+        bool Verify(pp *pp, pk *pk, std::string message, signature *signature);
 
         ~BLS();
         

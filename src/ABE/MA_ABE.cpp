@@ -148,7 +148,6 @@ void MA_ABE::Encrypt(gpk *gpk, vector<pkTheta *> *pkThetas, string policy, eleme
     // c0 = m * e(g,g)^z
     element_pairing(C->c0, gpk->g, gpk->g);
     element_pow_zn(C->c0, C->c0, this->z);
-    PrintElement("e(g,g)^z", C->c0);
     element_mul(C->c0, C->c0, *m);
 
     // compute ci

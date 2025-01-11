@@ -85,8 +85,8 @@ void MyRSA::KeyGen(mpz_t *n, mpz_t *e, mpz_t *d, unsigned long k) {
     mpz_urandomb(q, state, k / 2);
     mpz_nextprime(q, q);
 
-    PrintMpz("p", p);
-    PrintMpz("q", q);
+    // PrintMpz("p", p);
+    // PrintMpz("q", q);
     
     // n = p * q
     mpz_mul(*n, p, q);

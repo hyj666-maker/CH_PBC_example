@@ -32,7 +32,6 @@ vector<DPCH_MXN_2022::pkTheta *> pkThetas;
 vector<DPCH_MXN_2022::skTheta *> skThetas;
 vector<DPCH_MXN_2022::skGidA *> skGidAs;
 
-
 int k;
 DPCH_MXN_2022::pp ppDPCH;
 DPCH_MXN_2022::pkDPCH pkDPCH;
@@ -40,6 +39,12 @@ DPCH_MXN_2022::skDPCH skDPCH;
 DPCH_MXN_2022::skGid skGid;
 DPCH_MXN_2022::sigmaGid sigmaGid;
 
+DPCH_MXN_2022::h h;
+DPCH_MXN_2022::r r,r_p;
+DPCH_MXN_2022::c c;
+
+string m = "message";
+string m_p = "message_p";
 
 
 
@@ -63,6 +68,8 @@ void init_type(std::string &param) {
     pkDPCH.Init(&G1);
     skDPCH.Init(&Zp);
     sigmaGid.Init(&G2);
+    
+    c.Init(&G1, &GT, SIZE_OF_POLICY);
 
     
     
@@ -88,12 +95,12 @@ void DPCH_MXN_2022_test() {
     // GenerateRandomWithLength(m_p, 128);
     // PrintMpzAndSize("m_p", m_p);
 
-    DPCH_MXN_2022 *test = new DPCH_MXN_2022(&pkDPCH.pkCHET.n0, &pkDPCH.pkCHET.e0, &skDPCH.skCHET.d0, &G1, &G2, &Zp, &GT);
+    DPCH_MXN_2022 *test = new DPCH_MXN_2022(&G1, &G2, &Zp, &GT);
     
     printf("——————————SetUp() start——————————\n");
     for(int _ = 0;_ < turns_pg;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->SetUp(k, &ppDPCH, &pkDPCH, &skDPCH);
+        test->SetUp(&ppDPCH, &pkDPCH, &skDPCH, k);
         te = std::chrono::high_resolution_clock::now();
         OutTime("SetUp", _, time_cast(te, ts));
 
@@ -109,12 +116,12 @@ void DPCH_MXN_2022_test() {
     printf("——————————ModSetUp() start——————————\n");
     for(int _ = 0;_ < turns_pg;_++) {
         ts = std::chrono::high_resolution_clock::now();
-        test->ModSetUp(&skDPCH, GID, &skGid, &sigmaGid);
+        test->ModSetUp(&skGid, &sigmaGid, &skDPCH, GID);
         te = std::chrono::high_resolution_clock::now();
         OutTime("ModSetUp", _, time_cast(te, ts));
 
-        PrintMpz("skGid.d0", skGid.d0);
-        PrintElement("signature", sigmaGid.signature);
+        PrintMpz("skGid.skCH.d0", skGid.skCH.d0);
+        PrintElement("signature", sigmaGid.signature.sigma);
     }
     printf("——————————ModSetUp() finished——————————\n");
 
@@ -126,7 +133,7 @@ void DPCH_MXN_2022_test() {
         skTheta->Init(&Zp);
 
         ts = std::chrono::high_resolution_clock::now();
-        test->AuthSetUp(&ppDPCH, ATTRIBUTES[_], pkTheta, skTheta);
+        test->AuthSetUp(pkTheta, skTheta, &ppDPCH, ATTRIBUTES[_]);
         te = std::chrono::high_resolution_clock::now();
         OutTime("AuthSetUp", _, time_cast(te, ts));
 
@@ -146,7 +153,7 @@ void DPCH_MXN_2022_test() {
         skGidA->Init(&G1);
 
         ts = std::chrono::high_resolution_clock::now();
-        test->ModKeyGen(&ppDPCH, &pkDPCH, GID, &sigmaGid, skThetas[_], ATTRIBUTES[_], skGidA);
+        test->ModKeyGen(skGidA, &ppDPCH, &pkDPCH, GID, &sigmaGid, skThetas[_], ATTRIBUTES[_]);
         te = std::chrono::high_resolution_clock::now();
         OutTime("ModKeyGen", _, time_cast(te, ts));
 
@@ -159,41 +166,46 @@ void DPCH_MXN_2022_test() {
     }
     printf("——————————ModKeyGen() finished——————————\n");
 
-    // printf("——————————Hash() start——————————\n");
-    // for(int _ = 0;_ < turns_h;_++) {
-    //     ts = std::chrono::high_resolution_clock::now();
-    //     test->Hash(&pkPCH, &m, POLICY, &h, &r);
-    //     te = std::chrono::high_resolution_clock::now();
-    //     OutTime("hash", _, time_cast(te, ts));
+    printf("——————————Hash() start——————————\n");
+    for(int _ = 0;_ < turns_h;_++) {
+        ts = std::chrono::high_resolution_clock::now();
+        test->Hash(&h, &r, &c, &ppDPCH, &pkDPCH, m, &pkThetas, POLICY);
+        te = std::chrono::high_resolution_clock::now();
+        OutTime("hash", _, time_cast(te, ts));
 
-    //     PrintMpzAndSize("h1", h.h1);
-    //     PrintMpzAndSize("h2", h.h2);
-    //     PrintMpzAndSize("N2", h.N2);
+        PrintMpz("h0", h.h.h0);
+        PrintMpz("h1", h.h.h1);
+        PrintMpz("r0", r.r.r0);
+        PrintMpz("r1", r.r.r1);
+
         
-    //     if(test->Check(&pkPCH, &m, &h, &r)){
-    //         printf("Check success\n");
-    //     }
-    //     else{
-    //         printf("Check failed\n");
-    //     }
-    // }
-    // printf("——————————Hash() finished——————————\n");
+        if(test->Check(&pkDPCH, m, &h, &r)){
+            printf("Check success\n");
+        }
+        else{
+            printf("Check failed\n");
+        }
+    }
+    printf("——————————Hash() finished——————————\n");
 
-    // printf("——————————Forge() start——————————\n");
-    // for(int _ = 0;_ < turns_f;_++) {
-    //     ts = std::chrono::high_resolution_clock::now();
-    //     test->Forge(&pkPCH, &sksPCH, &m, &m_p, &h, &r, &r_p);
-    //     te = std::chrono::high_resolution_clock::now();
+    printf("——————————Forge() start——————————\n");
+    for(int _ = 0;_ < turns_f;_++) {
+        ts = std::chrono::high_resolution_clock::now();
+        test->Forge(&r_p, &pkDPCH, &skGid, &skGidAs, &c, m, m_p, &h, &r);
+        te = std::chrono::high_resolution_clock::now();
+
+        PrintMpz("r0'", r_p.r.r0);
+        PrintMpz("r1'", r_p.r.r1);
        
-    //     if(test->Verify(&pkPCH, &m_p, &h, &r_p)){
-    //         printf("Verify success\n");
-    //     }
-    //     else{
-    //         printf("Verify failed\n");
-    //     }
-    //     OutTime("collision", _, time_cast(te, ts));
-    // }
-    // printf("——————————Forge() finished——————————\n");
+        if(test->Verify(&pkDPCH, m_p, &h, &r_p)){
+            printf("Verify success\n");
+        }
+        else{
+            printf("Verify failed\n");
+        }
+        OutTime("collision", _, time_cast(te, ts));
+    }
+    printf("——————————Forge() finished——————————\n");
 
     if(out_file) fprintf(out, "-----------------------------------\n");
     if(visiable) printf("\n");

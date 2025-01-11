@@ -20,7 +20,7 @@ BLS::pp pp;
 BLS::pk pk;
 BLS::sk sk;
 string message;
-element_t signature;
+BLS::signature signature;
 
 
 std::chrono::_V2::system_clock::time_point ts, te;
@@ -40,7 +40,7 @@ void init_type(std::string &param) {
     pp.Init(&G1);
     pk.Init(&G1);
     sk.Init(&Zp);
-    element_init_same_as(signature, G2);
+    signature.Init(&G2);
 }
 
 
@@ -75,7 +75,7 @@ void BLS_test() {
         te = std::chrono::high_resolution_clock::now();
         OutTime("Sign", _, time_cast(te, ts));
 
-        PrintElement("signature", signature);
+        PrintElement("signature", signature.sigma);
     }
     printf("——————————Sign() finished——————————\n");
 

@@ -64,10 +64,10 @@ void BLS::H(std::string m, element_t *res)
  * @param message: message to sign
  * @param signature: signature of message
  */
-void BLS::Sign(sk *sk, std::string message, element_t *signature)
+void BLS::Sign(sk *sk, std::string message, signature *signature)
 {   
     H(message, &tmp_H);
-    element_pow_zn(*signature, tmp_H, sk->a);
+    element_pow_zn(signature->sigma, tmp_H, sk->a);
 }
 
 /**
@@ -76,9 +76,9 @@ void BLS::Sign(sk *sk, std::string message, element_t *signature)
  * @param message: message to verify
  * @param signature: signature of message
  */
-bool BLS::Verify(pp *pp, pk *pk, std::string message, element_t *signature)
+bool BLS::Verify(pp *pp, pk *pk, std::string message, signature *signature)
 {
-    element_pairing(tmp_GT, pp->g, *signature);
+    element_pairing(tmp_GT, pp->g, signature->sigma);
     H(message, &tmp_H);
     element_pairing(tmp_GT_2, pk->y, tmp_H);
     return element_cmp(tmp_GT, tmp_GT_2) == 0;

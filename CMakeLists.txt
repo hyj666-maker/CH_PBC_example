@@ -151,6 +151,7 @@ add_executable(PCH_DSS_2019_test
 
 add_executable(DPCH_MXN_2022_test
     src/scheme/DPCH_MXN_2022.cpp
+    src/scheme/CH_ET_BC_CDK_2017.cpp
     src/SE/AES.cpp
     src/curve/params.cpp
     src/utils/func.cpp

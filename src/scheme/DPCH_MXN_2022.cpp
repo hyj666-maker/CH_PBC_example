@@ -1,7 +1,7 @@
 #include <scheme/DPCH_MXN_2022.h>
 
-DPCH_MXN_2022::DPCH_MXN_2022(mpz_t *_n,mpz_t *_e, mpz_t *_d, element_t *_G, element_t *_H, element_t *_Zn, element_t *_GT) 
-    : rsa(_n, _e, _d), ma_abe(_G, _H, _GT, _Zn), aes(), bls(_G, _H, _GT, _Zn) {
+DPCH_MXN_2022::DPCH_MXN_2022(element_t *_G, element_t *_H, element_t *_Zn, element_t *_GT) 
+    :ma_abe(_G, _H, _GT, _Zn), aes(), bls(_G, _H, _GT, _Zn) {
     this->G1 = _G;
     this->G2 = _H;
     this->GT = _GT;
@@ -23,204 +23,137 @@ DPCH_MXN_2022::DPCH_MXN_2022(mpz_t *_n,mpz_t *_e, mpz_t *_d, element_t *_G, elem
 }
 
 /**
- * @param k: key size
  * @param pp: public parameters
  * @param pkDPCH: public key of DPCH
  * @param skDPCH: secret key of DPCH
+ * @param k: key size
  */
-void DPCH_MXN_2022::SetUp(int k, pp *pp, pkDPCH *pkDPCH, skDPCH *skDPCH) {
-    element_random(pp->g);
+void DPCH_MXN_2022::SetUp(pp *pp, pkDPCH *pkDPCH, skDPCH *skDPCH, int k) {
+    element_random(tmp_G);
 
-    rsa.rsa_generate_keys(k);
+    ch_et.SetUp(&pp->ppCH, k);
+    ch_et.KeyGen(&pkDPCH->pkCH, &skDPCH->skCH, &pp->ppCH);
 
-    ma_abe.GlobalSetup(&pp->gpkMA_ABE, &pp->g);
+    ma_abe.GlobalSetup(&pp->gpkMA_ABE, &tmp_G);
 
-    bls.Setup(&pp->ppBLS, &pp->g);
+    bls.Setup(&pp->ppBLS, &tmp_G);
     bls.KeyGen(&pp->ppBLS, &pkDPCH->pkBLS, &skDPCH->skBLS);
 }
 
 /**
- * @param skDPCH: secret key of DPCH
- * @param gid: global id
  * @param skGid: secret key of gid
  * @param sigmaGid: signature of gid
+ * @param skDPCH: secret key of DPCH
+ * @param gid: global id
  */
-void DPCH_MXN_2022::ModSetUp(skDPCH *skDPCH, string gid, skGid *skGid, sigmaGid *sigmaGid){
-    mpz_set(skGid->d0, skDPCH->skCHET.d0);
+void DPCH_MXN_2022::ModSetUp(skGid *skGid, sigmaGid *sigmaGid, skDPCH *skDPCH, string gid){
+    mpz_set(skGid->skCH.d0, skDPCH->skCH.d0);
     bls.Sign(&skDPCH->skBLS, gid, &sigmaGid->signature);
 }
 
 /**
  * @param pkTheta: public key of Theta
  * @param skTheta: secret key of Theta
+ * @param pp: public parameters
+ * @param A: attribute
  */
-void DPCH_MXN_2022::AuthSetUp(pp *pp, string A, pkTheta *pkTheta, skTheta *skTheta){
+void DPCH_MXN_2022::AuthSetUp(pkTheta *pkTheta, skTheta *skTheta, pp *pp, string A){
     ma_abe.AuthSetup(&pp->gpkMA_ABE, A, &pkTheta->pk, &skTheta->sk);
 }
 
 /**
+ * @param skGidA: secret key of gid and attribute
  * @param pp: public parameters
  * @param pkDPCH: public key of DPCH
  * @param gid: global id
  * @param sigmaGid: signature of gid
  * @param skTheta: secret key of Theta
  * @param A: attribute
- * @param skGidA: secret key of gid and attribute
  */
-void DPCH_MXN_2022::ModKeyGen(pp *pp, pkDPCH *pkDPCH, string gid, sigmaGid *sigmaGid, skTheta *skTheta, string A, skGidA *skGidA){
+void DPCH_MXN_2022::ModKeyGen(skGidA *skGidA, pp *pp, pkDPCH *pkDPCH, string gid, sigmaGid *sigmaGid, skTheta *skTheta, string A){
     if(!(bls.Verify(&pp->ppBLS, &pkDPCH->pkBLS, gid, &sigmaGid->signature))){
-            throw std::runtime_error("ModKeyGen(): Signature Verify failed!");
+        throw std::runtime_error("ModKeyGen(): Signature Verify failed!");
     }
 
     ma_abe.KeyGen(&pp->gpkMA_ABE, &skTheta->sk, gid, A, &skGidA->sk);
 }
 
+/**
+ * @param h: hash value
+ * @param r: random value
+ * @param c: cyphertext
+ * @param pp: public parameters
+ * @param pkDPCH: public key of DPCH
+ * @param m: message
+ * @param pkThetas: public keys of Theta
+ * @param polocy: policy
+ */
+void DPCH_MXN_2022::Hash(h *h, r *r, c *c, pp *pp, pkDPCH *pkDPCH, string m, vector<DPCH_MXN_2022::pkTheta *> *pkThetas, string polocy){
+    CH_ET_BC_CDK_2017::etd etd;
 
-// void DPCH_MXN_2022::H1(mpz_t *m, mpz_t *N1, mpz_t *N2, mpz_t * n, mpz_t *res){
-//     Hgsm_n_2(*m, *N1, *N2, *n, *res);
-// }
-// void DPCH_MXN_2022::H2(mpz_t *m, mpz_t *N1, mpz_t *N2, mpz_t * n, mpz_t *res){
-//     Hgsm_n_2(*m, *N1, *N2, *n, *res);
-// }
-// /**
-//  * (u1,u2)<-H4((r,A))
-//  */
-// void DPCH_MXN_2022::H4(mpz_t *r, string A, element_t *u1, element_t *u2){
-//     // r -> string
-//     string r_str = mpz_get_str(NULL, 10, *r);
-//     // str -> element_t
-//     element_from_hash(this->tmp_Zn, (unsigned char *)r_str.c_str(), r_str.length());
-//     element_from_hash(this->tmp_Zn_2, (unsigned char *)A.c_str(), A.length());
-//     Hm_1(this->tmp_Zn, *u1);
-//     Hm_1(this->tmp_Zn_2, *u2);
-// }
+    ch_et.Hash(&h->h, &r->r, &etd, &pp->ppCH, &pkDPCH->pkCH, m);
 
+    aes.KGen(256, &tmp_GT);
+    aes.Enc(&tmp_GT, &etd.d1, &c->c_etd);
 
-// /**
-//  * input : pkPCH, m, policy_str
-//  * output: h, r
-//  */
-// void DPCH_MXN_2022::Hash(pkPCH *pkPCH, mpz_t *m, string policy_str, h *h,r *r) {
-//     mpz_t tmp1, tmp2, rr, kk;
-//     mpz_inits(tmp1, tmp2, rr, kk, NULL);
-//     this->rsa.rsa_generate_keys_with_e(this->k, &pkPCH->pkCHET.e);
+    vector<MA_ABE::pkTheta *> pkThetas_ABE;
+    for(int i=0;i<pkThetas->size();i++){
+        pkThetas_ABE.push_back(&pkThetas->at(i)->pk);
+    }
+    ma_abe.Encrypt(&pp->gpkMA_ABE, &pkThetas_ABE, polocy, &tmp_GT, &c->c_abe);
+}
 
-//     // h.N2
-//     mpz_set(h->N2, *this->rsa.getN());
-    
-//     // r1 ∈ ZN1*
-//     GenerateRandomInZnStar(r->r1, pkPCH->pkCHET.N1);
-//     // r2 ∈ ZN2*
-//     GenerateRandomInZnStar(r->r2, *this->rsa.getN());
+/**
+ * @param pkDPCH: public key of DPCH
+ * @param m: message
+ * @param h: hash value
+ * @param r: random value
+ * @return bool
+ */
+bool DPCH_MXN_2022::Check(pkDPCH *pkDPCH, string m, h *h, r *r){
+    return ch_et.Check(&h->h, &r->r, &pkDPCH->pkCH, m);
+}
 
-//     // h1 = H1(m,N1,N2)* r1^e mod N1
-//     H1(m, &pkPCH->pkCHET.N1, this->rsa.getN(), &pkPCH->pkCHET.N1, &tmp1);
-//     // r1^e mod N1
-//     mpz_powm(tmp2, r->r1, pkPCH->pkCHET.e, pkPCH->pkCHET.N1);
-//     mpz_mul(h->h1, tmp1, tmp2);
-//     mpz_mod(h->h1, h->h1, pkPCH->pkCHET.N1);
-//     // h2 = H2(m,N1,N2)* r2^e mod N2
-//     H2(m, &pkPCH->pkCHET.N1, this->rsa.getN(), this->rsa.getN(), &tmp1);
-//     // r2^e mod N2
-//     mpz_powm(tmp2, r->r2, pkPCH->pkCHET.e, *this->rsa.getN());
-//     mpz_mul(h->h2, tmp1, tmp2);
-//     mpz_mod(h->h2, h->h2, *this->rsa.getN());
+/**
+ * @param r_p: random value
+ * @param pkDPCH: public key of DPCH
+ * @param skGid: secret key of gid
+ * @param skGidAs: secret keys of gid and attributes
+ * @param c: cyphertext
+ * @param m: message
+ * @param m_p: message
+ * @param h: hash value
+ * @param r: random value
+ */
+void DPCH_MXN_2022::Forge(r *r_p, pkDPCH *pkDPCH, skGid *skGid, vector<DPCH_MXN_2022::skGidA *> *skGidAs, c *c, string m, string m_p, h *h, r *r){
+    if(m == m_p){
+        mpz_set(r_p->r.r0, r->r.r0);
+        mpz_set(r_p->r.r1, r->r.r1);
+        return;
+    }
 
-//     this->aes.KGen(256, &this->K);
-//     // (u1,u2)<-H4((r,A))
-//     H4(&rr, policy_str, &u1, &u2);
+    vector<MA_ABE::skgidA *> skgidAs_ABE;
+    for(int i=0;i<skGidAs->size();i++){
+        skgidAs_ABE.push_back(&skGidAs->at(i)->sk);
+    }
+    ma_abe.Decrypt(&skgidAs_ABE, &c->c_abe, &tmp_GT);
 
+    CH_ET_BC_CDK_2017::etd etd;
+    aes.Dec(&tmp_GT, &c->c_etd, &etd.d1);
 
-//     this->cp_abe.Encrypt(&pkPCH->mpkABE, &this->K, policy_str, &u1, &u2, &h->ct);
+    ch_et.Adapt(&r_p->r, &skGid->skCH, &etd, &pkDPCH->pkCH, &h->h, &r->r, m, m_p);
+}
 
-//     // ct_
-//     this->aes.Enc(&this->K, this->rsa.getD(), &h->ct_);
-
-//     mpz_clears(tmp1, tmp2, rr, kk, NULL);
-// }
-
-// /**
-//  * input : pkPCH, m, h, r
-//  * output: bool
-//  */
-// bool DPCH_MXN_2022::Check(pkPCH *pkPCH, mpz_t *m, h *h, r *r) {
-//     mpz_t tmp1, tmp2, tmp3;
-//     mpz_inits(tmp1, tmp2, tmp3, NULL);
-//     // h1 = H1(m,N1,N2)* r1^e mod N1
-//     H1(m, &pkPCH->pkCHET.N1, &h->N2, &pkPCH->pkCHET.N1, &tmp1);
-//     // r1^e mod N1
-//     mpz_powm(tmp2, r->r1, pkPCH->pkCHET.e, pkPCH->pkCHET.N1);
-//     mpz_mul(tmp3, tmp1, tmp2);
-//     mpz_mod(tmp3, tmp3, pkPCH->pkCHET.N1);
-//     if(mpz_cmp(tmp3, h->h1) != 0){
-//         mpz_clears(tmp1, tmp2,tmp3, NULL);
-//         return false;
-//     }
-//     // h2 = H2(m,N1,N2)* r2^e mod N2
-//     H2(m, &pkPCH->pkCHET.N1, &h->N2, &h->N2, &tmp1);
-//     // r2^e mod N2
-//     mpz_powm(tmp2, r->r2, pkPCH->pkCHET.e, h->N2);
-//     mpz_mul(tmp3, tmp1, tmp2);
-//     mpz_mod(tmp3, tmp3, h->N2);
-//     if(mpz_cmp(tmp3, h->h2) != 0){
-//         mpz_clears(tmp1, tmp2,tmp3, NULL);
-//         return false;
-//     }
-//     mpz_clears(tmp1, tmp2, tmp3, NULL);
-//     return true;
-// }
-
-// /**
-//  * input : pkPCH, sksPCH, m, m', h, r
-//  * output: r'
-//  */
-// void DPCH_MXN_2022::Forge(pkPCH * pkPCH, sksPCH *sksPCH, mpz_t *m, mpz_t *m_p, h *h, DPCH_MXN_2022::r *r, DPCH_MXN_2022::r *r_p) {
-//     mpz_t kk,rr,d2,x1,x1_p,y1,x2,x2_p,y2;
-//     mpz_inits(kk,rr,d2,x1,x1_p,y1,x2,x2_p,y2,NULL);
-
-//     cp_abe.Decrypt(&pkPCH->mpkABE, &h->ct, &sksPCH->sksABE, &this->K);
-
-//     // DecSE(K, ct_) -> d2
-//     this->aes.Dec(&this->K, &h->ct_, &d2);
-
-//     // x1 = H1(m, N1, N2)
-//     H1(m, &pkPCH->pkCHET.N1, &h->N2, &pkPCH->pkCHET.N1, &x1);
-//     // x1' = H1(m', N1, N2)
-//     H1(m_p, &pkPCH->pkCHET.N1, &h->N2, &pkPCH->pkCHET.N1, &x1_p);
-//     // y1 = x1 r1^e mod N1
-//     mpz_powm(y1, r->r1, pkPCH->pkCHET.e, pkPCH->pkCHET.N1);
-//     mpz_mul(y1, x1, y1);
-//     mpz_mod(y1, y1, pkPCH->pkCHET.N1);
-//     // x2 = H2(m, N1, N2)
-//     H2(m, &pkPCH->pkCHET.N1, &h->N2, &h->N2, &x2);
-//     // x2' = H2(m', N1, N2)
-//     H2(m_p, &pkPCH->pkCHET.N1, &h->N2, &h->N2, &x2_p);
-//     // y2 = x2 r2^e mod N2
-//     mpz_powm(y2, r->r2, pkPCH->pkCHET.e, h->N2);
-//     mpz_mul(y2, x2, y2);
-//     mpz_mod(y2, y2, h->N2);
-//     // r1' = (y1(x1'^(-1)))^d1 mod N1
-//     mpz_invert(x1_p, x1_p, pkPCH->pkCHET.N1);
-//     mpz_mul(r_p->r1, y1, x1_p);
-//     mpz_mod(r_p->r1, r_p->r1, pkPCH->pkCHET.N1);
-//     mpz_powm(r_p->r1, r_p->r1, sksPCH->skCHET.d1, pkPCH->pkCHET.N1);
-//     // r2' = (y2(x2'^(-1)))^d2 mod N2
-//     mpz_invert(x2_p, x2_p, h->N2);
-//     mpz_mul(r_p->r2, y2, x2_p);
-//     mpz_mod(r_p->r2, r_p->r2, h->N2);
-//     mpz_powm(r_p->r2, r_p->r2, d2, h->N2);
-  
-
-//     mpz_clears(kk,rr,d2,x1,x1_p,y1,x2,x2_p,y2,NULL);
-// }
-
-// /**
-//  * input : pkPCH, m', h, r'
-//  * output: bool
-//  */
-// bool DPCH_MXN_2022::Verify(pkPCH *pkPCH, mpz_t *m_p, h *h, r *r_p) {
-//     return this->Check(pkPCH, m_p, h, r_p);
-// }
+/**
+ * @param pkDPCH: public key of DPCH
+ * @param m_p: message
+ * @param h: hash value
+ * @param r_p: random value
+ * @return bool
+ */
+bool DPCH_MXN_2022::Verify(pkDPCH *pkDPCH, string m_p, h *h, r *r_p){
+    return ch_et.Verify(&h->h, &r_p->r, &pkDPCH->pkCH, m_p);
+}
 
 
 DPCH_MXN_2022::~DPCH_MXN_2022() {
