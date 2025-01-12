@@ -152,7 +152,7 @@ void DPCH_MXN_2022::Forge(r *r_p, pkDPCH *pkDPCH, skGid *skGid, vector<DPCH_MXN_
  * @return bool
  */
 bool DPCH_MXN_2022::Verify(pkDPCH *pkDPCH, string m_p, h *h, r *r_p){
-    return ch_et.Verify(&h->h, &r_p->r, &pkDPCH->pkCH, m_p);
+    return Check(pkDPCH, m_p, h, r_p);
 }
 
 

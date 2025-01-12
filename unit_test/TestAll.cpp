@@ -31,7 +31,17 @@ TEST(CP_ABE_test, UNIVERSAL_TEST) {
     ASSERT_EQ(result, 0);
 }
 
+TEST(DPCH_MXN_2022_test, UNIVERSAL_TEST) {  
+    std::string command = "./DPCH_MXN_2022_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
 
+TEST(CH_ET_BC_CDK_2017_test, UNIVERSAL_TEST) {  
+    std::string command = "./CH_ET_BC_CDK_2017_test a 1 all";
+    int result = system(command.c_str());
+    ASSERT_EQ(result, 0);
+}
 
 TEST(RPCH_TMM_2022_test, UNIVERSAL_TEST) {  
     std::string command = "./RPCH_TMM_2022_test a 1 all";

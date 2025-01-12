@@ -24,6 +24,12 @@ class MA_ABE{
             void Init(element_t *_G){
                 element_init_same_as(g, *_G);
             }
+            void setValues(element_t *_g){
+                element_set(g, *_g);
+            }
+            void setValues(gpk *_gpk){
+                element_set(g, _gpk->g);
+            }
             ~gpk(){
                 element_clear(g);
             }
@@ -35,6 +41,16 @@ class MA_ABE{
             void Init(element_t *_G, element_t *_GT){
                 element_init_same_as(pkTheta_1, *_GT);
                 element_init_same_as(pkTheta_2, *_G);
+            }
+            void setValues(string _A, element_t *_pkTheta_1, element_t *_pkTheta_2){
+                A = _A;
+                element_set(pkTheta_1, *_pkTheta_1);
+                element_set(pkTheta_2, *_pkTheta_2);
+            }
+            void setValues(pkTheta *_pkTheta){
+                A = _pkTheta->A;
+                element_set(pkTheta_1, _pkTheta->pkTheta_1);
+                element_set(pkTheta_2, _pkTheta->pkTheta_2);
             }
             ~pkTheta(){
                 element_clear(pkTheta_1);
@@ -62,6 +78,18 @@ class MA_ABE{
                 element_init_same_as(skgidA_0, *_G);
                 element_init_same_as(skgidA_1, *_G);
             }
+            void setValues(string _gid, string _A, element_t *_skgidA_0, element_t *_skgidA_1){
+                gid = _gid;
+                A = _A;
+                element_set(skgidA_0, *_skgidA_0);
+                element_set(skgidA_1, *_skgidA_1);
+            }
+            void setValues(skgidA *_skgidA){
+                gid = _skgidA->gid;
+                A = _skgidA->A;
+                element_set(skgidA_0, _skgidA->skgidA_0);
+                element_set(skgidA_1, _skgidA->skgidA_1);
+            }
             ~skgidA(){
                 element_clear(skgidA_0);
                 element_clear(skgidA_1);
@@ -75,6 +103,18 @@ class MA_ABE{
                 element_init_same_as(ci_2, *_G);
                 element_init_same_as(ci_3, *_G);
                 element_init_same_as(ci_4, *_G);
+            }
+            void setValues(element_t *_ci_1, element_t *_ci_2, element_t *_ci_3, element_t *_ci_4){
+                element_set(ci_1, *_ci_1);
+                element_set(ci_2, *_ci_2);
+                element_set(ci_3, *_ci_3);
+                element_set(ci_4, *_ci_4);
+            }
+            void setValues(ci *_ci){
+                element_set(ci_1, _ci->ci_1);
+                element_set(ci_2, _ci->ci_2);
+                element_set(ci_3, _ci->ci_3);
+                element_set(ci_4, _ci->ci_4);
             }
             ~ci(){
                 element_clear(ci_1);
@@ -94,6 +134,20 @@ class MA_ABE{
                     MA_ABE::ci* ci_tmp = new MA_ABE::ci();
                     ci_tmp->Init(_G, _GT);
                     ci.push_back(ci_tmp);
+                }
+            }
+            void setValues(string _policy, element_t *_c0, std::vector<MA_ABE::ci *> *_ci){
+                policy = _policy;
+                element_set(c0, *_c0);
+                for(int i=0;i<_ci->size();i++){
+                    ci[i]->setValues(_ci->at(i));
+                }
+            }
+            void setValues(ciphertext *_c){
+                policy = _c->policy;
+                element_set(c0, _c->c0);
+                for(int i=0;i<_c->ci.size();i++){
+                    ci[i]->setValues(_c->ci[i]);
                 }
             }
             ~ciphertext(){

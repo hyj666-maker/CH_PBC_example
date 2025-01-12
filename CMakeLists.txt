@@ -169,6 +169,24 @@ add_executable(DPCH_MXN_2022_test
     src/ABE/policy/policy_resolution.cpp
 )
 
+add_executable(MAPCH_ZLW_2021_test
+    src/scheme/MAPCH_ZLW_2021.cpp
+    src/scheme/CH_ET_BC_CDK_2017.cpp
+    src/curve/params.cpp
+    src/utils/func.cpp
+    src/RSA/RSA.cpp
+    unit_test/MAPCH_ZLW_2021_test.cpp
+    src/ABE/MA_ABE.cpp
+    src/ABE/data_structure/access_structure.cpp
+    src/ABE/data_structure/binary_tree.cpp
+    src/ABE/data_structure/element_t_matrix.cpp
+    src/ABE/data_structure/element_t_vector.cpp
+    src/ABE/data_structure/multiway_tree.cpp
+    src/ABE/data_structure/num_vector.cpp
+    src/ABE/policy/policy_generation.cpp
+    src/ABE/policy/policy_resolution.cpp
+)
+
 add_executable(RSA_test
     src/RSA/RSA.cpp
     src/utils/func.cpp

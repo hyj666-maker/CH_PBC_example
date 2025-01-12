@@ -53,4 +53,7 @@ element_t_vector* getCoordinateAxisUnitVector(element_t_matrix *M);
 
 signed long int gaussElimination(element_t_vector *x, element_t_matrix *A, element_t_vector *b);
 
+void mpz_from_element(mpz_t &mpz, element_t &element);
+void mpz_to_element(element_t &element, mpz_t &mpz);
+
 #endif //UTIL_FUNC_H
