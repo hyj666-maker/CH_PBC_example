@@ -59,7 +59,7 @@ void OutTime(std::string name, int id, double us) {
 #define time_cast(a, b) std::chrono::duration_cast<std::chrono::microseconds>(a - b).count()
     
 void CH_ET_test() {
-    printf("DLB_CH_KEF_test begin\n");
+    printf("CH_ET_test begin\n");
     CH_ET *test = new CH_ET(&G1, &G2, &Zp, &GT);
     
     for(int _ = 0;_ < turns_pg;_++) {
@@ -142,5 +142,5 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     CH_ET_test();
 
     fclose(out);
-    return 0;
+    return 1;
 }

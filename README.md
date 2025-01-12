@@ -1,14 +1,30 @@
-# 实现
-
 ## Fine-Grained and Controlled Rewriting in Blockchains Chameleon-Hashing Gone Attribute-Based
 
 ### PCH_DSS_2019
 
 ------
 
+## Redactable Blockchain in Decentralized Setting
+
+### DPCH_MXN_2022
+
+------
+
+## Redactable Transactions in Consortium Blockchain Controlled by Multi-authority CP-ABE
+
+### MAPCH_ZLW_2021
+
+------
+
 ## Revocable Policy-Based Chameleon Hash
 
 ### RPCH_XNM_2021
+
+------
+
+## Revocable Policy-Based ChameleonHash for Blockchain Rewriting
+
+### RPCH_TMM_2022
 
 ------
 
@@ -90,7 +106,9 @@
 
 ## Chameleon-Hashes with Ephemeral Trapdoors And Applications to Invisible Sanitizable Signatures
 
-### CHET in Known-Order Groups
+### CH_ET_BC_CDK_2017
+
+### CHET
 
 - todo
 

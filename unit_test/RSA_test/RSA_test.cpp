@@ -1,5 +1,7 @@
 #include <RSA/RSA.h>
 
+int test_result = 1;
+
 mpz_t n; // 模数
 mpz_t e; // 公钥指数
 mpz_t d; // 私钥指数
@@ -32,6 +34,7 @@ int main(int argc, char *argv[]){
     // 检查解密是否正确
     if (mpz_cmp(plaintext, decrypted) == 0) {
         printf("Decryption successful!\n");
+        test_result = 0;
     } else {
         printf("Decryption failed.\n");
     }
@@ -40,5 +43,5 @@ int main(int argc, char *argv[]){
     mpz_clears(plaintext, ciphertext, decrypted, NULL);
     test->rsa_clear();
 
-    return 0;
+    return test_result;
 }

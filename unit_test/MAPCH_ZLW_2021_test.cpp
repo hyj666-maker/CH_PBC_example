@@ -5,6 +5,8 @@
 #include <cstring>
 #include "pbc/pbc.h"
 
+int test_result = 1;
+
 FILE *out = NULL;
 
 int turns = 0, turns_pg = 1, turns_kg = 1, turns_h = 1, turns_f = 1;
@@ -78,13 +80,6 @@ void MAPCH_ZLW_2021_test() {
         test->SetUp(&pp, &mhks, &mtks, K, &As);
         te = std::chrono::high_resolution_clock::now();
         OutTime("SetUp", _, time_cast(te, ts));
-
-        // PrintMpz("n0", pkDPCH.pkCHET.n0);
-        // PrintMpz("e0", pkDPCH.pkCHET.e0);
-        // PrintMpz("d0", skDPCH.skCHET.d0);
-        // PrintElement("g", ppDPCH.g);
-        // PrintElement("y", pkDPCH.pkBLS.y);
-        // PrintElement("a", skDPCH.skBLS.a);
     }
     printf("——————————SetUp() finished——————————\n");
 
@@ -94,12 +89,6 @@ void MAPCH_ZLW_2021_test() {
         test->KeyGen(&mskis, &mtks, &mhks, &As, GID);
         te = std::chrono::high_resolution_clock::now();
         OutTime("KeyGen", _, time_cast(te, ts));
-
-        
-        // printf("skGidA->gid: %s\n", skGidA->sk.gid.c_str());
-        // printf("skGidA->A: %s\n", skGidA->sk.A.c_str());
-        // PrintElement("skgidA_0", skGidA->sk.skgidA_0);
-        // PrintElement("skgidA_1", skGidA->sk.skgidA_1);
     }
     printf("——————————KeyGen() finished——————————\n");
 
@@ -128,7 +117,11 @@ void MAPCH_ZLW_2021_test() {
     printf("——————————Forge() start——————————\n");
     for(int _ = 0;_ < turns_f;_++) {
         ts = std::chrono::high_resolution_clock::now();
+        
+        // test->Forge(&h_p, &mhks, &mskis, m, m_p, &h);
+        mskis.pop_back();
         test->Forge(&h_p, &mhks, &mskis, m, m_p, &h);
+
         te = std::chrono::high_resolution_clock::now();
 
         PrintMpz("h0'", h_p.h.h0);
@@ -138,6 +131,7 @@ void MAPCH_ZLW_2021_test() {
        
         if(test->Verify(&mhks, m_p, &h_p)){
             printf("Verify success\n");
+            test_result = 0;
         }
         else{
             printf("Verify failed\n");
@@ -187,5 +181,5 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     MAPCH_ZLW_2021_test();
 
     fclose(out);
-    return 0;
+    return test_result;
 }

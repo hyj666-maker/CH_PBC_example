@@ -5,6 +5,8 @@
 #include <cstring>
 #include "pbc/pbc.h"
 
+int test_result = 1;
+
 FILE *out = NULL;
 
 int turns = 0, turns_pg = 1, turns_kg = 1, turns_h = 1, turns_f = 1;
@@ -125,6 +127,7 @@ void PCH_DSS_2019_test() {
        
         if(test->Verify(&pkPCH, &m_p, &h, &r_p)){
             printf("Verify success\n");
+            test_result = 0;
         }
         else{
             printf("Verify failed\n");
@@ -174,5 +177,5 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     PCH_DSS_2019_test();
 
     fclose(out);
-    return 0;
+    return test_result;
 }

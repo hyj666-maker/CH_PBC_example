@@ -5,6 +5,8 @@
 #include <cstring>
 #include "pbc/pbc.h"
 
+int test_result = 1;
+
 FILE *out = NULL;
 
 int turns = 0, turns_pg = 1, turns_kg = 1, turns_h = 1, turns_f = 1;
@@ -45,9 +47,6 @@ DPCH_MXN_2022::c c;
 
 string m = "message";
 string m_p = "message_p";
-
-
-
 
 
 std::chrono::_V2::system_clock::time_point ts, te;
@@ -199,6 +198,7 @@ void DPCH_MXN_2022_test() {
        
         if(test->Verify(&pkDPCH, m_p, &h, &r_p)){
             printf("Verify success\n");
+            test_result = 0;
         }
         else{
             printf("Verify failed\n");
@@ -248,5 +248,5 @@ int main(int argc, char *argv[]) { // curve, scheme, turns, T;
     DPCH_MXN_2022_test();
 
     fclose(out);
-    return 0;
+    return test_result;
 }
